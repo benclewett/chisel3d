@@ -21,8 +21,8 @@ Config.Mandelbrot.I0=-0.7513
 Config.Mandelbrot.I1=-0.7413
 Config.Mandelbrot.J0=0.1050
 Config.Mandelbrot.J1=0.1145
-Config.Mandelbrot.I_COUNT=200
-Config.Mandelbrot.J_COUNT=200
+Config.Mandelbrot.I_COUNT=500
+Config.Mandelbrot.J_COUNT=500
 Config.Mandelbrot.SCALE_POWER=0.2
 
 Config.Mandelbrot.Print.X_MIN=-50
@@ -32,8 +32,8 @@ Config.Mandelbrot.Print.Y_MAX=50
 Config.Mandelbrot.Print.Z_MIN=0
 Config.Mandelbrot.Print.Z_MAX=50
 Config.Mandelbrot.Print.BASE_THICKNESS=5
-Config.Mandelbrot.Print.OVERLAP=0.01
+Config.Mandelbrot.Print.BOX_OVERLAP=0.01
 // Plateau's of 0.2% or greater are respected and ignored from Gaussian smoothing.
-Config.Mandelbrot.Print.MIN_PLATEAU_COEFFICIENT=0.002
-// Gaussian Radius as coefficient of the size.  Default 1.
-Config.Mandelbrot.GAUSSIAN_RADIUS=2
+Config.Mandelbrot.Print.MIN_PLATEAU_COEFFICIENT=0.001
+// Gaussian Radius as coefficient of the size.  Optional.  0.005 (or 0.5%) is a good option.
+Config.Mandelbrot.GAUSSIAN_RADIUS=0.005

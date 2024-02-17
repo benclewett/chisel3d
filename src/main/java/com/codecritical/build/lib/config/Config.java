@@ -22,7 +22,7 @@ public enum Config {
             Y_MAX,
             Z_MIN,
             Z_MAX,
-            OVERLAP,
+            BOX_OVERLAP,
             BASE_THICKNESS,
             MIN_PLATEAU_COEFFICIENT
         }

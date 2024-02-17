@@ -48,10 +48,12 @@ public class MapArray implements IMapArray {
         return mapArray[i + j * jSize];
     }
 
+    public void set(Point p) {
+        set(p.i, p.j, p.z);
+    }
     public void set(int i, int j, Double z) {
         mapArray[i + j * jSize] = z;
     }
-
 
     @Override
     public boolean isMax(int i, int j) {

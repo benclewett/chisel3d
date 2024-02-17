@@ -1,8 +1,6 @@
 package com.codecritical.build.mandelbrot;
 
-import com.codecritical.build.lib.FastUnion;
-import com.codecritical.build.lib.IMapArray;
-import com.codecritical.build.lib.Mapping;
+import com.codecritical.build.lib.*;
 import com.codecritical.build.lib.config.Config;
 import com.codecritical.build.lib.config.ConfigReader;
 import com.codecritical.parts.ExportStl;
@@ -28,19 +26,22 @@ public class Builder {
     }
 
     private void build() {
-        var mandelbrot = new BuildMandelbrot(config);
-        var map = mandelbrot.getMap();
+
+        var map = new BuildMandelbrot(config).getMap();
+        logger.info("Map build, points=" + map.stream().count());
 
         map = Mapping.normalise(map, false);
         map = Mapping.scale(map, IScale.toPower(config.asDouble(Config.Mandelbrot.SCALE_POWER)));
         map = Mapping.normalise(map, true);
 
         String rough = getRoughMap(map);
-        logger.info("Map:\r\n" + rough);
+        logger.info("Normalised Map:\r\n" + rough);
 
         PlateauSet plateauSet = getPlateauSet(map);
+
         map = Mapping.gaussian(map, config.asOptionalDouble(Config.Mandelbrot.GAUSSIAN_RADIUS), plateauSet);
         map = Mapping.normalise(map, true);
+        logger.info("Gaussian applied.");
 
         // IBuildPrint buildPrint = new BuildPrintBox(config);
         IBuildPrint buildPrint = new BuildPrintSurface(config);
@@ -61,16 +62,17 @@ public class Builder {
         double minPlateauSize = config.asDouble(Config.Mandelbrot.Print.MIN_PLATEAU_COEFFICIENT);
 
         PlateauSet plateauSet = new PlateauSet(map);
-
-        log.append(String.format("Plateaus size=%d, Plateaus greater than %.3f%%:",
-                plateauSet.size(), minPlateauSize * 100));
+        int allSize = plateauSet.size();
 
         plateauSet = new PlateauSet(
                 plateauSet.stream()
                         .filter(p -> p.sizeCoefficient() >= minPlateauSize)
                         .sorted(Comparator.comparingInt(Plateau::size).reversed())
         );
-        plateauSet.stream().forEach(p -> log.append("\r\n  " + p.toString()));
+
+        log.append(String.format("Plateaus all=%d. Plateaus greater than %.3f%% size=%d:",
+                allSize, minPlateauSize * 100, plateauSet.size()));
+        plateauSet.stream().forEach(p -> log.append("\r\n  ").append(p.toString()));
 
         logger.info(log.toString());
 

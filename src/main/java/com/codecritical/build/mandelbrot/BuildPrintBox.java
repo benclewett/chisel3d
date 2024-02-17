@@ -32,7 +32,7 @@ public class BuildPrintBox implements IBuildPrint {
         this.maxIterations = config.asInt(Config.Mandelbrot.MAX_ITERATIONS);
         this.iCount = config.asInt(Config.Mandelbrot.I_COUNT);
         this.jCount = config.asInt(Config.Mandelbrot.J_COUNT);
-        this.overlap = config.asDouble(Config.Mandelbrot.Print.OVERLAP);
+        this.overlap = config.asDouble(Config.Mandelbrot.Print.BOX_OVERLAP);
         this.baseThickness = config.asInt(Config.Mandelbrot.Print.BASE_THICKNESS);
 
         this.xCellSize = (xMax - xMin) / iCount;
