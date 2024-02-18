@@ -1,4 +1,4 @@
-package com.codecritical.build.lib;
+package com.codecritical.build.lib.mapping;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;

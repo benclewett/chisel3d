@@ -1,15 +1,14 @@
 package com.codecritital.buld.lib;
 
-import com.codecritical.build.lib.IMapArray;
-import com.codecritical.build.lib.MapArray;
-import com.codecritical.build.lib.Mapping;
+import com.codecritical.build.lib.mapping.IMapArray;
+import com.codecritical.build.lib.mapping.MapArray;
+import com.codecritical.build.lib.mapping.Mapping;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.testng.Assert;
 
 import java.util.OptionalDouble;
-import java.util.stream.Collectors;
 
 class MappingTest {
 

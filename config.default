@@ -21,8 +21,8 @@ Config.Mandelbrot.I0=-0.7513
 Config.Mandelbrot.I1=-0.7413
 Config.Mandelbrot.J0=0.1050
 Config.Mandelbrot.J1=0.1146
-Config.Mandelbrot.I_COUNT=100
-Config.Mandelbrot.J_COUNT=100
+Config.Mandelbrot.I_COUNT=500
+Config.Mandelbrot.J_COUNT=500
 Config.Mandelbrot.SCALE_POWER=0.2
 
 Config.Mandelbrot.Print.X_MIN=-50

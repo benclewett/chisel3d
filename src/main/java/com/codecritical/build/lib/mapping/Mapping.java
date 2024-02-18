@@ -1,4 +1,4 @@
-package com.codecritical.build.lib;
+package com.codecritical.build.lib.mapping;
 
 import com.codecritical.build.mandelbrot.IScale;
 import com.google.common.annotations.VisibleForTesting;

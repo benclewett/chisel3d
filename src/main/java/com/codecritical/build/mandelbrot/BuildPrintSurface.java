@@ -1,8 +1,9 @@
 package com.codecritical.build.mandelbrot;
 
-import com.codecritical.build.lib.IMapArray;
 import com.codecritical.build.lib.config.Config;
 import com.codecritical.build.lib.config.ConfigReader;
+import com.codecritical.build.lib.mapping.IMapArray;
+import com.codecritical.build.lib.model.Coords3dCache;
 import com.google.common.collect.ImmutableList;
 import eu.printingin3d.javascad.coords.Coords3d;
 import eu.printingin3d.javascad.vrl.CSG;
@@ -13,6 +14,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 @ParametersAreNonnullByDefault
 public class BuildPrintSurface implements IBuildPrint {
@@ -22,6 +24,7 @@ public class BuildPrintSurface implements IBuildPrint {
     private final double xMin, xMax, yMin, yMax, zMin, zMax, xRange, yRange, zRange;
     private final double baseThickness;
     private IMapArray map;
+    private Coords3dCache coords3dCache = new Coords3dCache();
 
     public BuildPrintSurface(ConfigReader config) {
         this.xMin = config.asDouble(Config.Mandelbrot.Print.X_MIN);
@@ -49,24 +52,77 @@ public class BuildPrintSurface implements IBuildPrint {
     private ImmutableList<Polygon> getPolygons() {
         ImmutableList.Builder<Polygon> builder = ImmutableList.builder();
 
-        for (int j = 1; j < map.getJSize(); j++) {
-            for (int i = 1; i < map.getISize(); i++) {
-                getPolygon(builder, i, j);
-            }
-        }
+        IntStream.range(1, map.getJSize()).forEach(j ->
+                IntStream.range(1, map.getISize()).forEach(i ->
+                        builder.addAll(getSurfacePolygons(i, j))
+                )
+        );
 
-        // Add the floor to seal the model
-        List<Coords3d> poly = new ArrayList<>();
-        poly.add(new Coords3d(xMin, yMin, zMin));
-        poly.add(new Coords3d(xMin, yMax, zMin));
-        poly.add(new Coords3d(xMax, yMax, zMin));
-        poly.add(new Coords3d(xMax, yMin, zMin));
-        builder.add(Polygon.fromPolygons(poly, COLOR));
+        builder.add(getBasePolygon());
 
         return builder.build();
     }
 
-    private void getPolygon(ImmutableList.Builder<Polygon> polygons, int i, int j) {
+
+    //region Get the base
+
+    /*
+     * Add the floor to seal the model
+     * (This must be a convex collection of points.  Ie, round the perimeter, in order.)
+     */
+    private Polygon getBasePolygon() {
+        List<Coords3d> baseCoords = new ArrayList<>();
+        baseCoords.addAll(
+                coords3dCache.stream()
+                        .filter(c -> c.getZ() == zMin && c.getY() == yMin)
+                        .sorted(this::compareXInOrder)
+                        .toList()
+        );
+        baseCoords.addAll(
+                coords3dCache.stream()
+                        .filter(c -> c.getZ() == zMin && c.getX() == xMax && c.getY() != yMin)
+                        .sorted(this::compareYInOrder)
+                        .toList()
+        );
+        baseCoords.addAll(
+                coords3dCache.stream()
+                        .filter(c -> c.getZ() == zMin && c.getY() == yMax && c.getX() != xMax)
+                        .sorted(this::compareXReverseOrder)
+                        .toList()
+        );
+        baseCoords.addAll(
+                coords3dCache.stream()
+                        .filter(c -> c.getZ() == zMin && c.getX() == xMin && c.getY() != yMax && c.getY() != yMin)
+                        .sorted(this::compareYReverseOrder)
+                        .toList()
+        );
+
+        return Polygon.fromPolygons(baseCoords, COLOR);
+    }
+
+    private int compareXInOrder(Coords3d c0, Coords3d c1) {
+        return Double.compare(c0.getX(), c1.getX());
+    }
+
+    private int compareYInOrder(Coords3d c0, Coords3d c1) {
+        return Double.compare(c0.getY(), c1.getY());
+    }
+
+    private int compareXReverseOrder(Coords3d c0, Coords3d c1) {
+        return Double.compare(c1.getX(), c0.getX());
+    }
+
+    private int compareYReverseOrder(Coords3d c1, Coords3d c0) {
+        return Double.compare(c0.getY(), c1.getY());
+    }
+
+    //endregion
+
+    //region Get the surface and sides
+
+    private List<Polygon> getSurfacePolygons(int i, int j) {
+
+        List<Polygon> polygons = new ArrayList<>();
 
         /*
          *   Vertex and Polygon Diagram
@@ -94,10 +150,10 @@ public class BuildPrintSurface implements IBuildPrint {
         if ((v0 == v1 && v2 == v3) || (v0 == v2 && v1 == v3)) {
             // Coplanar, needs just one polygon.
             List<Coords3d> poly = new ArrayList<>();
-            poly.add(new Coords3d(mapX(i - 1), mapY(j - 1), mapZ(v0)));
-            poly.add(new Coords3d(mapX(i - 1), mapY(j), mapZ(v2)));
-            poly.add(new Coords3d(mapX(i), mapY(j), mapZ(v3)));
-            poly.add(new Coords3d(mapX(i), mapY( j - 1), mapZ(v1)));
+            poly.add(coords3dCache.get(mapX(i - 1), mapY(j - 1), mapZ(v0)));
+            poly.add(coords3dCache.get(mapX(i - 1), mapY(j), mapZ(v2)));
+            poly.add(coords3dCache.get(mapX(i), mapY(j), mapZ(v3)));
+            poly.add(coords3dCache.get(mapX(i), mapY( j - 1), mapZ(v1)));
             polygons.add(Polygon.fromPolygons(poly, COLOR));
         } else {
             // Complex.  Break up into 4x polygons.
@@ -106,69 +162,74 @@ public class BuildPrintSurface implements IBuildPrint {
             double jMid = (double)j - 0.5;
 
             List<Coords3d> poly1 = new ArrayList<>();
-            poly1.add(new Coords3d(mapX(i - 1), mapY(j - 1), mapZ(v0)));
-            poly1.add(new Coords3d(mapX(i), mapY(j - 1), mapZ(v1)));
-            poly1.add(new Coords3d(mapX(iMid), mapY(jMid), mapZ(v5)));
+            poly1.add(coords3dCache.get(mapX(i - 1), mapY(j - 1), mapZ(v0)));
+            poly1.add(coords3dCache.get(mapX(i), mapY(j - 1), mapZ(v1)));
+            poly1.add(coords3dCache.get(mapX(iMid), mapY(jMid), mapZ(v5)));
             polygons.add(Polygon.fromPolygons(poly1, COLOR));
 
             List<Coords3d> poly2 = new ArrayList<>();
-            poly2.add(new Coords3d(mapX(iMid), mapY(jMid), mapZ(v5)));
-            poly2.add(new Coords3d(mapX(i - 1), mapY(j), mapZ(v2)));
-            poly2.add(new Coords3d(mapX(i), mapY(j), mapZ(v3)));
+            poly2.add(coords3dCache.get(mapX(iMid), mapY(jMid), mapZ(v5)));
+            poly2.add(coords3dCache.get(mapX(i - 1), mapY(j), mapZ(v2)));
+            poly2.add(coords3dCache.get(mapX(i), mapY(j), mapZ(v3)));
             polygons.add(Polygon.fromPolygons(poly2, COLOR));
 
             List<Coords3d> poly3 = new ArrayList<>();
-            poly3.add(new Coords3d(mapX(i - 1), mapY(j - 1), mapZ(v0)));
-            poly3.add(new Coords3d(mapX(i - 1), mapY(j), mapZ(v2)));
-            poly3.add(new Coords3d(mapX(iMid), mapY(jMid), mapZ(v5)));
+            poly3.add(coords3dCache.get(mapX(i - 1), mapY(j - 1), mapZ(v0)));
+            poly3.add(coords3dCache.get(mapX(i - 1), mapY(j), mapZ(v2)));
+            poly3.add(coords3dCache.get(mapX(iMid), mapY(jMid), mapZ(v5)));
             polygons.add(Polygon.fromPolygons(poly3, COLOR));
 
             List<Coords3d> poly4 = new ArrayList<>();
-            poly4.add(new Coords3d(mapX(i), mapY(j - 1), mapZ(v1)));
-            poly4.add(new Coords3d(mapX(iMid), mapY(jMid), mapZ(v5)));
-            poly4.add(new Coords3d(mapX(i), mapY(j), mapZ(v3)));
+            poly4.add(coords3dCache.get(mapX(i), mapY(j - 1), mapZ(v1)));
+            poly4.add(coords3dCache.get(mapX(iMid), mapY(jMid), mapZ(v5)));
+            poly4.add(coords3dCache.get(mapX(i), mapY(j), mapZ(v3)));
             polygons.add(Polygon.fromPolygons(poly4, COLOR));
-
         }
 
         // Edge walls
         
         if (i == 1) {
             List<Coords3d> poly = new ArrayList<>();
-            poly.add(new Coords3d(xMin, mapY(j), mapZ(v2)));
-            poly.add(new Coords3d(xMin, mapY(j - 1), mapZ(v0)));
-            poly.add(new Coords3d(xMin, mapY(j - 1), zMin));
-            poly.add(new Coords3d(xMin, mapY(j), zMin));
+            poly.add(coords3dCache.get(xMin, mapY(j), mapZ(v2)));
+            poly.add(coords3dCache.get(xMin, mapY(j - 1), mapZ(v0)));
+            poly.add(coords3dCache.get(xMin, mapY(j - 1), zMin));
+            poly.add(coords3dCache.get(xMin, mapY(j), zMin));
             polygons.add(Polygon.fromPolygons(poly, COLOR));
         }
 
         if (i == map.getISize() - 1) {
             List<Coords3d> poly = new ArrayList<>();
-            poly.add(new Coords3d(xMax, mapY(j), mapZ(v3)));
-            poly.add(new Coords3d(xMax, mapY(j - 1), mapZ(v1)));
-            poly.add(new Coords3d(xMax, mapY(j - 1), zMin));
-            poly.add(new Coords3d(xMax, mapY(j), zMin));
+            poly.add(coords3dCache.get(xMax, mapY(j), mapZ(v3)));
+            poly.add(coords3dCache.get(xMax, mapY(j - 1), mapZ(v1)));
+            poly.add(coords3dCache.get(xMax, mapY(j - 1), zMin));
+            poly.add(coords3dCache.get(xMax, mapY(j), zMin));
             polygons.add(Polygon.fromPolygons(poly, COLOR));
         }
 
         if (j == 1) {
             List<Coords3d> poly = new ArrayList<>();
-            poly.add(new Coords3d(mapX(i), yMin, mapZ(v1)));
-            poly.add(new Coords3d(mapX(i - 1), yMin, mapZ(v0)));
-            poly.add(new Coords3d(mapX(i - 1), yMin, zMin));
-            poly.add(new Coords3d(mapX(i), yMin, zMin));
+            poly.add(coords3dCache.get(mapX(i), yMin, mapZ(v1)));
+            poly.add(coords3dCache.get(mapX(i - 1), yMin, mapZ(v0)));
+            poly.add(coords3dCache.get(mapX(i - 1), yMin, zMin));
+            poly.add(coords3dCache.get(mapX(i), yMin, zMin));
             polygons.add(Polygon.fromPolygons(poly, COLOR));
         }
 
         if (j == map.getJSize() - 1) {
             List<Coords3d> poly = new ArrayList<>();
-            poly.add(new Coords3d(mapX(i), yMax, mapZ(v3)));
-            poly.add(new Coords3d(mapX(i - 1), yMax, mapZ(v2)));
-            poly.add(new Coords3d(mapX(i - 1), yMax, zMin));
-            poly.add(new Coords3d(mapX(i), yMax, zMin));
+            poly.add(coords3dCache.get(mapX(i), yMax, mapZ(v3)));
+            poly.add(coords3dCache.get(mapX(i - 1), yMax, mapZ(v2)));
+            poly.add(coords3dCache.get(mapX(i - 1), yMax, zMin));
+            poly.add(coords3dCache.get(mapX(i), yMax, zMin));
             polygons.add(Polygon.fromPolygons(poly, COLOR));
         }
+
+        return polygons;
     }
+
+    //endregion
+
+    //region Mappers
 
     private double mapX(double i) {
         return (i / (map.getISize() - 1) * xRange) + xMin;
@@ -181,4 +242,6 @@ public class BuildPrintSurface implements IBuildPrint {
     private double mapZ(double k) {
         return (k * (zRange - baseThickness)) + baseThickness + zMin;
     }
+
+    //endregion
 }

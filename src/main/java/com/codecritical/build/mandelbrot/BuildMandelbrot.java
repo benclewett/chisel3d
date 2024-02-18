@@ -1,9 +1,9 @@
 package com.codecritical.build.mandelbrot;
 
-import com.codecritical.build.lib.IMapArray;
+import com.codecritical.build.lib.mapping.IMapArray;
 import com.codecritical.build.lib.config.Config;
 import com.codecritical.build.lib.config.ConfigReader;
-import com.codecritical.build.lib.MapArray;
+import com.codecritical.build.lib.mapping.MapArray;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.logging.Logger;

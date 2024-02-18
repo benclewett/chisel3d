@@ -1,6 +1,6 @@
 package com.codecritical.build.mandelbrot;
 
-import com.codecritical.build.lib.IMapArray;
+import com.codecritical.build.lib.mapping.IMapArray;
 import com.google.common.collect.ImmutableList;
 import eu.printingin3d.javascad.vrl.CSG;
 

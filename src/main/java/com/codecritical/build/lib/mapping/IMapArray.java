@@ -1,6 +1,4 @@
-package com.codecritical.build.lib;
-
-import eu.printingin3d.javascad.coords.Dims3d;
+package com.codecritical.build.lib.mapping;
 
 import java.util.OptionalDouble;
 import java.util.stream.Stream;

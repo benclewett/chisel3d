@@ -1,13 +1,16 @@
 package com.codecritical.build.mandelbrot;
 
-import com.codecritical.build.lib.*;
 import com.codecritical.build.lib.config.Config;
 import com.codecritical.build.lib.config.ConfigReader;
+import com.codecritical.build.lib.mapping.IMapArray;
+import com.codecritical.build.lib.mapping.Mapping;
+import com.codecritical.build.lib.mapping.Plateau;
+import com.codecritical.build.lib.mapping.PlateauSet;
+import com.codecritical.build.lib.model.FastUnion;
 import com.codecritical.parts.ExportStl;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Comparator;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 @ParametersAreNonnullByDefault
