@@ -45,7 +45,7 @@ public class ConfigReader {
         return Long.parseLong(i.get());
     }
 
-    public Optional<String> asOptionalString(Config.InfiniteMachineConfig config) {
+    public Optional<String> asOptionalString(Enum config) {
         return get(config);
     }
 
@@ -110,7 +110,7 @@ public class ConfigReader {
             throw new RuntimeException("Missing config: " + key);
         }
         var o = properties.get(key);
-        return (o == null)
+        return (o == null || (o.getClass() == String.class && o.equals("")))
                 ? Optional.empty()
                 : Optional.of(o.toString());
     }

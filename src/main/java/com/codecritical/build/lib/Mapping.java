@@ -6,6 +6,7 @@ import com.google.common.annotations.VisibleForTesting;
 import javax.annotation.CheckForNull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.stream.IntStream;
 
@@ -40,8 +41,12 @@ public class Mapping {
         );
     }
 
-    /** Applies a 2D gaussian weighting.  This currently uses a fudged 1D gaussian, which is a bit wrong.  TODO  */
-    public static IMapArray gaussian(IMapArray map, OptionalDouble gaussianRadius, PlateauSet plateauSet) {
+    /**
+     * Applies a 2D gaussian weighting.
+     * <br>
+     * The area inside the plateauSet is ignored.  This will be replaced by the texture from plateauMap, or MAX is this is null.
+     */
+    public static IMapArray gaussian(IMapArray map, OptionalDouble gaussianRadius, PlateauSet plateauSet, Optional<IMapArray> plateauTextureMap) {
         if (gaussianRadius.isEmpty()) {
             return map;
         }
@@ -49,25 +54,29 @@ public class Mapping {
         // Normalise for the size of the map
         double radius = gaussianRadius.getAsDouble() * Math.sqrt(map.getISize() * map.getISize() + map.getJSize() * map.getJSize());
 
-        return getGaussianMapped(map, radius, plateauSet);
+        return getGaussianMapped(map, radius, plateauSet, plateauTextureMap);
     }
 
-    private static IMapArray getGaussianMapped(IMapArray map, double radiusConst, @CheckForNull PlateauSet plateauSet) {
+    private static IMapArray getGaussianMapped(IMapArray map, double radiusConst, @CheckForNull PlateauSet plateauSet, Optional<IMapArray> plateauTextureMap) {
 
         MapArray newMap = new MapArray(map);
 
         var gaussianMap = createGaussianMap(radiusConst);
 
-        map.streamPoints().forEach(p -> sumGaussian(newMap, map, p, gaussianMap, plateauSet));
+        map.streamPoints().forEach(p -> sumGaussian(newMap, map, p, gaussianMap, plateauSet, plateauTextureMap));
 
         return newMap;
 
     }
 
-    private static void sumGaussian(MapArray mapOut, IMapArray mapIn, MapArray.Point p, IMapArray gaussianMap, @CheckForNull PlateauSet plateauSet) {
+    private static void sumGaussian(MapArray mapOut, IMapArray mapIn, MapArray.Point p, IMapArray gaussianMap, @CheckForNull PlateauSet plateauSet, Optional<IMapArray> plateauTextureMap) {
 
         if (plateauSet != null && plateauSet.isPlateau(p)) {
-            mapOut.set(p);
+            if (plateauTextureMap.isPresent()) {
+                mapOut.set(p.i, p.j, plateauTextureMap.get().get(p.i, p.j));
+            } else {
+                mapOut.set(p);
+            }
             return;
         }
 

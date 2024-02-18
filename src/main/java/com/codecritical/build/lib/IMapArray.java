@@ -8,8 +8,6 @@ import java.util.stream.Stream;
 public interface IMapArray {
     double get(int i, int j);
 
-    boolean isMax(int i, int j);
-
     int getISize();
 
     int getJSize();

@@ -32,18 +32,20 @@ public class PlateauSet {
         Plateau[] plateau = new Plateau[1];
         Plateau allMap = new Plateau(map.size());
 
+        var max = map.getMax();
+
         map.streamPoints().forEach(p -> {
             plateau[0] = null;
             Square square = Square.getUnfoundSquare(allMap, p);
             if (square != null) {
-                testSquare(allMap, builder, map, plateau, square);
+                testSquare(allMap, builder, map, plateau, square, max);
             }
         });
 
         return builder.build();
     }
 
-    private void testSquare(Plateau allMap, ImmutableList.Builder<Plateau> builder, IMapArray map, Plateau[] plateau, @Nonnull Square s) {
+    private void testSquare(Plateau allMap, ImmutableList.Builder<Plateau> builder, IMapArray map, Plateau[] plateau, @Nonnull Square s, double max) {
 
         if (!map.isInRange(s.i0, s.j0) || !map.isInRange(s.i1, s.j1)) {
             // Not a square on the grid.
@@ -52,7 +54,7 @@ public class PlateauSet {
 
         int countMiss = 0;
         for (Plateau.PlateauBit p : s.getPlateauBits()) {
-            if (!map.isMax(p.i, p.j)) {
+            if (map.get(p.i, p.j) != max) {
                 // Fallen off the plateau.  End of tree here.
                 return;
             }
@@ -80,10 +82,10 @@ public class PlateauSet {
         s.forEach(plateau[0]::add);
 
         // Recursive call
-        testSquare(allMap, builder, map, plateau, new Square(s.i0 - 1, s.i1 - 1, s.j0, s.j1));
-        testSquare(allMap, builder, map, plateau, new Square(s.i0 + 1, s.i1 + 1, s.j0, s.j1));
-        testSquare(allMap, builder, map, plateau, new Square(s.i0, s.i1, s.j0 - 1, s.j1 - 1));
-        testSquare(allMap, builder, map, plateau, new Square(s.i0, s.i1, s.j0 + 1, s.j1 + 1));
+        testSquare(allMap, builder, map, plateau, new Square(s.i0 - 1, s.i1 - 1, s.j0, s.j1), max);
+        testSquare(allMap, builder, map, plateau, new Square(s.i0 + 1, s.i1 + 1, s.j0, s.j1), max);
+        testSquare(allMap, builder, map, plateau, new Square(s.i0, s.i1, s.j0 - 1, s.j1 - 1), max);
+        testSquare(allMap, builder, map, plateau, new Square(s.i0, s.i1, s.j0 + 1, s.j1 + 1), max);
     }
 
     public boolean isPlateau(int i, int j) {

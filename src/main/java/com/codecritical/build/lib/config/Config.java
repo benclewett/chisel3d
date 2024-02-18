@@ -24,6 +24,7 @@ public enum Config {
             Z_MAX,
             BOX_OVERLAP,
             BASE_THICKNESS,
+            PLATEAU_TEXTURE_MAP,
             MIN_PLATEAU_COEFFICIENT
         }
 

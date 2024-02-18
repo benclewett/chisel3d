@@ -10,7 +10,7 @@ public class MapArray implements IMapArray {
     final public Double[] mapArray;
     private final int iSize;
     private final int jSize;
-    private double max;
+
 
     public MapArray(int iSize, int jSize) {
         this(iSize, jSize, null);
@@ -33,14 +33,12 @@ public class MapArray implements IMapArray {
                 mapArray[n] = 0.0;
             }
         }
-        setMax();
     }
 
     public MapArray(IMapArray map) {
         this.iSize = map.getISize();
         this.jSize = map.getJSize();
         this.mapArray = map.stream().toArray(Double[]::new);
-        setMax();
     }
 
     @Override
@@ -55,21 +53,12 @@ public class MapArray implements IMapArray {
         mapArray[i + j * jSize] = z;
     }
 
-    @Override
-    public boolean isMax(int i, int j) {
-        return mapArray[i + j * jSize].equals(max);
-    }
-
     public int getISize() {
         return iSize;
     }
 
     public int getJSize() {
         return jSize;
-    }
-
-    public double getMax() {
-        return max;
     }
 
     public int size() {
@@ -92,11 +81,16 @@ public class MapArray implements IMapArray {
         return l.stream();
     }
 
-    public void setMax() {
-        this.max = Arrays.stream(mapArray)
+    public double getMax() {
+        return Arrays.stream(mapArray)
                 .filter(Objects::nonNull)
                 .max(Double::compareTo)
                 .orElse(0.0);
+    }
+
+    public IMapArray setAllValues(double z) {
+        Arrays.fill(mapArray, z);
+        return this;
     }
 
     public static class Point {

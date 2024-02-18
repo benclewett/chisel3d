@@ -63,7 +63,7 @@ class MappingTest {
         showMap(map);
         OptionalDouble radius = OptionalDouble.of(1.0);
 
-        var newMap = Mapping.gaussian(map, radius, null);
+        var newMap = Mapping.gaussian(map, radius, null, null);
 
         System.out.printf("After:%n");
         showMap(newMap);

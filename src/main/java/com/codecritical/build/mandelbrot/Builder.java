@@ -7,6 +7,7 @@ import com.codecritical.parts.ExportStl;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @ParametersAreNonnullByDefault
@@ -39,14 +40,15 @@ public class Builder {
 
         PlateauSet plateauSet = getPlateauSet(map);
 
-        map = Mapping.gaussian(map, config.asOptionalDouble(Config.Mandelbrot.GAUSSIAN_RADIUS), plateauSet);
+        var plateauMap = new PlateauMap(config, map).get();
+
+        map = Mapping.gaussian(map, config.asOptionalDouble(Config.Mandelbrot.GAUSSIAN_RADIUS), plateauSet, plateauMap);
         map = Mapping.normalise(map, true);
         logger.info("Gaussian applied.");
 
         // IBuildPrint buildPrint = new BuildPrintBox(config);
         IBuildPrint buildPrint = new BuildPrintSurface(config);
         var print = buildPrint.getPrint(map);
-
         logger.info("Print cells defined, count=" + print.size());
 
         var csg = FastUnion.fastUnion(print);

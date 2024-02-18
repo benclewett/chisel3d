@@ -38,8 +38,6 @@ public class BuildMandelbrot {
         this.map = new MapArray(iCount, jCount);
 
         buildMap();
-
-        map.setMax();
     }
 
     private void buildMap() {
