@@ -30,13 +30,13 @@ public class Builder {
 
     private void build() {
         Build.createMandelbrot(config)
-                .normalise(false)
-                .scale(IScale.toPower(config.asDouble(Config.Mandelbrot.SCALE_POWER)))
-                .showRoughMap()
-                .usePlateau()
-                .reportPlateau()
-                .applyGaussian()
-                .savePrint();
+            .normalise(false)
+            .scale(IScale.toPower(config.asDouble(Config.Mandelbrot.SCALE_POWER)))
+            .showRoughMap()
+            .usePlateau()
+            .reportPlateau()
+            .applyGaussian()
+            .savePrint();
     }
 
     static class Build {
