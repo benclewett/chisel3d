@@ -1,5 +1,6 @@
-package com.codecritical.build.lib.config;
+package com.codecritical.lib.config;
 
+import com.codecritical.build.mandelbrot.PlateauTexture;
 import com.google.common.collect.ImmutableList;
 import eu.printingin3d.javascad.coords.Dims3d;
 
@@ -13,6 +14,15 @@ public class ConfigReader {
 
     public ConfigReader(Properties properties) {
         this.properties = properties;
+    }
+
+    public ConfigReader() {
+        this.properties = new Properties();
+    }
+
+    public ConfigReader add(String name, String value) {
+        this.properties.setProperty(name.toString(), value);
+        return this;
     }
 
     public OptionalInt asOptionalInt(Enum config) {
@@ -113,6 +123,14 @@ public class ConfigReader {
         return (o == null || (o.getClass() == String.class && o.equals("")))
                 ? Optional.empty()
                 : Optional.of(o.toString());
+    }
+
+    public <T extends Enum<T>> Optional<T> asEnum(Class<T> clazz, Enum config) {
+        var val = get(config);
+        if (val.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(Enum.valueOf(clazz, val.get()));
     }
 
 }

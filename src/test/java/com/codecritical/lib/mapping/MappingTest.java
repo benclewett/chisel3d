@@ -1,8 +1,5 @@
-package com.codecritital.buld.lib;
+package com.codecritical.lib.mapping;
 
-import com.codecritical.build.lib.mapping.IMapArray;
-import com.codecritical.build.lib.mapping.MapArray;
-import com.codecritical.build.lib.mapping.Mapping;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

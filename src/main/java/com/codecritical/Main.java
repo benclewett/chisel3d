@@ -11,7 +11,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        if (Arrays.stream(args).count() == 0) {
+        if (args.length == 0) {
             throw new RuntimeException("Please pass the model type as the only argument: " + Arrays.asList(EModel.values()));
         }
 

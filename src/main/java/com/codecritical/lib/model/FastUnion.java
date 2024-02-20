@@ -1,4 +1,4 @@
-package com.codecritical.build.lib.model;
+package com.codecritical.lib.model;
 
 import com.google.common.collect.ImmutableList;
 import eu.printingin3d.javascad.vrl.CSG;

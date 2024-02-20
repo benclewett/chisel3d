@@ -1,6 +1,5 @@
-package com.codecritical.build.lib.mapping;
+package com.codecritical.lib.mapping;
 
-import com.codecritical.build.mandelbrot.IScale;
 import com.google.common.annotations.VisibleForTesting;
 
 import javax.annotation.CheckForNull;
@@ -46,7 +45,7 @@ public class Mapping {
      * <br>
      * The area inside the plateauSet is ignored.  This will be replaced by the texture from plateauMap, or MAX is this is null.
      */
-    public static IMapArray gaussian(IMapArray map, OptionalDouble gaussianRadius, PlateauSet plateauSet, Optional<IMapArray> plateauTextureMap) {
+    public static IMapArray gaussian(IMapArray map, OptionalDouble gaussianRadius, PlateauCollections plateauSet, Optional<IMapArray> plateauTextureMap) {
         if (gaussianRadius.isEmpty()) {
             return map;
         }
@@ -57,7 +56,7 @@ public class Mapping {
         return getGaussianMapped(map, radius, plateauSet, plateauTextureMap);
     }
 
-    private static IMapArray getGaussianMapped(IMapArray map, double radiusConst, @CheckForNull PlateauSet plateauSet, Optional<IMapArray> plateauTextureMap) {
+    private static IMapArray getGaussianMapped(IMapArray map, double radiusConst, @CheckForNull PlateauCollections plateauSet, Optional<IMapArray> plateauTextureMap) {
 
         MapArray newMap = new MapArray(map);
 
@@ -69,7 +68,7 @@ public class Mapping {
 
     }
 
-    private static void sumGaussian(MapArray mapOut, IMapArray mapIn, MapArray.Point p, IMapArray gaussianMap, @CheckForNull PlateauSet plateauSet, Optional<IMapArray> plateauTextureMap) {
+    private static void sumGaussian(MapArray mapOut, IMapArray mapIn, MapArray.Point p, IMapArray gaussianMap, @CheckForNull PlateauCollections plateauSet, Optional<IMapArray> plateauTextureMap) {
 
         if (plateauSet != null && plateauSet.isPlateau(p)) {
             if (plateauTextureMap.isPresent()) {
@@ -115,7 +114,7 @@ public class Mapping {
     }
 
     @VisibleForTesting
-    public static IMapArray createGaussianMap(double radiusConst) {
+    static IMapArray createGaussianMap(double radiusConst) {
 
         int mapSize = (int)(radiusConst * 5);
         if (mapSize < 3) {

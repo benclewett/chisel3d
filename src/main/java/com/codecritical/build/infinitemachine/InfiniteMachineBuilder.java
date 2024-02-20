@@ -1,7 +1,7 @@
 package com.codecritical.build.infinitemachine;
 
-import com.codecritical.build.lib.config.Config;
-import com.codecritical.build.lib.config.ConfigReader;
+import com.codecritical.lib.config.Config;
+import com.codecritical.lib.config.ConfigReader;
 import com.codecritical.parts.*;
 import com.google.common.collect.ImmutableMap;
 import eu.printingin3d.javascad.coords.Coords3d;

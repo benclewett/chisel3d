@@ -1,4 +1,4 @@
-package com.codecritical.build.lib.mapping;
+package com.codecritical.lib.mapping;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
@@ -11,19 +11,18 @@ import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 @ParametersAreNonnullByDefault
-public class PlateauSet {
+public class PlateauCollections {
 
     final ImmutableList<Plateau> plateaus;
 
     /** Clone a plateau set */
-    public PlateauSet(Stream<Plateau> plateauStream) {
+    public PlateauCollections(Stream<Plateau> plateauStream) {
         plateaus = plateauStream.collect(ImmutableList.toImmutableList());
     }
 
     /** Create new plateau set from map. */
-    public PlateauSet(IMapArray map) {
+    public PlateauCollections(IMapArray map) {
         plateaus = buildPlateau(map);
-       // plateaus.forEach(Plateau::trimScraggly);
     }
 
     private ImmutableList<Plateau> buildPlateau(IMapArray map) {

@@ -1,4 +1,4 @@
-package com.codecritical.build.lib.model;
+package com.codecritical.lib.model;
 
 import com.google.common.base.MoreObjects;
 import eu.printingin3d.javascad.coords.Coords3d;

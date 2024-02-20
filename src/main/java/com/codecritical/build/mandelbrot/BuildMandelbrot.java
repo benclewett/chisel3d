@@ -1,9 +1,9 @@
 package com.codecritical.build.mandelbrot;
 
-import com.codecritical.build.lib.mapping.IMapArray;
-import com.codecritical.build.lib.config.Config;
-import com.codecritical.build.lib.config.ConfigReader;
-import com.codecritical.build.lib.mapping.MapArray;
+import com.codecritical.lib.mapping.IMapArray;
+import com.codecritical.lib.config.Config;
+import com.codecritical.lib.config.ConfigReader;
+import com.codecritical.lib.mapping.MapArray;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.logging.Logger;
@@ -19,13 +19,13 @@ public class BuildMandelbrot {
     MapArray map;
 
     public BuildMandelbrot(ConfigReader config) {
-        this.maxIterations = config.asInt(Config.Mandelbrot.MAX_ITERATIONS);
-        this.i0 = config.asDouble(Config.Mandelbrot.I0);
-        this.i1 = config.asDouble(Config.Mandelbrot.I1);
-        this.j0 = config.asDouble(Config.Mandelbrot.J0);
-        this.j1 = config.asDouble(Config.Mandelbrot.J1);
-        this.iCount = config.asInt(Config.Mandelbrot.I_COUNT);
-        this.jCount = config.asInt(Config.Mandelbrot.J_COUNT);
+        this.maxIterations = config.asInt(Config.Mandelbrot.Model.MAX_ITERATIONS);
+        this.i0 = config.asDouble(Config.Mandelbrot.Model.I0);
+        this.i1 = config.asDouble(Config.Mandelbrot.Model.I1);
+        this.j0 = config.asDouble(Config.Mandelbrot.Model.J0);
+        this.j1 = config.asDouble(Config.Mandelbrot.Model.J1);
+        this.iCount = config.asInt(Config.Mandelbrot.Model.I_COUNT);
+        this.jCount = config.asInt(Config.Mandelbrot.Model.J_COUNT);
 
         logger.info("MaxIterations: " + maxIterations);
         logger.info("i0=" + i0 + ", i1=" + i1);

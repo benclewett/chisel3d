@@ -2,8 +2,8 @@ package com.codecritical;
 
 import com.codecritical.build.infinitemachine.InfiniteMachineBuilder;
 import com.codecritical.build.mandelbrot.Builder;
-import com.codecritical.build.lib.config.ConfigReader;
-import com.codecritical.build.lib.config.Config;
+import com.codecritical.lib.config.ConfigReader;
+import com.codecritical.lib.config.Config;
 
 import java.io.FileInputStream;
 import java.util.Properties;

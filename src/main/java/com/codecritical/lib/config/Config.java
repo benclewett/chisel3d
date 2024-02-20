@@ -1,21 +1,30 @@
-package com.codecritical.build.lib.config;
+package com.codecritical.lib.config;
 
 public enum Config {
     RANDOM_SEED;
 
     public enum Mandelbrot {
-        OUTPUT_FILENAME,
-        MAX_ITERATIONS,
-        I0,
-        I1,
-        J0,
-        J1,
-        I_COUNT,
-        J_COUNT,
-        SCALE_POWER,
-        GAUSSIAN_RADIUS;
+        ;
+
+        public enum Model {
+            MAX_ITERATIONS,
+            I0,
+            I1,
+            J0,
+            J1,
+            I_COUNT,
+            J_COUNT;
+        }
+
+        public enum Processing {
+            SCALE_POWER,
+            PLATEAU_TEXTURE_MAP,
+            MIN_PLATEAU_COEFFICIENT,
+            GAUSSIAN_RADIUS;
+        }
 
         public enum Print {
+            OUTPUT_FILENAME,
             X_MIN,
             X_MAX,
             Y_MIN,
@@ -23,11 +32,8 @@ public enum Config {
             Z_MIN,
             Z_MAX,
             BOX_OVERLAP,
-            BASE_THICKNESS,
-            PLATEAU_TEXTURE_MAP,
-            MIN_PLATEAU_COEFFICIENT
+            BASE_THICKNESS;
         }
-
     }
 
     public enum InfiniteMachineConfig {

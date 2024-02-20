@@ -1,4 +1,4 @@
-package com.codecritical.build.lib.mapping;
+package com.codecritical.lib.mapping;
 
 import java.util.OptionalDouble;
 import java.util.stream.Stream;

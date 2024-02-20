@@ -1,8 +1,8 @@
 package com.codecritical.build.mandelbrot;
 
-import com.codecritical.build.lib.mapping.IMapArray;
-import com.codecritical.build.lib.config.Config;
-import com.codecritical.build.lib.config.ConfigReader;
+import com.codecritical.lib.mapping.IMapArray;
+import com.codecritical.lib.config.Config;
+import com.codecritical.lib.config.ConfigReader;
 import com.google.common.collect.ImmutableList;
 import eu.printingin3d.javascad.coords.Coords3d;
 import eu.printingin3d.javascad.coords.Dims3d;
@@ -29,9 +29,9 @@ public class BuildPrintBox implements IBuildPrint {
         this.yMax = config.asDouble(Config.Mandelbrot.Print.Y_MAX);
         this.zMin = config.asDouble(Config.Mandelbrot.Print.Z_MIN);
         this.zMax = config.asDouble(Config.Mandelbrot.Print.Z_MAX);
-        this.maxIterations = config.asInt(Config.Mandelbrot.MAX_ITERATIONS);
-        this.iCount = config.asInt(Config.Mandelbrot.I_COUNT);
-        this.jCount = config.asInt(Config.Mandelbrot.J_COUNT);
+        this.maxIterations = config.asInt(Config.Mandelbrot.Model.MAX_ITERATIONS);
+        this.iCount = config.asInt(Config.Mandelbrot.Model.I_COUNT);
+        this.jCount = config.asInt(Config.Mandelbrot.Model.J_COUNT);
         this.overlap = config.asDouble(Config.Mandelbrot.Print.BOX_OVERLAP);
         this.baseThickness = config.asInt(Config.Mandelbrot.Print.BASE_THICKNESS);
 

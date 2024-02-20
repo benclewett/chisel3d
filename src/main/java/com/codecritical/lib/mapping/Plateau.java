@@ -1,11 +1,9 @@
-package com.codecritical.build.lib.mapping;
+package com.codecritical.lib.mapping;
 
 import com.google.common.base.MoreObjects;
 
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /* A selection of one or more adjacent points which are at max-iterations. */
 public class Plateau {
@@ -33,46 +31,23 @@ public class Plateau {
         return (double)plateau.size() / mapSize;
     }
 
-    /**
-     * Trim exposed points with only one neighbour.  These don't print well
-     * and also can chain to form scraggly chains which break the gaussian smoothing.
-     */
-    public void trimScraggly() {
-        do {
-            if (plateau.size() <= 3) {
-                plateau.clear();
-                break;
-            }
-            var scraggly = findScraggly();
-            if (scraggly.size() == 0) {
-                break;
-            } else {
-                scraggly.forEach(plateau::remove);
-            }
-        } while (plateau.size() > 0);
-    }
-
-    private Set<PlateauBit> findScraggly() {
-        return plateau.stream()
-                .filter(this::isScraggly)
-                .collect(Collectors.toSet());
-    }
-
-    private boolean isScraggly(PlateauBit p) {
-        int c = 0;
-        c += (plateau.contains(new PlateauBit(p.i, p.j - 1))) ? 1 : 0;
-        c += (plateau.contains(new PlateauBit(p.i, p.j + 1))) ? 1 : 0;
-        c += (plateau.contains(new PlateauBit(p.i + 1, p.j))) ? 1 : 0;
-        c += (plateau.contains(new PlateauBit(p.i - 1, p.j))) ? 1 : 0;
-        return (c <= 1);
-    }
-
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("size", size())
                 .add("sizePercent", String.format("%.3f%%", sizeCoefficient() * 100.0))
                 .toString();
+    }
+
+    public IMapArray asMapArray() {
+        MapArray mapOut = new MapArray(
+                plateau.stream().map(p -> p.i).max(Integer::compare).get(),
+                plateau.stream().map(p -> p.j).max(Integer::compare).get()
+        );
+        mapOut.streamPoints().forEach(p -> {
+            mapOut.set(p.i, p.j, (isSet(p.i, p.j)) ? 1.0 : 0.0);
+        });
+        return mapOut;
     }
 
     static class PlateauBit {

@@ -1,4 +1,4 @@
-package com.codecritital;
+package com.codecritical;
 
 import eu.printingin3d.javascad.basic.Radius;
 import eu.printingin3d.javascad.coords.Coords3d;

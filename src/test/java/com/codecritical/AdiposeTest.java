@@ -1,4 +1,4 @@
-package com.codecritital;
+package com.codecritical;
 
 import com.aspose.threed.*;
 import org.junit.jupiter.api.AfterEach;

@@ -1,4 +1,4 @@
-package com.codecritical.build.mandelbrot;
+package com.codecritical.lib.mapping;
 
 @FunctionalInterface
 public interface IScale {

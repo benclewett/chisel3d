@@ -15,26 +15,35 @@ Config.InfiniteMachineConfig.ShaftBoxBranch.SIZE_SCALE_MAX=0.9
 Config.InfiniteMachineConfig.ShaftBoxBranch.SHAFT_LENGTH_MAX=4.0
 Config.InfiniteMachineConfig.ShaftBoxBranch.SHAFT_LENGTH_MIN=0.5
 
-Config.Mandelbrot.OUTPUT_FILENAME=mandelbrot.stl
-Config.Mandelbrot.MAX_ITERATIONS=400
-Config.Mandelbrot.I0=-0.7513
-Config.Mandelbrot.I1=-0.7413
-Config.Mandelbrot.J0=0.1050
-Config.Mandelbrot.J1=0.1146
-Config.Mandelbrot.I_COUNT=1000
-Config.Mandelbrot.J_COUNT=1000
-Config.Mandelbrot.SCALE_POWER=0.2
+#
+# Mandelbrot
+#
 
+Config.Mandelbrot.Model.MAX_ITERATIONS=400
+Config.Mandelbrot.Model.I0=-0.7513
+Config.Mandelbrot.Model.I1=-0.7413
+Config.Mandelbrot.Model.J0=0.1050
+Config.Mandelbrot.Model.J1=0.1146
+Config.Mandelbrot.Model.I_COUNT=1000
+Config.Mandelbrot.Model.J_COUNT=1000
+
+Config.Mandelbrot.Processing.SCALE_POWER=0.2
+# Plateau's of 0.1% area or greater are respected and ignored from Gaussian smoothing.
+Config.Mandelbrot.Processing.MIN_PLATEAU_COEFFICIENT=0.001
+# Plateau applied with texture, HOLLOW -> hollow out the plateau leaving a border.
+Config.Mandelbrot.Processing.PLATEAU_TEXTURE_MAP=HOLLOW
+# Gaussian Radius as coefficient of the size.  Optional.  0.005 (0.5%) is a good option.
+Config.Mandelbrot.Processing.GAUSSIAN_RADIUS=0.005
+
+# All dimensions are mm or coefficients.
 Config.Mandelbrot.Print.X_MIN=-50
 Config.Mandelbrot.Print.X_MAX=50
 Config.Mandelbrot.Print.Y_MIN=-50
 Config.Mandelbrot.Print.Y_MAX=50
 Config.Mandelbrot.Print.Z_MIN=0
 Config.Mandelbrot.Print.Z_MAX=50
+# Base is added onto the Z range.
 Config.Mandelbrot.Print.BASE_THICKNESS=5
+# When building map from box's, overlap to avoid union errors, here by 1%
 Config.Mandelbrot.Print.BOX_OVERLAP=0.01
-// Plateau's of 0.2% or greater are respected and ignored from Gaussian smoothing.
-Config.Mandelbrot.Print.MIN_PLATEAU_COEFFICIENT=0.001
-Config.Mandelbrot.Print.PLATEAU_TEXTURE_MAP=HIGH
-// Gaussian Radius as coefficient of the size.  Optional.  0.005 (or 0.5%) is a good option.
-Config.Mandelbrot.GAUSSIAN_RADIUS=0.005
+Config.Mandelbrot.Print.OUTPUT_FILENAME=mandelbrot.stl

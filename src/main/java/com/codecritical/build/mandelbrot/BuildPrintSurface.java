@@ -1,9 +1,9 @@
 package com.codecritical.build.mandelbrot;
 
-import com.codecritical.build.lib.config.Config;
-import com.codecritical.build.lib.config.ConfigReader;
-import com.codecritical.build.lib.mapping.IMapArray;
-import com.codecritical.build.lib.model.Coords3dCache;
+import com.codecritical.lib.config.Config;
+import com.codecritical.lib.config.ConfigReader;
+import com.codecritical.lib.mapping.IMapArray;
+import com.codecritical.lib.model.Coords3dCache;
 import com.google.common.collect.ImmutableList;
 import eu.printingin3d.javascad.coords.Coords3d;
 import eu.printingin3d.javascad.vrl.CSG;
