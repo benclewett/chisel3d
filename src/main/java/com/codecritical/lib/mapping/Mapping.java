@@ -8,6 +8,7 @@ import com.google.common.annotations.VisibleForTesting;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.meta.Exhaustive;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.OptionalDouble;
@@ -49,7 +50,7 @@ public class Mapping {
      * <br>
      * The area inside the plateauSet is ignored.  This will be replaced by the texture from plateauMap, or MAX is this is null.
      */
-    public static IMapArray gaussian(IMapArray map, OptionalDouble gaussianRadius, PlateauCollections plateauSet, Optional<IMapArray> plateauTextureMap) {
+    public static IMapArray gaussian(IMapArray map, OptionalDouble gaussianRadius, @CheckForNull PlateauCollections plateauSet, @CheckForNull Optional<IMapArray> plateauTextureMap) {
         if (gaussianRadius.isEmpty()) {
             return map;
         }
