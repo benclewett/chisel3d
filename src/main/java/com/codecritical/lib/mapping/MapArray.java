@@ -7,14 +7,15 @@ package com.codecritical.lib.mapping;
 import com.google.common.base.MoreObjects;
 
 import javax.annotation.CheckForNull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.stream.Stream;
 
+@ParametersAreNonnullByDefault
 public class MapArray implements IMapArray {
-    final public Double[] mapArray;
+    private final Double[] mapArray;
     private final int iSize;
     private final int jSize;
-
 
     public MapArray(int iSize, int jSize) {
         this(iSize, jSize, null);
@@ -78,7 +79,7 @@ public class MapArray implements IMapArray {
     public Stream<Point> streamPoints() {
         List<Point> l = new ArrayList<>();
         for (int i = 0; i < iSize; i++) {
-            for (int j = 0; j < iSize; j++) {
+            for (int j = 0; j < jSize; j++) {
                 l.add(new Point(i, j, get(i, j)));
             }
         }
@@ -127,5 +128,14 @@ public class MapArray implements IMapArray {
     @Override
     public boolean isInRange(int i, int j) {
         return (i >= 0 && j >= 0 && i < iSize && j < jSize);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("i", iSize)
+                .add("j", jSize)
+                .add("size", mapArray.length)
+                .toString();
     }
 }

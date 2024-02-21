@@ -4,9 +4,11 @@ package com.codecritical.lib.mapping;
  * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
  */
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.OptionalDouble;
 import java.util.stream.Stream;
 
+@ParametersAreNonnullByDefault
 public interface IMapArray {
     double get(int i, int j);
 

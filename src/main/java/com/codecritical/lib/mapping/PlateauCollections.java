@@ -4,6 +4,7 @@ package com.codecritical.lib.mapping;
  * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
  */
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 
@@ -17,7 +18,7 @@ import java.util.stream.Stream;
 @ParametersAreNonnullByDefault
 public class PlateauCollections {
 
-    final ImmutableList<Plateau> plateaus;
+    private final ImmutableList<Plateau> plateaus;
 
     /** Clone a plateau set */
     public PlateauCollections(Stream<Plateau> plateauStream) {
@@ -113,6 +114,24 @@ public class PlateauCollections {
         return MoreObjects.toStringHelper(this)
                 .add("size", this.plateaus.size())
                 .toString();
+    }
+
+    @VisibleForTesting
+    public IMapArray asMapArray() {
+        var max = new int[] {0,0};
+        plateaus.forEach(plateau -> plateau.steam().forEach(point -> {
+            if (point.i > max[0]) {
+                max[0] = point.i;
+            }
+            if (point.j > max[1]) {
+                max[1] = point.j;
+            }
+        }));
+        var map = new MapArray(max[0] + 1, max[1] + 1);
+        map.streamPoints().forEach(point ->
+                map.set(point.i, point.j, (isPlateau(point)) ? 1.0 : 0.0)
+        );
+        return map;
     }
 
     record Square(int i0, int i1, int j0, int j1) {

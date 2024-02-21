@@ -17,6 +17,10 @@ import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/*
+ * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
+ */
+
 public class GcsgTest {
 
     static final Logger logger = Logger.getLogger("");

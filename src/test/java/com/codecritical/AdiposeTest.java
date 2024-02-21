@@ -1,5 +1,9 @@
 package com.codecritical;
 
+/*
+ * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
+ */
+
 import com.aspose.threed.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

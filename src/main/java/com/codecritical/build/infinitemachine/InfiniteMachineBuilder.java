@@ -14,18 +14,19 @@ import eu.printingin3d.javascad.tranform.ITransformation;
 import eu.printingin3d.javascad.tranform.TransformationFactory;
 import eu.printingin3d.javascad.vrl.CSG;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
+@ParametersAreNonnullByDefault
 public class InfiniteMachineBuilder {
     static final Logger logger = Logger.getLogger("");
 
     private final ShaftMultiBox root;
     private final Random random;
     private final ImmutableMap<String, List<IParts>> parts;
-    private final ConfigReader config;
     private final CSG csg;
     private final int minCount;
     private final int maxCount;
@@ -37,8 +38,6 @@ public class InfiniteMachineBuilder {
     private final double shaftLenMax;
 
     public InfiniteMachineBuilder(ConfigReader config, Random random) {
-
-        this.config = config;
         this.depth = config.asInt(Config.InfiniteMachineConfig.DEPTH);
         this.random = random;
 
@@ -79,7 +78,7 @@ public class InfiniteMachineBuilder {
 
         addBranches(root, branchDepth, items);
 
-        logger.info("Part count: " + items.values().stream().flatMap(Collection::stream).count());
+        logger.info("Part count: " + items.values().stream().mapToLong(Collection::size).sum());
 
         return ImmutableMap.copyOf(items);
     }

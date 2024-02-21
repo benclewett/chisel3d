@@ -9,11 +9,13 @@ import com.codecritical.build.mandelbrot.Builder;
 import com.codecritical.lib.config.ConfigReader;
 import com.codecritical.lib.config.Config;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.Random;
 import java.util.logging.Logger;
 
+@ParametersAreNonnullByDefault
 public class Container {
     static final Logger logger = Logger.getLogger("");
     private static final String CONFIG_FILE = "config.default";
@@ -28,12 +30,8 @@ public class Container {
         random = new Random(config.asLong(Config.RANDOM_SEED));
 
         switch (model) {
-            case INFINITE_MACHINE -> {
-                new InfiniteMachineBuilder(config, random);
-            }
-            case MANDELBROT -> {
-                new Builder(config);
-            }
+            case INFINITE_MACHINE -> new InfiniteMachineBuilder(config, random);
+            case MANDELBROT -> new Builder(config);
             default -> throw new IllegalStateException("Unexpected value: " + model);
         }
     }

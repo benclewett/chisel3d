@@ -7,9 +7,11 @@ package com.codecritical.lib.model;
 import com.google.common.base.MoreObjects;
 import eu.printingin3d.javascad.coords.Coords3d;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashSet;
 import java.util.stream.Stream;
 
+@ParametersAreNonnullByDefault
 public class Coords3dCache {
 
     final HashSet<Coords3d> cache = new HashSet<>();

@@ -7,6 +7,9 @@ package com.codecritical.parts;
 import eu.printingin3d.javascad.coords.Dims3d;
 import eu.printingin3d.javascad.vrl.CSG;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public interface IParts {
 
     CSG getCsg();

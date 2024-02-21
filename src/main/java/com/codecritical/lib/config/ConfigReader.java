@@ -7,11 +7,12 @@ package com.codecritical.lib.config;
 import com.google.common.collect.ImmutableList;
 import eu.printingin3d.javascad.coords.Dims3d;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.logging.Logger;
 
-public class
-ConfigReader {
+@ParametersAreNonnullByDefault
+public class ConfigReader {
     static final Logger logger = Logger.getLogger("");
 
     final Properties properties;
@@ -116,7 +117,7 @@ ConfigReader {
     }
 
     private Optional<String> get(Enum config) {
-        String key = config.getClass().getName() + "." + config.toString();
+        String key = config.getClass().getName() + "." + config;
         key = key.replace("$", ".");
         key = key.substring(key.indexOf("Config"));
         if (!properties.containsKey(key)) {

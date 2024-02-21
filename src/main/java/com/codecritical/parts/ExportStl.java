@@ -7,12 +7,14 @@ package com.codecritical.parts;
 import eu.printingin3d.javascad.vrl.CSG;
 import eu.printingin3d.javascad.vrl.export.StlBinaryFile;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@ParametersAreNonnullByDefault
 public class ExportStl {
     static final Logger logger = Logger.getLogger("");
 

@@ -6,10 +6,13 @@ package com.codecritical.lib.mapping;
 
 import com.google.common.base.MoreObjects;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.stream.Stream;
 
-/* A selection of one or more adjacent points which are at max-iterations. */
+/** A selection of one or more adjacent points which are at max-iterations height. */
+@ParametersAreNonnullByDefault
 public class Plateau {
 
     final HashSet<PlateauBit> plateau = new HashSet<>();
@@ -43,15 +46,8 @@ public class Plateau {
                 .toString();
     }
 
-    public IMapArray asMapArray() {
-        MapArray mapOut = new MapArray(
-                plateau.stream().map(p -> p.i).max(Integer::compare).get(),
-                plateau.stream().map(p -> p.j).max(Integer::compare).get()
-        );
-        mapOut.streamPoints().forEach(p -> {
-            mapOut.set(p.i, p.j, (isSet(p.i, p.j)) ? 1.0 : 0.0);
-        });
-        return mapOut;
+    public Stream<PlateauBit> steam() {
+        return plateau.stream();
     }
 
     static class PlateauBit {

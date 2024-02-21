@@ -1,30 +1,46 @@
 package com.codecritical.build.mandelbrot;
 
-import com.codecritical.lib.config.Config;
+/*
+ * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
+ */
+
 import com.codecritical.lib.config.ConfigReader;
 import com.codecritical.lib.mapping.IMapArray;
 import com.codecritical.lib.mapping.MapArray;
-import com.codecritical.lib.mapping.Plateau;
 import com.codecritical.lib.mapping.PlateauCollections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Properties;
+import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
 class PlateauTextureTest {
 
+    static final Logger logger = Logger.getLogger("");
+
     static final int MAP_SIZE = 20;
     private static final double MIN = 0.0;
     private static final double MAX = 1.0;
-    IMapArray map;
+    private IMapArray map;
 
     @BeforeEach
     void beforeEach() {
         var mapNew = new MapArray(MAP_SIZE, MAP_SIZE);
         mapNew.setAllValues(MIN);
-        IntStream.range(5, MAP_SIZE - 5).forEach(i ->
+        // Hole touching edge
+        IntStream.range(2, 10).forEach(i ->
                 IntStream.range(0, MAP_SIZE - 5).forEach(j ->
+                        mapNew.set(i, j, MAX)
+                )
+        );
+        // True holes
+        IntStream.range(12, 18).forEach(i ->
+                IntStream.range(2, 8).forEach(j ->
+                        mapNew.set(i, j, MAX)
+                )
+        );
+        IntStream.range(12, 17).forEach(i ->
+                IntStream.range(10, 15).forEach(j ->
                         mapNew.set(i, j, MAX)
                 )
         );
@@ -38,10 +54,7 @@ class PlateauTextureTest {
 
         PlateauCollections plateauCollection = new PlateauCollections(map);
 
-        var plateauMap = plateauCollection.stream()
-                .findFirst()
-                .map(Plateau::asMapArray)
-                .get();
+        IMapArray plateauMap = plateauCollection.asMapArray();
 
         showMap("Plateau (as a map)", plateauMap);
 
@@ -54,40 +67,42 @@ class PlateauTextureTest {
 
         var plateauTexture = new PlateauTexture(config, map, plateauCollection).getTexture(0.5);
 
-        var texture = plateauTexture.get();
+        var texture = plateauTexture.orElse(null);
+
+        if (texture == null) {
+            throw new RuntimeException("texture is null");
+        }
 
         showMap("Texture", texture);
 
         MapArray mapUnion = new MapArray(map.getISize(), map.getJSize());
-        mapUnion.streamPoints().forEach(p -> {
-            mapUnion.set(
-                    p.i,
-                    p.j,
-                (plateauCollection.isPlateau(p)) ? texture.get(p.i, p.j) : map.get(p.i, p.j));
-        });
+        mapUnion.streamPoints().forEach(p -> mapUnion.set(
+                p.i,
+                p.j,
+                (plateauCollection.isPlateau(p)) ? texture.get(p.i, p.j) : map.get(p.i, p.j))
+        );
 
         showMap("Union", mapUnion);
-
     }
 
-
     private void showMap(String title, IMapArray m) {
-        System.out.println(title);
+        StringBuilder sb = new StringBuilder();
+        sb.append(title);
         IntStream.range(0, m.getJSize()).forEach(j -> {
-            StringBuilder sb = new StringBuilder();
-            sb.append("    ");
-            IntStream.range(0, m.getISize()).forEach(i -> sb.append(mapToChar(m.get(i, j))));
-            System.out.println(sb.toString());
+            sb.append("\r\n    ");
+            IntStream.range(0, m.getISize())
+                    .forEach(i -> sb.append(mapToChar(m.get(i, j))));
         });
+        logger.info(sb.toString());
     }
 
     private String mapToChar(double v) {
         if (v == MIN) {
-            return "..";
+            return ". ";
         } else if (v == MAX) {
-            return "##";
+            return "[]";
         } else {
-            return "**";
+            return "<>";
         }
     }
 }

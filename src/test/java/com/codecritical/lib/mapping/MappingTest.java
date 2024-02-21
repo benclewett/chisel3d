@@ -1,5 +1,9 @@
 package com.codecritical.lib.mapping;
 
+/*
+ * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
+ */
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -23,7 +27,7 @@ class MappingTest {
             sum += g / 10.0;
             System.out.printf("| %6.1f | %5.5f | %5.5f |%n",
                     r, g, sum);
-        };
+        }
 
         System.out.println("+--------+---------+---------+");
 
