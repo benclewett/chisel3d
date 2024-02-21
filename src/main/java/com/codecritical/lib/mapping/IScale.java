@@ -1,5 +1,9 @@
 package com.codecritical.lib.mapping;
 
+/*
+ * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
+ */
+
 @FunctionalInterface
 public interface IScale {
     double scale(double d);

@@ -1,5 +1,9 @@
 package com.codecritical.lib.config;
 
+/*
+ * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
+ */
+
 public enum Config {
     RANDOM_SEED;
 

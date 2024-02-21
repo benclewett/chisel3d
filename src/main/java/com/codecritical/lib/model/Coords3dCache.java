@@ -1,5 +1,9 @@
 package com.codecritical.lib.model;
 
+/*
+ * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
+ */
+
 import com.google.common.base.MoreObjects;
 import eu.printingin3d.javascad.coords.Coords3d;
 

@@ -1,5 +1,9 @@
 package com.codecritical.parts;
 
+/*
+ * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
+ */
+
 import eu.printingin3d.javascad.coords.Dims3d;
 import eu.printingin3d.javascad.models.Cube;
 import eu.printingin3d.javascad.tranform.TransformationFactory;

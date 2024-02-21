@@ -1,5 +1,9 @@
 package com.codecritical.lib.mapping;
 
+/*
+ * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
+ */
+
 import com.google.common.annotations.VisibleForTesting;
 
 import javax.annotation.CheckForNull;

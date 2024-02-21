@@ -1,5 +1,9 @@
 package com.codecritical.parts;
 
+/*
+ * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
+ */
+
 import eu.printingin3d.javascad.vrl.CSG;
 import eu.printingin3d.javascad.vrl.export.StlBinaryFile;
 

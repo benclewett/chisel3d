@@ -1,13 +1,17 @@
 package com.codecritical.lib.config;
 
-import com.codecritical.build.mandelbrot.PlateauTexture;
+/*
+ * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
+ */
+
 import com.google.common.collect.ImmutableList;
 import eu.printingin3d.javascad.coords.Dims3d;
 
 import java.util.*;
 import java.util.logging.Logger;
 
-public class ConfigReader {
+public class
+ConfigReader {
     static final Logger logger = Logger.getLogger("");
 
     final Properties properties;
@@ -21,7 +25,7 @@ public class ConfigReader {
     }
 
     public ConfigReader add(String name, String value) {
-        this.properties.setProperty(name.toString(), value);
+        this.properties.setProperty(name, value);
         return this;
     }
 

@@ -1,5 +1,9 @@
 package com.codecritical;
 
+/*
+ * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
+ */
+
 import java.util.Arrays;
 
 public class Main {

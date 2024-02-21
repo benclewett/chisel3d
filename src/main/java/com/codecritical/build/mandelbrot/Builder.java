@@ -1,5 +1,9 @@
 package com.codecritical.build.mandelbrot;
 
+/*
+ * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
+ */
+
 import com.codecritical.lib.config.Config;
 import com.codecritical.lib.config.ConfigReader;
 import com.codecritical.lib.mapping.*;
@@ -40,6 +44,8 @@ public class Builder {
 
     static class Build {
 
+        static final double HOLLOW_DEPTH=0.0;
+
         IMapArray map;
         final ConfigReader config;
         Optional<IMapArray> plateauTexture = Optional.empty();
@@ -76,7 +82,7 @@ public class Builder {
 
             plateauCollection = getPlateauCollection(map);
 
-            plateauTexture = new PlateauTexture(config, map, plateauCollection).getTexture(0.0);
+            plateauTexture = new PlateauTexture(config, map, plateauCollection).getTexture(HOLLOW_DEPTH);
 
             return this;
         }

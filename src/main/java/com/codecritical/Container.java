@@ -1,5 +1,9 @@
 package com.codecritical;
 
+/*
+ * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
+ */
+
 import com.codecritical.build.infinitemachine.InfiniteMachineBuilder;
 import com.codecritical.build.mandelbrot.Builder;
 import com.codecritical.lib.config.ConfigReader;
