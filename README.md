@@ -12,6 +12,7 @@ Licenced under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL 3.0</a
 <img src="images/mandelbrot_hollow.png" height="200" width="300" />
 
 <pre>
+Config.Mandelbrot.Model.MAX_ITERATIONS=400
 Config.Mandelbrot.Model.I0=-2.1
 Config.Mandelbrot.Model.I1=0.9
 Config.Mandelbrot.Model.J0=-1.3
