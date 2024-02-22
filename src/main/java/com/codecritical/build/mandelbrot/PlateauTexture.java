@@ -26,7 +26,7 @@ public class PlateauTexture {
     static final Logger logger = Logger.getLogger("");
 
     /** HOLE texture, where a hole when more than this mm from the edge of the plateau. */
-    final static double HOLE_COUNT_RADIUS = 1.0;
+    // final static double HOLE_COUNT_RADIUS = 1.0;
     final static double HIGH = 1.0;
     final static double LOW = 0.0;
 
@@ -35,6 +35,7 @@ public class PlateauTexture {
     final IMapArray map;
     final PlateauCollections plateauCollection;
     final int holeRadiosCountOnMap;
+    final double holeCountRadius;
 
     enum ETextureName {
         NONE,
@@ -49,7 +50,8 @@ public class PlateauTexture {
         this.plateauCollection = plateauCollection;
         this.textureMapName = config.asEnum(ETextureName.class, Config.Mandelbrot.Processing.PLATEAU_TEXTURE_MAP)
                 .orElse(ETextureName.NONE);
-        this.holeRadiosCountOnMap = (int)(HOLE_COUNT_RADIUS /
+        this.holeCountRadius = config.asDouble(Config.Mandelbrot.Processing.PLATEAU_HOLLOW_RADIUS);
+        this.holeRadiosCountOnMap = (int)(holeCountRadius /
                 (config.asDouble(Config.Mandelbrot.Print.X_MAX) - config.asDouble(Config.Mandelbrot.Print.X_MIN))
                 * map.getISize());
         logger.info(this.toString());
@@ -131,7 +133,7 @@ public class PlateauTexture {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("HOLE_COUNT_RADIUS", HOLE_COUNT_RADIUS)
+                .add("holeCountRadius", holeCountRadius)
                 .add("holeRadiusCountOnMap", holeRadiosCountOnMap)
                 .add("plateauCollection.size", plateauCollection.size())
                 .add("textureMapName", textureMapName)

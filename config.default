@@ -19,19 +19,20 @@ Config.InfiniteMachineConfig.ShaftBoxBranch.SHAFT_LENGTH_MIN=0.5
 # Mandelbrot
 #
 
-Config.Mandelbrot.Model.MAX_ITERATIONS=400
-Config.Mandelbrot.Model.I0=-0.7513
-Config.Mandelbrot.Model.I1=-0.7413
-Config.Mandelbrot.Model.J0=0.1050
-Config.Mandelbrot.Model.J1=0.1146
+Config.Mandelbrot.Model.MAX_ITERATIONS=4000
+Config.Mandelbrot.Model.I0=-0.7458547
+Config.Mandelbrot.Model.I1=-0.7412791
+Config.Mandelbrot.Model.J0=0.1291145
+Config.Mandelbrot.Model.J1=0.1336901
 Config.Mandelbrot.Model.I_COUNT=1000
 Config.Mandelbrot.Model.J_COUNT=1000
 
-Config.Mandelbrot.Processing.SCALE_POWER=0.2
+Config.Mandelbrot.Processing.SCALE_POWER=0.01
 # Plateau's of 0.1% area or greater are respected and ignored from Gaussian smoothing.
 Config.Mandelbrot.Processing.MIN_PLATEAU_COEFFICIENT=0.001
 # Plateau applied with texture, HOLLOW -> hollow out the plateau leaving a border.
 Config.Mandelbrot.Processing.PLATEAU_TEXTURE_MAP=HOLLOW
+Config.Mandelbrot.Processing.PLATEAU_HOLLOW_RADIUS=1.5
 # Gaussian Radius as coefficient of the size.  Optional.  0.005 (0.5%) is a good option.
 Config.Mandelbrot.Processing.GAUSSIAN_RADIUS=0.005
 

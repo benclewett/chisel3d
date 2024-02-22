@@ -24,6 +24,7 @@ public enum Config {
             SCALE_POWER,
             PLATEAU_TEXTURE_MAP,
             MIN_PLATEAU_COEFFICIENT,
+            PLATEAU_HOLLOW_RADIUS,
             GAUSSIAN_RADIUS;
         }
 

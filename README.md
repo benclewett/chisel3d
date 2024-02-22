@@ -3,26 +3,41 @@
 
 (C) 2024 Ben Clewett & Code Critical Ltd
 
-# Examples of good Mandelbrot's
+Licenced under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL 3.0</a>
 
-## Spiral
+# Examples of Mandelbrot's
 
-https://www.deviantart.com/e-mc3/art/Mandelbrot-set-Step-4-100599901
+## Whole Mandelbrot
+
+<img src="images/mandelbrot_hollow.png" height="200" width="300" />
 
 <pre>
-Config.Mandelbrot.MAX_ITERATIONS=4000
-Config.Mandelbrot.I0=-0.7458547
-Config.Mandelbrot.I1=-0.7412791
-Config.Mandelbrot.J0=0.1291145
-Config.Mandelbrot.J1=0.1336901
+Config.Mandelbrot.Model.I0=-2.1
+Config.Mandelbrot.Model.I1=0.9
+Config.Mandelbrot.Model.J0=-1.3
+Config.Mandelbrot.Model.J1=1.3
 </pre>
 
 ## Hillside 
 
+<img src="images/mandelbrot_hillside_hollow.png" height="200" width="300" />
+
 <pre>
-Config.Mandelbrot.MAX_ITERATIONS=400
-Config.Mandelbrot.I0=-0.7513
-Config.Mandelbrot.I1=-0.7413
-Config.Mandelbrot.J0=0.1050
-Config.Mandelbrot.J1=0.1145
+Config.Mandelbrot.Model.MAX_ITERATIONS=400
+Config.Mandelbrot.Model.I0=-0.7513
+Config.Mandelbrot.Model.I1=-0.7413
+Config.Mandelbrot.Model.J0=0.1050
+Config.Mandelbrot.Model.J1=0.1146
+</pre>
+
+## Spiral
+
+<img src="images/mandelbrot_spiral.png" height="200" width="300" />
+
+<pre>
+Config.Mandelbrot.Model.MAX_ITERATIONS=4000
+Config.Mandelbrot.Model.I0=-0.7458547
+Config.Mandelbrot.Model.I1=-0.7412791
+Config.Mandelbrot.Model.J0=0.1291145
+Config.Mandelbrot.Model.J1=0.1336901
 </pre>

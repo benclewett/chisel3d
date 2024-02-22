@@ -8,7 +8,6 @@ import com.google.common.annotations.VisibleForTesting;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.meta.Exhaustive;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.OptionalDouble;
