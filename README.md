@@ -42,3 +42,13 @@ Config.Mandelbrot.Model.I1=-0.7412791
 Config.Mandelbrot.Model.J0=0.1291145
 Config.Mandelbrot.Model.J1=0.1336901
 </pre>
+
+## Valley
+
+<img src="images/mandelbrot_valley.png" height="200" width="300" />
+
+Config.Mandelbrot.Model.MAX_ITERATIONS=8000
+Config.Mandelbrot.Model.I0=-0.73857486
+Config.Mandelbrot.Model.I1=-0.73857469
+Config.Mandelbrot.Model.J0=0.1753608767
+Config.Mandelbrot.Model.J1=0.1753610113
