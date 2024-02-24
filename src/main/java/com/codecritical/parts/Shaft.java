@@ -6,6 +6,7 @@ package com.codecritical.parts;
 
 import eu.printingin3d.javascad.basic.Radius;
 import eu.printingin3d.javascad.coords.Angles3d;
+import eu.printingin3d.javascad.coords.Coords3d;
 import eu.printingin3d.javascad.coords.Dims3d;
 import eu.printingin3d.javascad.models.Cylinder;
 import eu.printingin3d.javascad.tranform.TransformationFactory;
@@ -18,9 +19,9 @@ public class Shaft implements IParts {
 
     final CSG shaft;
     final Dims3d size;
-    final Dims3d origin;
+    final Coords3d origin;
 
-    public Shaft(Dims3d origin, double length, double radius, Axis axis) {
+    public Shaft(Coords3d origin, double length, double radius, Axis axis) {
         this.origin = origin;
         this.size = new Dims3d(length, radius * 2, radius * 2);
         var cylinder = new Cylinder(length, Radius.fromRadius(radius))
@@ -48,7 +49,7 @@ public class Shaft implements IParts {
     }
 
     @Override
-    public Dims3d getOrigin() {
+    public Coords3d getOrigin() {
         return origin;
     }
 }

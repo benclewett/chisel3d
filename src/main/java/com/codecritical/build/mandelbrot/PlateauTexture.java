@@ -35,7 +35,8 @@ public class PlateauTexture {
     final IMapArray map;
     final PlateauCollections plateauCollection;
     final int holeRadiosCountOnMap;
-    final double holeCountRadius;
+    final double hollowCountRadius;
+    final double hollowDepth;
 
     enum ETextureName {
         NONE,
@@ -50,14 +51,15 @@ public class PlateauTexture {
         this.plateauCollection = plateauCollection;
         this.textureMapName = config.asEnum(ETextureName.class, Config.Mandelbrot.Processing.PLATEAU_TEXTURE_MAP)
                 .orElse(ETextureName.NONE);
-        this.holeCountRadius = config.asDouble(Config.Mandelbrot.Processing.PLATEAU_HOLLOW_RADIUS);
-        this.holeRadiosCountOnMap = (int)(holeCountRadius /
-                (config.asDouble(Config.Mandelbrot.Print.X_MAX) - config.asDouble(Config.Mandelbrot.Print.X_MIN))
+        this.hollowCountRadius = config.asDouble(Config.Mandelbrot.Processing.PLATEAU_HOLLOW_RADIUS);
+        this.hollowDepth = config.asDouble(Config.Mandelbrot.Processing.PLATEAU_HOLLOW_DEPTH);
+        this.holeRadiosCountOnMap = (int)(hollowCountRadius /
+                (config.asDouble(Config.StlPrint.X_MAX) - config.asDouble(Config.StlPrint.X_MIN))
                 * map.getISize());
         logger.info(this.toString());
     }
 
-    public Optional<IMapArray> getTexture(double hollowDepth) {
+    public Optional<IMapArray> getTexture() {
         if (textureMapName.equals(ETextureName.NONE)) {
             return Optional.empty();
         }
@@ -133,7 +135,7 @@ public class PlateauTexture {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("holeCountRadius", holeCountRadius)
+                .add("holeCountRadius", hollowCountRadius)
                 .add("holeRadiusCountOnMap", holeRadiosCountOnMap)
                 .add("plateauCollection.size", plateauCollection.size())
                 .add("textureMapName", textureMapName)

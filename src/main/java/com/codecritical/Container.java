@@ -4,8 +4,9 @@ package com.codecritical;
  * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
  */
 
+import com.codecritical.build.gravitationalwaves.GravitationalWaveBuilder;
 import com.codecritical.build.infinitemachine.InfiniteMachineBuilder;
-import com.codecritical.build.mandelbrot.Builder;
+import com.codecritical.build.mandelbrot.MandelbrotBuilder;
 import com.codecritical.lib.config.ConfigReader;
 import com.codecritical.lib.config.Config;
 
@@ -31,7 +32,8 @@ public class Container {
 
         switch (model) {
             case INFINITE_MACHINE -> new InfiniteMachineBuilder(config, random);
-            case MANDELBROT -> new Builder(config);
+            case MANDELBROT -> new MandelbrotBuilder(config);
+            case GRAVITATIONAL_WAVES -> new GravitationalWaveBuilder(config);
             default -> throw new IllegalStateException("Unexpected value: " + model);
         }
     }

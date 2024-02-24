@@ -1,4 +1,4 @@
-package com.codecritical.build.mandelbrot;
+package com.codecritical.lib.model;
 
 /*
  * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
@@ -7,7 +7,6 @@ package com.codecritical.build.mandelbrot;
 import com.codecritical.lib.config.Config;
 import com.codecritical.lib.config.ConfigReader;
 import com.codecritical.lib.mapping.IMapArray;
-import com.codecritical.lib.model.Coords3dCache;
 import com.google.common.collect.ImmutableList;
 import eu.printingin3d.javascad.coords.Coords3d;
 import eu.printingin3d.javascad.vrl.CSG;
@@ -31,16 +30,16 @@ public class BuildPrintSurface implements IBuildPrint {
     private Coords3dCache coords3dCache = new Coords3dCache();
 
     public BuildPrintSurface(ConfigReader config) {
-        this.xMin = config.asDouble(Config.Mandelbrot.Print.X_MIN);
-        this.xMax = config.asDouble(Config.Mandelbrot.Print.X_MAX);
-        this.yMin = config.asDouble(Config.Mandelbrot.Print.Y_MIN);
-        this.yMax = config.asDouble(Config.Mandelbrot.Print.Y_MAX);
-        this.zMin = config.asDouble(Config.Mandelbrot.Print.Z_MIN);
-        this.zMax = config.asDouble(Config.Mandelbrot.Print.Z_MAX);
+        this.xMin = config.asDouble(Config.StlPrint.X_MIN);
+        this.xMax = config.asDouble(Config.StlPrint.X_MAX);
+        this.yMin = config.asDouble(Config.StlPrint.Y_MIN);
+        this.yMax = config.asDouble(Config.StlPrint.Y_MAX);
+        this.zMin = config.asDouble(Config.StlPrint.Z_MIN);
+        this.zMax = config.asDouble(Config.StlPrint.Z_MAX);
         this.xRange = this.xMax - this.xMin;
         this.yRange = this.yMax - this.yMin;
         this.zRange = this.zMax - this.zMin;
-        this.baseThickness = config.asInt(Config.Mandelbrot.Print.BASE_THICKNESS);
+        this.baseThickness = config.asInt(Config.StlPrint.BASE_THICKNESS);
     }
 
     @Override

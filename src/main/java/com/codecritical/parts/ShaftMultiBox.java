@@ -4,6 +4,7 @@ package com.codecritical.parts;
  * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
  */
 
+import eu.printingin3d.javascad.coords.Coords3d;
 import eu.printingin3d.javascad.coords.Dims3d;
 import eu.printingin3d.javascad.models.Cube;
 import eu.printingin3d.javascad.tranform.TransformationFactory;
@@ -16,9 +17,9 @@ public class ShaftMultiBox implements IParts {
 
     private final CSG box;
     private final Dims3d size;
-    private final Dims3d origin;
+    private final Coords3d origin;
 
-    public ShaftMultiBox(Dims3d origin, Dims3d size) {
+    public ShaftMultiBox(Coords3d origin, Dims3d size) {
         this.origin = origin;
         this.size = size;
         this.box = new Cube(size)
@@ -43,7 +44,7 @@ public class ShaftMultiBox implements IParts {
         return size;
     }
 
-    public Dims3d getOrigin() {
+    public Coords3d getOrigin() {
         return origin;
     }
 }

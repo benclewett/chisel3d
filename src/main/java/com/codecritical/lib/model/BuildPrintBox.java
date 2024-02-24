@@ -1,4 +1,4 @@
-package com.codecritical.build.mandelbrot;
+package com.codecritical.lib.model;
 
 /*
  * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
@@ -27,17 +27,17 @@ public class BuildPrintBox implements IBuildPrint {
     private final int baseThickness;
 
     public BuildPrintBox(ConfigReader config) {
-        this.xMin = config.asDouble(Config.Mandelbrot.Print.X_MIN);
-        this.xMax = config.asDouble(Config.Mandelbrot.Print.X_MAX);
-        this.yMin = config.asDouble(Config.Mandelbrot.Print.Y_MIN);
-        this.yMax = config.asDouble(Config.Mandelbrot.Print.Y_MAX);
-        this.zMin = config.asDouble(Config.Mandelbrot.Print.Z_MIN);
-        this.zMax = config.asDouble(Config.Mandelbrot.Print.Z_MAX);
+        this.xMin = config.asDouble(Config.StlPrint.X_MIN);
+        this.xMax = config.asDouble(Config.StlPrint.X_MAX);
+        this.yMin = config.asDouble(Config.StlPrint.Y_MIN);
+        this.yMax = config.asDouble(Config.StlPrint.Y_MAX);
+        this.zMin = config.asDouble(Config.StlPrint.Z_MIN);
+        this.zMax = config.asDouble(Config.StlPrint.Z_MAX);
         this.maxIterations = config.asInt(Config.Mandelbrot.Model.MAX_ITERATIONS);
         this.iCount = config.asInt(Config.Mandelbrot.Model.I_COUNT);
         this.jCount = config.asInt(Config.Mandelbrot.Model.J_COUNT);
-        this.overlap = config.asDouble(Config.Mandelbrot.Print.BOX_OVERLAP);
-        this.baseThickness = config.asInt(Config.Mandelbrot.Print.BASE_THICKNESS);
+        this.overlap = config.asDouble(Config.StlPrint.BOX_OVERLAP);
+        this.baseThickness = config.asInt(Config.StlPrint.BASE_THICKNESS);
 
         this.xCellSize = (xMax - xMin) / iCount;
         this.yCellSize = (yMax - yMin) / jCount;

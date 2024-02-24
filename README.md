@@ -47,6 +47,8 @@ Config.Mandelbrot.Model.J0=0.1291145
 Config.Mandelbrot.Model.J1=0.1336901
 </pre>
 
+<a href="https://www.thingiverse.com/thing:6500841">thingiverse.com</a>
+
 ## Valley
 
 <img src="images/mandelbrot_valley.png" height="200" width="300" />

@@ -44,7 +44,7 @@ public class InfiniteMachineBuilder {
         logger.info("depth=" + depth);
 
         this.root = new ShaftMultiBox(
-                config.asDims3d(Config.InfiniteMachineConfig.ROOT_BOX_ORIGIN),
+                config.asCoors3d(Config.InfiniteMachineConfig.ROOT_BOX_ORIGIN),
                 config.asDims3d(Config.InfiniteMachineConfig.ROOT_BOX_SIZE)
         );
         logger.info("Root ShardMultiBox: " + root);
@@ -127,32 +127,32 @@ public class InfiniteMachineBuilder {
         if (o0.getX() < o1.getX()) {
             double x0 = o0.getX() + (parent.getSize().getX() / 2.0);
             double x1 = o1.getX() - (nextBox.getSize().getX() / 2.0);
-            var newOrigin = new Dims3d((x0 + x1) / 2.0, o0.getY(), o0.getZ());
+            var newOrigin = new Coords3d((x0 + x1) / 2.0, o0.getY(), o0.getZ());
             return new Shaft(newOrigin, Math.abs(x0 - x1), nextBox.getSize().getY() / 5.0, Axis.X_PLUS);
       } else if (o0.getX() > o1.getX()) {
             double x0 = o0.getX() - (parent.getSize().getX() / 2.0);
             double x1 = o1.getX() + (nextBox.getSize().getX() / 2.0);
-            var newOrigin = new Dims3d((x0 + x1) / 2.0, o0.getY(), o0.getZ());
+            var newOrigin = new Coords3d((x0 + x1) / 2.0, o0.getY(), o0.getZ());
             return new Shaft(newOrigin, Math.abs(x0 - x1), nextBox.getSize().getY() / 5.0, Axis.X_MINUS);
         } else if (o0.getY() < o1.getY()) {
             double y0 = o0.getY() + (parent.getSize().getY() / 2.0);
             double y1 = o1.getY() - (nextBox.getSize().getY() / 2.0);
-            var newOrigin = new Dims3d(o0.getX(), (y0 + y1) / 2.0, o0.getZ());
+            var newOrigin = new Coords3d(o0.getX(), (y0 + y1) / 2.0, o0.getZ());
             return new Shaft(newOrigin, Math.abs(y0 - y1), nextBox.getSize().getY() / 5.0, Axis.Y_PLUS);
         } else if (o0.getY() > o1.getY()) {
             double y0 = o0.getY() - (parent.getSize().getY() / 2.0);
             double y1 = o1.getY() + (nextBox.getSize().getY() / 2.0);
-            var newOrigin = new Dims3d(o0.getX(), (y0 + y1) / 2.0, o0.getZ());
+            var newOrigin = new Coords3d(o0.getX(), (y0 + y1) / 2.0, o0.getZ());
             return new Shaft(newOrigin, Math.abs(y0 - y1), nextBox.getSize().getY() / 5.0, Axis.Y_MINUS);
         } else if (o0.getZ() < o1.getZ()) {
             double z0 = o0.getZ() + (parent.getSize().getZ() / 2.0);
             double z1 = o1.getZ() - (nextBox.getSize().getZ() / 2.0);
-            var newOrigin = new Dims3d(o0.getX(), o0.getY(), (z0 + z1) / 2.0);
+            var newOrigin = new Coords3d(o0.getX(), o0.getY(), (z0 + z1) / 2.0);
             return new Shaft(newOrigin, Math.abs(z0 - z1), nextBox.getSize().getZ() / 5.0, Axis.Z_PLUS);
         } else {
             double z0 = o0.getZ() - (parent.getSize().getZ() / 2.0);
             double z1 = o1.getZ() + (nextBox.getSize().getZ() / 2.0);
-            var newOrigin = new Dims3d(o0.getX(), o0.getY(), (z0 + z1) / 2.0);
+            var newOrigin = new Coords3d(o0.getX(), o0.getY(), (z0 + z1) / 2.0);
             return new Shaft(newOrigin, Math.abs(z0 - z1), nextBox.getSize().getZ() / 5.0, Axis.Z_MINUS);
         }
     }
@@ -178,15 +178,15 @@ public class InfiniteMachineBuilder {
         }
     }
 
-    private static Dims3d extendOrigin(IParts source, Axis axis, Dims3d length) {
+    private static Coords3d extendOrigin(IParts source, Axis axis, Dims3d length) {
         var origin = source.getOrigin();
         return switch (axis) {
-            case X_PLUS -> new Dims3d(origin.getX() + length.getX(), origin.getY(), origin.getZ());
-            case X_MINUS -> new Dims3d(origin.getX() - length.getX(), origin.getY(), origin.getZ());
-            case Y_PLUS -> new Dims3d(origin.getX(), origin.getY() + length.getY(), origin.getZ());
-            case Y_MINUS -> new Dims3d(origin.getX(), origin.getY() - length.getY(), origin.getZ());
-            case Z_PLUS -> new Dims3d(origin.getX(), origin.getY(), origin.getZ() + length.getZ());
-            case Z_MINUS -> new Dims3d(origin.getX(), origin.getY(), origin.getZ() - length.getZ());
+            case X_PLUS -> new Coords3d(origin.getX() + length.getX(), origin.getY(), origin.getZ());
+            case X_MINUS -> new Coords3d(origin.getX() - length.getX(), origin.getY(), origin.getZ());
+            case Y_PLUS -> new Coords3d(origin.getX(), origin.getY() + length.getY(), origin.getZ());
+            case Y_MINUS -> new Coords3d(origin.getX(), origin.getY() - length.getY(), origin.getZ());
+            case Z_PLUS -> new Coords3d(origin.getX(), origin.getY(), origin.getZ() + length.getZ());
+            case Z_MINUS -> new Coords3d(origin.getX(), origin.getY(), origin.getZ() - length.getZ());
         };
     }
 
@@ -241,7 +241,7 @@ public class InfiniteMachineBuilder {
 
     }
 
-    private Dims3d getPartMin(Dims3d origin, Dims3d size) {
+    private Dims3d getPartMin(Coords3d origin, Dims3d size) {
         double x = origin.getX() - size.getX() / 2.0;
         double y = origin.getY() - size.getY() / 2.0;
         double z = origin.getZ() - size.getZ() / 2.0;
