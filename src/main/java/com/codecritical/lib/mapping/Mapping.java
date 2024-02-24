@@ -18,8 +18,11 @@ public class Mapping {
 
     public static double MIN_WHEN_NO_ZERO = 0.01;
 
-    public static IMapArray normalise(IMapArray map, boolean allowZero) {
+    public static IMapArray normalise(IMapArray map) {
         return normalise(map, true, 0.0, 1.0);
+    }
+    public static IMapArray normalise(IMapArray map, boolean allowZero) {
+        return normalise(map, allowZero, 0.0, 1.0);
     }
     public static IMapArray normalise(IMapArray map, boolean allowZero, double minOut, double maxOut) {
 
@@ -31,14 +34,16 @@ public class Mapping {
                 .min(Comparator.naturalOrder())
                 .orElse(0.0);
 
-        var min2 = (allowZero) ? min : min - (max - min) * MIN_WHEN_NO_ZERO;
+        var min2 = (allowZero)
+                ? min
+                : min - (max - min) * MIN_WHEN_NO_ZERO;
 
         var range = max - min2;
 
         return new MapArray(
                 map.getISize(),
                 map.getJSize(),
-                map.stream().map(p -> ((p - min2) / range) / (maxOut - minOut) + minOut)
+                map.stream().map(p -> ((p - min2) / range) * (maxOut - minOut) + minOut)
         );
     }
 
@@ -55,7 +60,7 @@ public class Mapping {
      * <br>
      * The area inside the plateauSet is ignored.  This will be replaced by the texture from plateauMap, or MAX is this is null.
      */
-    public static IMapArray gaussian(IMapArray map, OptionalDouble gaussianRadius, @CheckForNull PlateauCollections plateauSet, @CheckForNull Optional<IMapArray> plateauTextureMap) {
+    public static IMapArray gaussian(IMapArray map, OptionalDouble gaussianRadius, @CheckForNull PlateauCollections plateauSet, Optional<IMapArray> plateauTextureMap) {
         if (gaussianRadius.isEmpty()) {
             return map;
         }
@@ -146,9 +151,7 @@ public class Mapping {
         // Normalise so total == 1
         var sum = map.stream().mapToDouble(Double::doubleValue).sum();
         MapArray mapN = new MapArray(mapSize, mapSize);
-        map.streamPoints().forEach(p -> {
-            mapN.set(p.i, p.j, p.z / sum);
-        });
+        map.streamPoints().forEach(p -> mapN.set(p.i, p.j, p.z / sum));
 
         return mapN;
     }

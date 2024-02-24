@@ -25,17 +25,19 @@ public class Hemisphere implements IParts {
     public Hemisphere(double x, double y, double radius, double z0, double z1) {
         this.size = new Dims3d(radius, radius, z1 - z0);
         this.origin = new Coords3d(x, y, z0);
-        this.csg = buildShape(radius, z0, z1);
+        this.csg = buildShape();
     }
 
-    private CSG buildShape(double radius, double z0, double z1) {
+    private CSG buildShape() {
         // Create a sphere with origin on the bottom plane
-        var sphere = new Sphere(Radius.fromRadius(radius)).toCSG();
-        sphere.transformed(TransformationFactory.getScaleMatrix(new Coords3d(radius, radius, z1 - z0)));
+        var sphere = new Sphere(Radius.fromRadius(1.0)).toCSG();
+        sphere = sphere.transformed(TransformationFactory.getScaleMatrix(size));
+        sphere = sphere.transformed(TransformationFactory.getTranlationMatrix(origin));
 
-        // Create a cube to cut off the bottom
-        var cube = new Cube(radius).toCSG();
-        cube.transformed(TransformationFactory.getTranlationMatrix(new Coords3d(0, 0, -radius)));
+        // Create a cube to cut off the bottom (size is 2x radius)
+        var cube = new Cube(new Dims3d(size.getX() * 2, size.getY() * 2, size.getZ())).toCSG();
+        cube = cube.transformed(TransformationFactory.getTranlationMatrix(origin));
+        cube = cube.transformed(TransformationFactory.getTranlationMatrix(new Coords3d(0, 0, -size.getZ() / 2)));
 
         return sphere.difference(cube);
     }

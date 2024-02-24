@@ -8,7 +8,6 @@ public enum Config {
     RANDOM_SEED;
 
     public enum StlPrint {
-        OUTPUT_FILENAME,
         X_MIN,
         X_MAX,
         Y_MIN,
@@ -16,7 +15,7 @@ public enum Config {
         Z_MIN,
         Z_MAX,
         BOX_OVERLAP,
-        BASE_THICKNESS;
+        BASE_THICKNESS
     }
 
     public enum Mandelbrot {
@@ -29,7 +28,7 @@ public enum Config {
             J0,
             J1,
             I_COUNT,
-            J_COUNT;
+            J_COUNT
         }
 
         public enum Processing {
@@ -38,7 +37,7 @@ public enum Config {
             MIN_PLATEAU_COEFFICIENT,
             PLATEAU_HOLLOW_RADIUS,
             GAUSSIAN_RADIUS,
-            PLATEAU_HOLLOW_DEPTH;
+            PLATEAU_HOLLOW_DEPTH
         }
 
     }
@@ -69,7 +68,8 @@ public enum Config {
         SPIRAL_DEGREES_OFFSET,
         WAVE_FADE_IN_WIDTH,
         WAVE_RIDGE_COUNT_IN_X_AXIS,
-        MASS_RADIUS_PERCENT;
+        MASS_RADIUS_COEFFICIENT,
+        WAVE_HEIGHT;
 
         public enum Print {
             OUTPUT_FILENAME

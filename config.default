@@ -29,7 +29,7 @@ Config.StlPrint.X_MAX=50
 Config.StlPrint.Y_MIN=-50
 Config.StlPrint.Y_MAX=50
 Config.StlPrint.Z_MIN=0
-Config.StlPrint.Z_MAX=50
+Config.StlPrint.Z_MAX=10
 # Base is added onto the Z range.
 Config.StlPrint.BASE_THICKNESS=5
 
@@ -68,10 +68,11 @@ Config.GravitationalWaves.J0=0
 Config.GravitationalWaves.J1=156
 Config.GravitationalWaves.I_COUNT=100
 Config.GravitationalWaves.J_COUNT=100
+Config.GravitationalWaves.WAVE_HEIGHT=0.50
 # Set to pi/9
 Config.GravitationalWaves.SPIRAL_DEGREES_OFFSET=0.349
 Config.GravitationalWaves.WAVE_FADE_IN_WIDTH=30
 Config.GravitationalWaves.WAVE_RIDGE_COUNT_IN_X_AXIS=4
-Config.GravitationalWaves.MASS_RADIUS_PERCENT=6
+Config.GravitationalWaves.MASS_RADIUS_COEFFICIENT=0.03
 
 Config.GravitationalWaves.Print.OUTPUT_FILENAME=gravitationalWaves

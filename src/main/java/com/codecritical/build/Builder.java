@@ -27,7 +27,7 @@ public class Builder {
     private final ConfigReader config;
     private Optional<IMapArray> plateauTexture = Optional.empty();
     private PlateauCollections plateauCollection;
-    private ImmutableList.Builder<CSG> csg = ImmutableList.builder();
+    private final ImmutableList.Builder<CSG> csg = ImmutableList.builder();
 
     public static Builder create(ConfigReader config, IMapArray map) {
         return new Builder(config, map);
@@ -50,7 +50,7 @@ public class Builder {
 
     public Builder scale() {
         map = Mapping.scale(map, IScale.toPower(config.asDouble(Config.Mandelbrot.Processing.SCALE_POWER)));
-        map = Mapping.normalise(map, true);
+        map = Mapping.normalise(map);
         return this;
     }
 
@@ -115,7 +115,7 @@ public class Builder {
 
     public Builder applyGaussian() {
         map = Mapping.gaussian(map, config.asOptionalDouble(Config.Mandelbrot.Processing.GAUSSIAN_RADIUS), plateauCollection, plateauTexture);
-        map = Mapping.normalise(map, true);
+        map = Mapping.normalise(map);
         logger.info("Gaussian applied.");
 
         return this;
@@ -159,17 +159,19 @@ public class Builder {
         double y0 = config.asDouble(Config.StlPrint.Y_MIN);
         double y1 = config.asDouble(Config.StlPrint.Y_MAX);
 
-        double massRadiusPercent = config.asDouble(Config.GravitationalWaves.MASS_RADIUS_PERCENT);
+        double width = x1 - x0;
+
+        double massRadiusCoefficient = config.asDouble(Config.GravitationalWaves.MASS_RADIUS_COEFFICIENT);
         double spiralDegreesOffset = config.asDouble(Config.GravitationalWaves.SPIRAL_DEGREES_OFFSET);
         double waveRidgeCountInXAxis = config.asDouble(Config.GravitationalWaves.WAVE_RIDGE_COUNT_IN_X_AXIS);
 
-        double massDistFromCentre = (x0 - x1) / waveRidgeCountInXAxis / 4 + 5;
-        double massRadius = massRadiusPercent / 100 * (x1 - x0);
+        double massDistFromCentre = width / waveRidgeCountInXAxis / 4.0;
+        double massRadius = massRadiusCoefficient * width;
 
-        double z0 = config.asDouble(Config.StlPrint.Z_MIN);
+        double z0 = config.asDouble(Config.StlPrint.Z_MIN) + config.asDouble(Config.StlPrint.BASE_THICKNESS);
         double z1 = config.asDouble(Config.StlPrint.Z_MAX);
 
-        double[] massAngles = new double[]{
+        double[] massAngles = new double[] {
                 spiralDegreesOffset - Math.PI / 2,
                 spiralDegreesOffset + Math.PI / 2
         };

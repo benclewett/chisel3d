@@ -29,8 +29,10 @@ public class GravitationalWaveBuilder {
     private void build() {
         var map = new GravitationalWavesMap(config).getMap();
 
+        double waveHeight = config.asDouble(Config.GravitationalWaves.WAVE_HEIGHT);
+
         Builder.create(config, map)
-                .normalise(0.0, 0.3)
+                .normalise(0.0, waveHeight)
                 .showRoughMap()
                 .mapToCsg()
                 .addTwoGravitationalMass()
