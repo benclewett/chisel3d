@@ -74,5 +74,7 @@ Config.GravitationalWaves.SPIRAL_DEGREES_OFFSET=0.349
 Config.GravitationalWaves.WAVE_FADE_IN_WIDTH=30
 Config.GravitationalWaves.WAVE_RIDGE_COUNT_IN_X_AXIS=4
 Config.GravitationalWaves.MASS_RADIUS_COEFFICIENT=0.03
+# 0.523 = 30 degrees (PI/6) in rads.
+Config.GravitationalWaves.PERSPECTIVE_ANGLE=0.523
 
 Config.GravitationalWaves.Print.OUTPUT_FILENAME=gravitationalWaves

@@ -26,6 +26,8 @@ public class GravitationalWavesMap {
     private final OptionalDouble waveFadeInWidth;
     private final double waveRidgeCountInXAxis;
     private final double iDelta, jDelta;
+    private final double perspectiveDistance;
+    private final OptionalDouble perspectiveAngle;
 
     final IMapArray map;
 
@@ -36,9 +38,13 @@ public class GravitationalWavesMap {
         this.j1 = config.asDouble(Config.GravitationalWaves.J1);
         this.iCount = config.asInt(Config.GravitationalWaves.I_COUNT);
         this.jCount = config.asInt(Config.GravitationalWaves.J_COUNT);
+
         this.spiralDegreesOffset = config.asDouble(Config.GravitationalWaves.SPIRAL_DEGREES_OFFSET);
         this.waveFadeInWidth = config.asOptionalDouble(Config.GravitationalWaves.WAVE_FADE_IN_WIDTH);
         this.waveRidgeCountInXAxis = config.asDouble(Config.GravitationalWaves.WAVE_RIDGE_COUNT_IN_X_AXIS);
+
+        this.perspectiveAngle = config.asOptionalDouble(Config.GravitationalWaves.PERSPECTIVE_ANGLE);
+        this.perspectiveDistance = Math.cos(Math.PI / 12) * (i1 - i0) / 2;
 
         this.iCentre = (i1 + i0) / 2;
         this.jCentre = (j1 + j0) / 2;
@@ -63,7 +69,52 @@ public class GravitationalWavesMap {
         return mapNew;
     }
 
+    private PerspectiveOut adjustPerspective(double i, double j) {
+
+        if (perspectiveAngle.isEmpty()) {
+            return new PerspectiveOut(i, j, false);
+        }
+
+        i -= iCentre;
+        j -= jCentre;
+
+        double yAngleAboveCentreLine = Math.atan(j / perspectiveDistance);
+
+        if (yAngleAboveCentreLine > perspectiveAngle.getAsDouble() + Math.PI / 2) {
+            // Above the horizon.
+            return new PerspectiveOut(i, j, true);
+        }
+
+        double alpha = j / Math.sin((Math.PI / 2) - perspectiveAngle.getAsDouble() - yAngleAboveCentreLine) * Math.sin(perspectiveAngle.getAsDouble());
+        double jOut = alpha / Math.cos(yAngleAboveCentreLine);
+        double iOut = i * (alpha + perspectiveDistance) / perspectiveDistance;
+
+        i = iOut + iCentre;
+        j = j + jOut * 2 + jCentre;
+
+        return new PerspectiveOut(i, j, false);
+    }
+
+    record PerspectiveOut(double i, double j, boolean aboveHorizon) {
+        @Override
+        public String toString() {
+            return MoreObjects.toStringHelper(this)
+                    .add("i", i)
+                    .add("j", j)
+                    .add("aboveHorizon", aboveHorizon)
+                    .toString();
+        }
+    }
+
+
     public double getPoint(double i, double j) {
+
+        var perspective = adjustPerspective(i, j);
+        if (perspective.aboveHorizon) {
+            return 0.0;
+        }
+        i = perspective.i;
+        j = perspective.j;
 
         double iOffset = i - iCentre;
         double jOffset = j - jCentre;

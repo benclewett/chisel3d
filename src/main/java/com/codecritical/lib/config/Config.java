@@ -69,7 +69,8 @@ public enum Config {
         WAVE_FADE_IN_WIDTH,
         WAVE_RIDGE_COUNT_IN_X_AXIS,
         MASS_RADIUS_COEFFICIENT,
-        WAVE_HEIGHT;
+        WAVE_HEIGHT,
+        PERSPECTIVE_ANGLE;
 
         public enum Print {
             OUTPUT_FILENAME

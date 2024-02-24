@@ -156,8 +156,6 @@ public class Builder {
 
         double x0 = config.asDouble(Config.StlPrint.X_MIN);
         double x1 = config.asDouble(Config.StlPrint.X_MAX);
-        double y0 = config.asDouble(Config.StlPrint.Y_MIN);
-        double y1 = config.asDouble(Config.StlPrint.Y_MAX);
 
         double width = x1 - x0;
 
@@ -165,7 +163,7 @@ public class Builder {
         double spiralDegreesOffset = config.asDouble(Config.GravitationalWaves.SPIRAL_DEGREES_OFFSET);
         double waveRidgeCountInXAxis = config.asDouble(Config.GravitationalWaves.WAVE_RIDGE_COUNT_IN_X_AXIS);
 
-        double massDistFromCentre = width / waveRidgeCountInXAxis / 4.0;
+        double massDistFromCentre = width / waveRidgeCountInXAxis / 5.0;    // Why 5?  Nobody knows.
         double massRadius = massRadiusCoefficient * width;
 
         double z0 = config.asDouble(Config.StlPrint.Z_MIN) + config.asDouble(Config.StlPrint.BASE_THICKNESS);
@@ -177,14 +175,13 @@ public class Builder {
         };
 
         double xCentre = (x0 + x1) / 2;
-        double yCentre = (y0 + y1) / 2;
 
         double[] massCentreX = new double[2];
         double[] massCentreY = new double[2];
 
         for (int i = 0; i < 2; i++) {
             massCentreX[i] = massDistFromCentre * Math.sin(massAngles[i]) + xCentre;
-            massCentreY[i] = massDistFromCentre * Math.cos(massAngles[i]) + yCentre;
+            massCentreY[i] = 0;
         }
 
         var mass1 = new Hemisphere(massCentreX[0], massCentreY[0], massRadius, z0, z1).getCsg();
