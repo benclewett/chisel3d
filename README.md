@@ -1,5 +1,5 @@
-# chisel3d
-3D libs and code to build 3D printable objects.
+# Chisel3d
+3D libs and code to build 3D printable / CNC cutable objects.
 
 (C) 2024 Ben Clewett & Code Critical Ltd
 
@@ -19,9 +19,11 @@ Config.Mandelbrot.Model.J0=-1.3
 Config.Mandelbrot.Model.J1=1.3
 </pre>
 
-## Hillside 
+<a href="https://www.thingiverse.com/thing:6498451">thingiverse.com</a>
 
-<img src="images/mandelbrot_hillside_hollow.png" height="200" width="300" />
+## Seahorse
+
+<img src="images/mandelbrot_seahorse.png" height="200" width="300" />
 
 <pre>
 Config.Mandelbrot.Model.MAX_ITERATIONS=400
@@ -30,6 +32,8 @@ Config.Mandelbrot.Model.I1=-0.7413
 Config.Mandelbrot.Model.J0=0.1050
 Config.Mandelbrot.Model.J1=0.1146
 </pre>
+
+<a href="https://www.thingiverse.com/thing:6500804">thingiverse.com</a>
 
 ## Spiral
 
@@ -47,8 +51,18 @@ Config.Mandelbrot.Model.J1=0.1336901
 
 <img src="images/mandelbrot_valley.png" height="200" width="300" />
 
+<pre>
 Config.Mandelbrot.Model.MAX_ITERATIONS=8000
 Config.Mandelbrot.Model.I0=-0.73857486
 Config.Mandelbrot.Model.I1=-0.73857469
 Config.Mandelbrot.Model.J0=0.1753608767
 Config.Mandelbrot.Model.J1=0.1753610113
+</pre>
+
+<a href="https://www.thingiverse.com/thing:6498625">thingiverse.com</a>
+
+## Infinite Machine
+
+Production of fractal structures.  With the help of Blender, images like this may be produced.
+
+<img src="images/infinite_machine.jpeg" height="200" width="350" />
