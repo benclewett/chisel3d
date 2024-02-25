@@ -4,11 +4,14 @@ package com.codecritical.lib.model;
  * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
  */
 
+import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableList;
 import eu.printingin3d.javascad.vrl.CSG;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
 
 @ParametersAreNonnullByDefault
@@ -22,6 +25,9 @@ public class FastUnion {
 
     /** Unions a large number of parts at some speed. */
     public static CSG fastUnion(ImmutableList<CSG> parts) {
+
+        // Don't forget the mapToCsg() call.
+        Verify.verify(parts.size() != 0);
 
         // The 'Union' class should be able to do this.  However, this slows down exponentially.
         // 10,000 parts can take 10 hours.  This method takes the same number of seconds.
@@ -46,7 +52,7 @@ public class FastUnion {
     }
 
     /** Unions a list of parts into another list of half the size */
-    private static ImmutableList<CSG> union(ImmutableList<CSG> parts) {
+    private static ImmutableList<CSG> union(List<CSG> parts) {
 
         ImmutableList.Builder<CSG> newUnions = ImmutableList.builder();
         @CheckForNull CSG union = null;

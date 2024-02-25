@@ -1,4 +1,4 @@
-package com.codecritical.build.mandelbrot;
+package com.codecritical.lib.model;
 
 /*
  * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd

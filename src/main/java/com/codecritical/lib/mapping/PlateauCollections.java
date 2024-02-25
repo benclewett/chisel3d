@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 @ParametersAreNonnullByDefault
 public class PlateauCollections {
 
+    private final static double MIN = 0.0, MAX = 1.0;
     private final ImmutableList<Plateau> plateaus;
 
     /** Clone a plateau set */
@@ -129,7 +130,7 @@ public class PlateauCollections {
         }));
         var map = new MapArray(max[0] + 1, max[1] + 1);
         map.streamPoints().forEach(point ->
-                map.set(point.i, point.j, (isPlateau(point)) ? 1.0 : 0.0)
+                map.set(point.i, point.j, (isPlateau(point)) ? MAX : MIN)
         );
         return map;
     }

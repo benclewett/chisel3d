@@ -5,6 +5,7 @@ package com.codecritical.lib.config;
  */
 
 import com.google.common.collect.ImmutableList;
+import eu.printingin3d.javascad.coords.Coords3d;
 import eu.printingin3d.javascad.coords.Dims3d;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -103,6 +104,18 @@ public class ConfigReader {
         );
     }
 
+    public Coords3d asCoors3d(Enum config) {
+        var l = asImmutableList(config);
+        if (3 != l.size()) {
+            throw new RuntimeException("Config " + config + " should have 3 values");
+        }
+        return new Coords3d(
+                Double.parseDouble(l.get(0)),
+                Double.parseDouble(l.get(1)),
+                Double.parseDouble(l.get(2))
+        );
+    }
+
     public ImmutableList<String> asImmutableList(Enum config) {
         var i = get(config);
         if (i.isEmpty()) {
@@ -137,5 +150,4 @@ public class ConfigReader {
         }
         return Optional.of(Enum.valueOf(clazz, val.get()));
     }
-
 }

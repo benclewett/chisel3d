@@ -7,8 +7,19 @@ package com.codecritical.lib.config;
 public enum Config {
     RANDOM_SEED;
 
+    public enum StlPrint {
+        X_MIN,
+        X_MAX,
+        Y_MIN,
+        Y_MAX,
+        Z_MIN,
+        Z_MAX,
+        BOX_OVERLAP,
+        BASE_THICKNESS
+    }
+
     public enum Mandelbrot {
-        ;
+        OUTPUT_FILENAME;
 
         public enum Model {
             MAX_ITERATIONS,
@@ -17,7 +28,7 @@ public enum Config {
             J0,
             J1,
             I_COUNT,
-            J_COUNT;
+            J_COUNT
         }
 
         public enum Processing {
@@ -25,20 +36,10 @@ public enum Config {
             PLATEAU_TEXTURE_MAP,
             MIN_PLATEAU_COEFFICIENT,
             PLATEAU_HOLLOW_RADIUS,
-            GAUSSIAN_RADIUS;
+            GAUSSIAN_RADIUS,
+            PLATEAU_HOLLOW_DEPTH
         }
 
-        public enum Print {
-            OUTPUT_FILENAME,
-            X_MIN,
-            X_MAX,
-            Y_MIN,
-            Y_MAX,
-            Z_MIN,
-            Z_MAX,
-            BOX_OVERLAP,
-            BASE_THICKNESS;
-        }
     }
 
     public enum InfiniteMachineConfig {
@@ -56,4 +57,23 @@ public enum Config {
             SHAFT_LENGTH_MAX
         }
     }
+
+    public enum GravitationalWaves {
+        I0,
+        I1,
+        J0,
+        J1,
+        I_COUNT,
+        J_COUNT,
+        SPIRAL_DEGREES_OFFSET,
+        WAVE_FADE_IN_WIDTH,
+        WAVE_RIDGE_COUNT_IN_X_AXIS,
+        MASS_RADIUS_COEFFICIENT,
+        WAVE_HEIGHT,
+        PERSPECTIVE_ANGLE;
+
+        public enum Print {
+            OUTPUT_FILENAME
+        }
     }
+}

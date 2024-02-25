@@ -1,5 +1,9 @@
 Config.RANDOM_SEED=1
 
+#
+# Infinite Machine
+#
+
 Config.InfiniteMachineConfig.OUTPUT_FILENAME=infinite_machine_small.stl
 Config.InfiniteMachineConfig.DEPTH=2
 
@@ -16,35 +20,61 @@ Config.InfiniteMachineConfig.ShaftBoxBranch.SHAFT_LENGTH_MAX=4.0
 Config.InfiniteMachineConfig.ShaftBoxBranch.SHAFT_LENGTH_MIN=0.5
 
 #
-# Mandelbrot
+# Used for all STL prints
 #
 
-Config.Mandelbrot.Model.MAX_ITERATIONS=400
-Config.Mandelbrot.Model.I0=-0.7513
-Config.Mandelbrot.Model.I1=-0.7413
-Config.Mandelbrot.Model.J0=0.1050
-Config.Mandelbrot.Model.J1=0.1146
+# All dimensions are mm or coefficients.
+Config.StlPrint.X_MIN=-50
+Config.StlPrint.X_MAX=50
+Config.StlPrint.Y_MIN=-50
+Config.StlPrint.Y_MAX=50
+Config.StlPrint.Z_MIN=0
+Config.StlPrint.Z_MAX=50
+# Base is added onto the Z range.
+Config.StlPrint.BASE_THICKNESS=5
+
+
+#
+# Mandelbrot STL Print
+#
+
+Config.Mandelbrot.Model.MAX_ITERATIONS=4000
+Config.Mandelbrot.Model.I0=-1.25728541466
+Config.Mandelbrot.Model.I1=-1.25728540845
+Config.Mandelbrot.Model.J0=0.038280500524
+Config.Mandelbrot.Model.J1=0.038280505180
 Config.Mandelbrot.Model.I_COUNT=200
 Config.Mandelbrot.Model.J_COUNT=200
 
-Config.Mandelbrot.Processing.SCALE_POWER=0.01
+Config.Mandelbrot.Processing.SCALE_POWER=0.1
 # Plateau's of 0.1% area or greater are respected and ignored from Gaussian smoothing.
 Config.Mandelbrot.Processing.MIN_PLATEAU_COEFFICIENT=0.001
 # Plateau applied with texture, HIGH, LOW or HOLLOW -> hollow out the plateau leaving a border.
 Config.Mandelbrot.Processing.PLATEAU_TEXTURE_MAP=HOLLOW
-Config.Mandelbrot.Processing.PLATEAU_HOLLOW_RADIUS=1.5
+Config.Mandelbrot.Processing.PLATEAU_HOLLOW_RADIUS=1.1
+Config.Mandelbrot.Processing.PLATEAU_HOLLOW_DEPTH=0.0
 # Gaussian Radius as coefficient of the size.  Optional.  0.005 (0.5%) is a good option.
-Config.Mandelbrot.Processing.GAUSSIAN_RADIUS=0.004
+Config.Mandelbrot.Processing.GAUSSIAN_RADIUS=0.002
 
-# All dimensions are mm or coefficients.
-Config.Mandelbrot.Print.X_MIN=-50
-Config.Mandelbrot.Print.X_MAX=50
-Config.Mandelbrot.Print.Y_MIN=-50
-Config.Mandelbrot.Print.Y_MAX=50
-Config.Mandelbrot.Print.Z_MIN=0
-Config.Mandelbrot.Print.Z_MAX=50
-# Base is added onto the Z range.
-Config.Mandelbrot.Print.BASE_THICKNESS=5
-# When building map from box's, overlap to avoid union errors, here by 1%
-Config.Mandelbrot.Print.BOX_OVERLAP=0.01
-Config.Mandelbrot.Print.OUTPUT_FILENAME=mandelbrot.stl
+Config.Mandelbrot.OUTPUT_FILENAME=mandelbrot
+
+#
+# Gravitational Waves STL Print
+#
+
+Config.GravitationalWaves.I0=0
+Config.GravitationalWaves.I1=250
+Config.GravitationalWaves.J0=0
+Config.GravitationalWaves.J1=156
+Config.GravitationalWaves.I_COUNT=100
+Config.GravitationalWaves.J_COUNT=100
+Config.GravitationalWaves.WAVE_HEIGHT=0.50
+# Set to pi/9
+Config.GravitationalWaves.SPIRAL_DEGREES_OFFSET=0.349
+Config.GravitationalWaves.WAVE_FADE_IN_WIDTH=30
+Config.GravitationalWaves.WAVE_RIDGE_COUNT_IN_X_AXIS=4
+Config.GravitationalWaves.MASS_RADIUS_COEFFICIENT=0.03
+# 0.523 = 30 degrees (PI/6) in rads.
+Config.GravitationalWaves.PERSPECTIVE_ANGLE=0.523
+
+Config.GravitationalWaves.Print.OUTPUT_FILENAME=gravitationalWaves

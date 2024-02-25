@@ -10,7 +10,8 @@ public class Main {
 
     enum EModel {
         INFINITE_MACHINE,
-        MANDELBROT
+        MANDELBROT,
+        GRAVITATIONAL_WAVES
     }
 
     public static void main(String[] args) {

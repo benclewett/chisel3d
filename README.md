@@ -47,6 +47,8 @@ Config.Mandelbrot.Model.J0=0.1291145
 Config.Mandelbrot.Model.J1=0.1336901
 </pre>
 
+<a href="https://www.thingiverse.com/thing:6500841">thingiverse.com</a>
+
 ## Valley
 
 <img src="images/mandelbrot_valley.png" height="200" width="300" />
@@ -60,6 +62,29 @@ Config.Mandelbrot.Model.J1=0.1753610113
 </pre>
 
 <a href="https://www.thingiverse.com/thing:6498625">thingiverse.com</a>
+
+## Mandelbrot Castle
+
+<img src="images/mandelbrot_castle.png" height="200" width="300" />
+
+<pre>
+Config.Mandelbrot.Model.I0=-1.940982879244
+Config.Mandelbrot.Model.I1=-1.940982878940
+Config.Mandelbrot.Model.J0=0.0006481238065
+Config.Mandelbrot.Model.J1=0.0006481240343
+</pre>
+
+## Mandelbrot Boss
+
+<img src="images/mandelbrot_boss.png" height="200" width="300" />
+
+<pre>
+Config.Mandelbrot.Model.MAX_ITERATIONS=4000
+Config.Mandelbrot.Model.I0=-1.25728541466
+Config.Mandelbrot.Model.I1=-1.25728540845
+Config.Mandelbrot.Model.J0=0.038280500524
+Config.Mandelbrot.Model.J1=0.038280505180
+</pre>
 
 ## Infinite Machine
 

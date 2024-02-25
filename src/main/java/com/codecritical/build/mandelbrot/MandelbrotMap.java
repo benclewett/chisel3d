@@ -8,12 +8,13 @@ import com.codecritical.lib.mapping.IMapArray;
 import com.codecritical.lib.config.Config;
 import com.codecritical.lib.config.ConfigReader;
 import com.codecritical.lib.mapping.MapArray;
+import com.google.common.base.MoreObjects;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.logging.Logger;
 
 @ParametersAreNonnullByDefault
-public class BuildMandelbrot {
+public class MandelbrotMap {
     static final Logger logger = Logger.getLogger("");
 
     private final int maxIterations;
@@ -22,7 +23,7 @@ public class BuildMandelbrot {
     private final double iDelta, jDelta;
     MapArray map;
 
-    public BuildMandelbrot(ConfigReader config) {
+    public MandelbrotMap(ConfigReader config) {
         this.maxIterations = config.asInt(Config.Mandelbrot.Model.MAX_ITERATIONS);
         this.i0 = config.asDouble(Config.Mandelbrot.Model.I0);
         this.i1 = config.asDouble(Config.Mandelbrot.Model.I1);
@@ -31,15 +32,12 @@ public class BuildMandelbrot {
         this.iCount = config.asInt(Config.Mandelbrot.Model.I_COUNT);
         this.jCount = config.asInt(Config.Mandelbrot.Model.J_COUNT);
 
-        logger.info("MaxIterations: " + maxIterations);
-        logger.info("i0=" + i0 + ", i1=" + i1);
-        logger.info("j0=" + j0 + ", j1=" + j1);
-        logger.info("iCount=" + iCount + ", jCount=" + jCount);
-
         this.iDelta = (i1 - i0) / (double)iCount;
         this.jDelta = (j1 - j0) / (double)jCount;
 
         this.map = new MapArray(iCount, jCount);
+
+        logger.info(this.toString());
 
         buildMap();
     }
@@ -75,5 +73,18 @@ public class BuildMandelbrot {
 
     public IMapArray getMap() {
         return map;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("maxIterations", maxIterations)
+                .add("i0", i0)
+                .add("i1", i1)
+                .add("j0", j0)
+                .add("j1", j1)
+                .add("iCount", iCount)
+                .add("jCount", jCount)
+                .toString();
     }
 }
