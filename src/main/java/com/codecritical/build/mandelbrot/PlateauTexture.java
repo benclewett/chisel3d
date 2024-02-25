@@ -31,7 +31,7 @@ public class PlateauTexture {
     final static double LOW = 0.0;
 
     final ConfigReader config;
-    final ETextureName textureMapName;
+    final ETextureName eTextureMapName;
     final IMapArray map;
     final PlateauCollections plateauCollection;
     final int holeRadiosCountOnMap;
@@ -49,7 +49,7 @@ public class PlateauTexture {
         this.config = config;
         this.map = map;
         this.plateauCollection = plateauCollection;
-        this.textureMapName = config.asEnum(ETextureName.class, Config.Mandelbrot.Processing.PLATEAU_TEXTURE_MAP)
+        this.eTextureMapName = (ETextureName)config.asOptionalEnum(ETextureName.class, Config.Mandelbrot.Processing.PLATEAU_TEXTURE_MAP)
                 .orElse(ETextureName.NONE);
         this.hollowCountRadius = config.asDouble(Config.Mandelbrot.Processing.PLATEAU_HOLLOW_RADIUS);
         this.hollowDepth = config.asDouble(Config.Mandelbrot.Processing.PLATEAU_HOLLOW_DEPTH);
@@ -60,15 +60,15 @@ public class PlateauTexture {
     }
 
     public Optional<IMapArray> getTexture() {
-        if (textureMapName.equals(ETextureName.NONE)) {
+        if (eTextureMapName.equals(ETextureName.NONE)) {
             return Optional.empty();
         }
 
-        return Optional.of(switch (textureMapName) {
+        return Optional.of(switch (eTextureMapName) {
             case HIGH -> getHigh(map);
             case LOW -> getLow(map);
             case HOLLOW -> getHollow(map, hollowDepth);
-            default -> throw new RuntimeException("Texture map " + textureMapName + " is not known");
+            default -> throw new RuntimeException("Texture map " + eTextureMapName + " is not known");
         });
     }
 
@@ -138,7 +138,7 @@ public class PlateauTexture {
                 .add("holeCountRadius", hollowCountRadius)
                 .add("holeRadiusCountOnMap", holeRadiosCountOnMap)
                 .add("plateauCollection.size", plateauCollection.size())
-                .add("textureMapName", textureMapName)
+                .add("textureMapName", eTextureMapName)
                 .toString();
     }
 }

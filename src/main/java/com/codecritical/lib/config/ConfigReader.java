@@ -143,11 +143,19 @@ public class ConfigReader {
                 : Optional.of(o.toString());
     }
 
-    public <T extends Enum<T>> Optional<T> asEnum(Class<T> clazz, Enum config) {
+    public <T extends Enum<T>, U extends Enum<U>> Optional<Enum> asOptionalEnum(Class<T> clazz, U config) {
         var val = get(config);
         if (val.isEmpty()) {
             return Optional.empty();
         }
         return Optional.of(Enum.valueOf(clazz, val.get()));
+    }
+
+    public <T extends Enum<T>, U extends Enum<U>> Enum asEnum(Class<T> clazz, U config) {
+        var val = get(config);
+        if (val.isEmpty()) {
+            throw new RuntimeException("Missing value for: " + config);
+        }
+        return Enum.valueOf(clazz, val.get());
     }
 }

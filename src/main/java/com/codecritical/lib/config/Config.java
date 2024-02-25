@@ -15,7 +15,8 @@ public enum Config {
         Z_MIN,
         Z_MAX,
         BOX_OVERLAP,
-        BASE_THICKNESS
+        BASE_THICKNESS,
+        SHAPE
     }
 
     public enum Mandelbrot {

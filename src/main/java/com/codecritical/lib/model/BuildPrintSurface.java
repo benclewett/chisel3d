@@ -1,11 +1,8 @@
 package com.codecritical.lib.model;
 
-/*
- * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
- */
-
 import com.codecritical.lib.config.Config;
 import com.codecritical.lib.config.ConfigReader;
+import com.codecritical.lib.mapping.CircularSorter;
 import com.codecritical.lib.mapping.IMapArray;
 import com.google.common.collect.ImmutableList;
 import eu.printingin3d.javascad.coords.Coords3d;
@@ -13,9 +10,11 @@ import eu.printingin3d.javascad.vrl.CSG;
 import eu.printingin3d.javascad.vrl.Polygon;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
@@ -23,11 +22,23 @@ import java.util.stream.IntStream;
 public class BuildPrintSurface implements IBuildPrint {
     static final Logger logger = Logger.getLogger("");
 
+    public enum EShape {
+        SQUARE, CIRCLE
+    }
+
     private static final Color COLOR = Color.WHITE;
     private final double xMin, xMax, yMin, yMax, zMin, zMax, xRange, yRange, zRange;
     private final double baseThickness;
+    private final Coords3dCache coords3dCache = new Coords3dCache();
+    private final EShape eShape;
+    private final CircularSorter circularSorter;
+
+    // For use when we are in CIRCLE mode
+    private final Coords3d centre;
+    private final double circleRadiusSquared;
+    private final double circleRadius;
+
     private IMapArray map;
-    private Coords3dCache coords3dCache = new Coords3dCache();
 
     public BuildPrintSurface(ConfigReader config) {
         this.xMin = config.asDouble(Config.StlPrint.X_MIN);
@@ -40,6 +51,15 @@ public class BuildPrintSurface implements IBuildPrint {
         this.yRange = this.yMax - this.yMin;
         this.zRange = this.zMax - this.zMin;
         this.baseThickness = config.asInt(Config.StlPrint.BASE_THICKNESS);
+        this.eShape = (EShape)config.asEnum(EShape.class, Config.StlPrint.SHAPE);
+        this.centre = new Coords3d(
+                (xMin + xMax) / 2,
+                (yMin + yMax) / 2,
+                (zMin + zMax) / 2
+        );
+        this.circularSorter = new CircularSorter(this.centre);
+        this.circleRadius = (xMax - xMin) / 2;
+        this.circleRadiusSquared = this.circleRadius * this.circleRadius;
     }
 
     @Override
@@ -55,75 +75,62 @@ public class BuildPrintSurface implements IBuildPrint {
     private ImmutableList<Polygon> getPolygons() {
         ImmutableList.Builder<Polygon> builder = ImmutableList.builder();
 
+        Set<Coords3d> perimeter = new HashSet<>();
+
         IntStream.range(1, map.getJSize()).forEach(j ->
                 IntStream.range(1, map.getISize()).forEach(i ->
-                        builder.addAll(getSurfacePolygons(i, j))
+                        builder.addAll(getSurfacePolygons(i, j, perimeter))
                 )
         );
 
-        builder.add(getFloorPolygon());
+        var perimeterSorted = circularSorter.sortAntiClockwiseZPlane(perimeter);
+
+        builder.addAll(getPerimeter(perimeterSorted));
+
+        builder.add(getFloorPolygon(perimeterSorted));
 
         return builder.build();
     }
 
+    private ImmutableList<Polygon> getPerimeter(ImmutableList<Coords3d> perimeter) {
 
-    //region Get the base
+        ImmutableList.Builder<Polygon> builder = ImmutableList.builder();
+
+        var prevVertex = perimeter.get(perimeter.size() - 1);
+        for (var p : perimeter) {
+            List<Coords3d> poly = new ArrayList<>();
+            poly.add(p);
+            poly.add(prevVertex);
+            poly.add(new Coords3d(prevVertex.getX(), prevVertex.getY(), zMin));
+            poly.add(new Coords3d(p.getX(), p.getY(), zMin));
+            builder.add(Polygon.fromPolygons(poly, COLOR));
+            prevVertex = p;
+        }
+
+        return builder.build();
+    }
 
     /*
-     * Add the floor to seal the model
-     * (This must be a convex collection of points.  Ie, round the perimeter, in order, and anti-clockwise)
+     * Add the floor to seal the model.  Point must have been ordered anti-clockwise.
      */
-    private Polygon getFloorPolygon() {
-        List<Coords3d> baseCoords = new ArrayList<>();
-        baseCoords.addAll(
-                coords3dCache.stream()
-                        .filter(c -> c.getZ() == zMin && c.getY() == yMin)
-                        .sorted(this::compareXReverseOrder)
-                        .toList()
-        );
-        baseCoords.addAll(
-                coords3dCache.stream()
-                        .filter(c -> c.getZ() == zMin && c.getX() == xMin && c.getY() != yMax && c.getY() != yMin)
-                        .sorted(this::compareYInOrder)
-                        .toList()
-        );
-        baseCoords.addAll(
-                coords3dCache.stream()
-                        .filter(c -> c.getZ() == zMin && c.getY() == yMax && c.getX() != xMax)
-                        .sorted(this::compareXInOrder)
-                        .toList()
-        );
-        baseCoords.addAll(
-                coords3dCache.stream()
-                        .filter(c -> c.getZ() == zMin && c.getX() == xMax && c.getY() != yMin)
-                        .sorted(this::compareYReverseOrder)
-                        .toList()
-        );
+    private Polygon getFloorPolygon(ImmutableList<Coords3d> perimeter) {
 
-        return Polygon.fromPolygons(baseCoords, COLOR);
+        List<Coords3d> baseVertices = new ArrayList<>();
+
+        perimeter.forEach(p -> baseVertices.add(coords3dCache.get(
+                p.getX(),
+                p.getY(),
+                zMin
+        )));
+
+        return Polygon.fromPolygons(baseVertices, COLOR);
     }
-
-    private int compareXInOrder(Coords3d c0, Coords3d c1) {
-        return Double.compare(c0.getX(), c1.getX());
-    }
-
-    private int compareYInOrder(Coords3d c0, Coords3d c1) {
-        return Double.compare(c0.getY(), c1.getY());
-    }
-
-    private int compareXReverseOrder(Coords3d c0, Coords3d c1) {
-        return Double.compare(c1.getX(), c0.getX());
-    }
-
-    private int compareYReverseOrder(Coords3d c1, Coords3d c0) {
-        return Double.compare(c0.getY(), c1.getY());
-    }
-
-    //endregion
 
     //region Get the surface and sides
 
-    private List<Polygon> getSurfacePolygons(int i, int j) {
+    private final static List<Polygon> EMPTY_POLYGON_LIST = new ArrayList<>();
+
+    private List<Polygon> getSurfacePolygons(int i, int j, Set<Coords3d> perimeter) {
 
         // Remember, a correctly defined polygons is ANTI-CLOCKWISE on the surface.
         // (Blender doesn't care, but UltiCura does.)
@@ -152,12 +159,38 @@ public class BuildPrintSurface implements IBuildPrint {
         double z1 = map.get(i, j - 1);
         double z2 = map.get(i - 1, j);
         double z3 = map.get(i, j);
+        double z5 = (z0 + z1 + z2 + z3) / 4.0;
 
         // Vertices
         var v0 = coords3dCache.get(mapX(i - 1), mapY(j - 1), mapZ(z0));
         var v1 = coords3dCache.get(mapX(i), mapY( j - 1), mapZ(z1));
         var v2 = coords3dCache.get(mapX(i - 1), mapY(j), mapZ(z2));
         var v3 = coords3dCache.get(mapX(i), mapY(j), mapZ(z3));
+        var v5 = coords3dCache.get(mapX(i - 0.5), mapY(j - 0.5), mapZ(z5));
+
+        if (EShape.CIRCLE.equals(eShape)) {
+            if (getRadiusSquare(v5) > circleRadiusSquared) {
+                // Reject, more than half the shape is outside the circle.
+                return EMPTY_POLYGON_LIST;
+            }
+            // Look for edge
+            if (getRadiusSquare(v0) > circleRadiusSquared) {
+                v0 = coords3dCache.get(trimToRadius(v0));
+                perimeter.add(v0);
+            }
+            if (getRadiusSquare(v1) > circleRadiusSquared) {
+                v1 = coords3dCache.get(trimToRadius(v1));
+                perimeter.add(v1);
+            }
+            if (getRadiusSquare(v2) > circleRadiusSquared) {
+                v2 = coords3dCache.get(trimToRadius(v2));
+                perimeter.add(v2);
+            }
+            if (getRadiusSquare(v3) > circleRadiusSquared) {
+                v3 = coords3dCache.get(trimToRadius(v3));
+                perimeter.add(v3);
+            }
+        }
 
         if ((v0 == v1 && v2 == v3) || (v0 == v2 && v1 == v3)) {
             // Coplanar, needs just one polygon.
@@ -169,8 +202,6 @@ public class BuildPrintSurface implements IBuildPrint {
             polygons.add(Polygon.fromPolygons(poly, COLOR));
         } else {
             // Complex.  Break up into 4x polygons.
-            double z5 = (z0 + z1 + z2 + z3) / 4.0;
-            var v5 = coords3dCache.get(mapX(i - 0.5), mapY(j - 0.5), mapZ(z5));
 
             List<Coords3d> poly1 = new ArrayList<>();
             poly1.add(v1);
@@ -197,45 +228,39 @@ public class BuildPrintSurface implements IBuildPrint {
             polygons.add(Polygon.fromPolygons(poly4, COLOR));
         }
 
-        // Edge walls
-        
-        if (i == 1) {
-            List<Coords3d> poly = new ArrayList<>();
-            poly.add(v0);
-            poly.add(v2);
-            poly.add(coords3dCache.get(xMin, mapY(j), zMin));
-            poly.add(coords3dCache.get(xMin, mapY(j - 1), zMin));
-            polygons.add(Polygon.fromPolygons(poly, COLOR));
-        }
+        // Square Edge walls
 
-        if (i == map.getISize() - 1) {
-            List<Coords3d> poly = new ArrayList<>();
-            poly.add(v3);
-            poly.add(v1);
-            poly.add(coords3dCache.get(xMax, mapY(j - 1), zMin));
-            poly.add(coords3dCache.get(xMax, mapY(j), zMin));
-            polygons.add(Polygon.fromPolygons(poly, COLOR));
-        }
-
-        if (j == 1) {
-            List<Coords3d> poly = new ArrayList<>();
-            poly.add(v1);
-            poly.add(v0);
-            poly.add(coords3dCache.get(mapX(i - 1), yMin, zMin));
-            poly.add(coords3dCache.get(mapX(i), yMin, zMin));
-            polygons.add(Polygon.fromPolygons(poly, COLOR));
-        }
-
-        if (j == map.getJSize() - 1) {
-            List<Coords3d> poly = new ArrayList<>();
-            poly.add(v2);
-            poly.add(v3);
-            poly.add(coords3dCache.get(mapX(i), yMax, zMin));
-            poly.add(coords3dCache.get(mapX(i - 1), yMax, zMin));
-            polygons.add(Polygon.fromPolygons(poly, COLOR));
+        if (EShape.SQUARE.equals(eShape)) {
+            if (i == 1) {
+                perimeter.add(v0);
+                perimeter.add(v2);
+            } else if (i == map.getISize() - 1) {
+                perimeter.add(v3);
+                perimeter.add(v1);
+            }
+            if (j == 1) {
+                perimeter.add(v1);
+                perimeter.add(v0);
+            } else if (j == map.getJSize() - 1) {
+                perimeter.add(v2);
+                perimeter.add(v3);
+            }
         }
 
         return polygons;
+    }
+
+    private Coords3d trimToRadius(Coords3d c) {
+        double alpha = Math.atan2(c.getY() - centre.getY(), c.getX() - centre.getX());
+        return new Coords3d(
+                Math.cos(alpha) * circleRadius + centre.getX(),
+                Math.sin(alpha) * circleRadius + centre.getY(),
+                c.getZ()
+        );
+    }
+
+    private double getRadiusSquare(Coords3d c) {
+        return Math.pow(centre.getX() - c.getX(), 2) + Math.pow(centre.getY() - c.getY(), 2);
     }
 
     //endregion
