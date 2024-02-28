@@ -28,6 +28,14 @@ public class Coords3dCache {
             return coords;
         }
     }
+    public Coords3d get(Coords3d coords) {
+        if (cache.contains(coords)) {
+            return coords;
+        } else {
+            cache.add(coords);
+            return coords;
+        }
+    }
 
     @Override
     public String toString() {

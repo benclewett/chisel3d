@@ -57,13 +57,13 @@ class PlateauTextureTest {
         showMap("Plateau (as a map)", plateauCollection.asMapArray());
 
         ConfigReader config = new ConfigReader()
+                .add("Config.StlPrint.X_MAX", 10.0)
+                .add("Config.StlPrint.Y_MAX", 10.0)
+                .add("Config.StlPrint.X_MIN", 0.0)
+                .add("Config.StlPrint.Y_MIN", 0.0)
                 .add("Config.Mandelbrot.Processing.PLATEAU_TEXTURE_MAP", "HOLLOW")
-                .add("Config.Mandelbrot.Print.X_MAX", "10")
-                .add("Config.Mandelbrot.Print.Y_MAX", "10")
-                .add("Config.Mandelbrot.Print.X_MIN", "0")
-                .add("Config.Mandelbrot.Print.Y_MIN", "0")
-                .add("Config.Mandelbrot.Processing.PLATEAU_HOLLOW_RADIUS", "1.0")
-                .add("Config.Mandelbrot.Processing.PLATEAU_HOLLOW_DEPTH", "0.5");
+                .add("Config.Mandelbrot.Processing.PLATEAU_HOLLOW_RADIUS", 1.0)
+                .add("Config.Mandelbrot.Processing.PLATEAU_HOLLOW_DEPTH", 0.5);
 
         var plateauTexture = new PlateauTexture(config, map, plateauCollection).getTexture();
 
