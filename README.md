@@ -76,14 +76,14 @@ Config.Mandelbrot.Model.J1=0.0006481240343
 
 ## Mandelbrot Boss
 
-<img src="images/mandelbrot_boss.png" height="200" width="300" />
+<img src="images/mandelbrot_boss_2.png" height="200" width="300" />
 
 <pre>
 Config.Mandelbrot.Model.MAX_ITERATIONS=4000
-Config.Mandelbrot.Model.I0=-1.25728541466
-Config.Mandelbrot.Model.I1=-1.25728540845
-Config.Mandelbrot.Model.J0=0.038280500524
-Config.Mandelbrot.Model.J1=0.038280505180
+Config.Mandelbrot.Model.I0=-1.2572854149705
+Config.Mandelbrot.Model.I1=-1.2572854081395
+Config.Mandelbrot.Model.J0=0.0382804994950
+Config.Mandelbrot.Model.J1=0.0382805062089
 </pre>
 
 ## Infinite Machine

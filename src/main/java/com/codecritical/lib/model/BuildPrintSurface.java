@@ -5,15 +5,24 @@ import com.codecritical.lib.config.ConfigReader;
 import com.codecritical.lib.mapping.CircularSorter;
 import com.codecritical.lib.mapping.IMapArray;
 import com.google.common.collect.ImmutableList;
+import eu.printingin3d.javascad.basic.Radius;
 import eu.printingin3d.javascad.coords.Coords3d;
+import eu.printingin3d.javascad.models.Abstract3dModel;
+import eu.printingin3d.javascad.models.Complex3dModel;
+import eu.printingin3d.javascad.models.Cylinder;
+import eu.printingin3d.javascad.models.Empty3dModel;
+import eu.printingin3d.javascad.tranzitions.Intersection;
+import eu.printingin3d.javascad.tranzitions.Union;
 import eu.printingin3d.javascad.vrl.CSG;
 import eu.printingin3d.javascad.vrl.Polygon;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
@@ -66,10 +75,16 @@ public class BuildPrintSurface implements IBuildPrint {
     public ImmutableList<CSG> getPrint(IMapArray map) {
         this.map = map;
 
-        var polygons = getPolygons();
-        var csg = new CSG(polygons);
+        ImmutableList<Polygon> polygons = getPolygons();
+        var mandelbrot = new CSG(polygons);
 
-        return ImmutableList.of(csg);
+        /*
+        var boundary = new Cylinder(zMax - zMin, Radius.fromRadius(circleRadius));
+
+        var csgOut = new Intersection(polygons, boundary).toCSG();
+         */
+
+        return ImmutableList.of(mandelbrot);
     }
 
     private ImmutableList<Polygon> getPolygons() {
@@ -93,6 +108,10 @@ public class BuildPrintSurface implements IBuildPrint {
     }
 
     private ImmutableList<Polygon> getPerimeter(ImmutableList<Coords3d> perimeter) {
+
+        if (perimeter.size() == 0) {
+            logger.severe("We don't seem to have a perimeter.");
+        }
 
         ImmutableList.Builder<Polygon> builder = ImmutableList.builder();
 
@@ -128,12 +147,14 @@ public class BuildPrintSurface implements IBuildPrint {
 
     //region Get the surface and sides
 
-    private final static List<Polygon> EMPTY_POLYGON_LIST = new ArrayList<>();
-
     private List<Polygon> getSurfacePolygons(int i, int j, Set<Coords3d> perimeter) {
 
+        if (EShape.CIRCLE.equals(eShape)) {
+            throw new RuntimeException("CIRCLE not yet supported.");
+        }
+
         // Remember, a correctly defined polygons is ANTI-CLOCKWISE on the surface.
-        // (Blender doesn't care, but UltiCura does.)
+        // (Blender doesn't care, but UltiMaker Cura does.)
 
         List<Polygon> polygons = new ArrayList<>();
 
@@ -145,7 +166,7 @@ public class BuildPrintSurface implements IBuildPrint {
          *        |   \         /   |
          *        |     \     /     |
          *        |       \ /       |
-         *   y/j  |  p3   v5    p4  |
+         *   y/j  |  p3   v4    p4  |
          *        |       / \       |
          *        |     /     \     |
          *        |   /         \   |
@@ -159,72 +180,66 @@ public class BuildPrintSurface implements IBuildPrint {
         double z1 = map.get(i, j - 1);
         double z2 = map.get(i - 1, j);
         double z3 = map.get(i, j);
-        double z5 = (z0 + z1 + z2 + z3) / 4.0;
+        double z4 = (z0 + z1 + z2 + z3) / 4.0;
 
         // Vertices
-        var v0 = coords3dCache.get(mapX(i - 1), mapY(j - 1), mapZ(z0));
-        var v1 = coords3dCache.get(mapX(i), mapY( j - 1), mapZ(z1));
-        var v2 = coords3dCache.get(mapX(i - 1), mapY(j), mapZ(z2));
-        var v3 = coords3dCache.get(mapX(i), mapY(j), mapZ(z3));
-        var v5 = coords3dCache.get(mapX(i - 0.5), mapY(j - 0.5), mapZ(z5));
+        Coords3d[] v = new Coords3d[]{
+                coords3dCache.get(mapX(i - 1), mapY(j - 1), mapZ(z0)),
+                coords3dCache.get(mapX(i), mapY(j - 1), mapZ(z1)),
+                coords3dCache.get(mapX(i - 1), mapY(j), mapZ(z2)),
+                coords3dCache.get(mapX(i), mapY(j), mapZ(z3)),
+                coords3dCache.get(mapX(i - 0.5), mapY(j - 0.5), mapZ(z4))
+        };
+
+        /*
 
         if (EShape.CIRCLE.equals(eShape)) {
-            if (getRadiusSquare(v5) > circleRadiusSquared) {
-                // Reject, more than half the shape is outside the circle.
+            // Pre-process cut-off on the radius of the circle.
+            int[] vInCircle = getVertexInRadius(v, 4);
+            int countIn = Arrays.stream(vInCircle).sum();
+            if (countIn == 0) {
                 return EMPTY_POLYGON_LIST;
-            }
-            // Look for edge
-            if (getRadiusSquare(v0) > circleRadiusSquared) {
-                v0 = coords3dCache.get(trimToRadius(v0));
-                perimeter.add(v0);
-            }
-            if (getRadiusSquare(v1) > circleRadiusSquared) {
-                v1 = coords3dCache.get(trimToRadius(v1));
-                perimeter.add(v1);
-            }
-            if (getRadiusSquare(v2) > circleRadiusSquared) {
-                v2 = coords3dCache.get(trimToRadius(v2));
-                perimeter.add(v2);
-            }
-            if (getRadiusSquare(v3) > circleRadiusSquared) {
-                v3 = coords3dCache.get(trimToRadius(v3));
-                perimeter.add(v3);
+            } else if (countIn == 1) {
+                List<Coords3d> vTriangle = getTriangle(vInCircle, v, perimeter);
+                polygons.add(Polygon.fromPolygons(vTriangle, COLOR));
+                return polygons;
             }
         }
+         */
 
-        if ((v0 == v1 && v2 == v3) || (v0 == v2 && v1 == v3)) {
+        if ((v[0] == v[1] && v[2] == v[3]) || (v[0] == v[2] && v[1] == v[3])) {
             // Coplanar, needs just one polygon.
             List<Coords3d> poly = new ArrayList<>();
-            poly.add(v0);
-            poly.add(v1);
-            poly.add(v3);
-            poly.add(v2);
+            poly.add(v[0]);
+            poly.add(v[1]);
+            poly.add(v[3]);
+            poly.add(v[2]);
             polygons.add(Polygon.fromPolygons(poly, COLOR));
         } else {
             // Complex.  Break up into 4x polygons.
 
             List<Coords3d> poly1 = new ArrayList<>();
-            poly1.add(v1);
-            poly1.add(v5);
-            poly1.add(v0);
+            poly1.add(v[1]);
+            poly1.add(v[4]);
+            poly1.add(v[0]);
             polygons.add(Polygon.fromPolygons(poly1, COLOR));
 
             List<Coords3d> poly2 = new ArrayList<>();
-            poly2.add(v3);
-            poly2.add(v2);
-            poly2.add(v5);
+            poly2.add(v[3]);
+            poly2.add(v[2]);
+            poly2.add(v[4]);
             polygons.add(Polygon.fromPolygons(poly2, COLOR));
 
             List<Coords3d> poly3 = new ArrayList<>();
-            poly3.add(v5);
-            poly3.add(v2);
-            poly3.add(v0);
+            poly3.add(v[4]);
+            poly3.add(v[2]);
+            poly3.add(v[0]);
             polygons.add(Polygon.fromPolygons(poly3, COLOR));
 
             List<Coords3d> poly4 = new ArrayList<>();
-            poly4.add(v3);
-            poly4.add(v5);
-            poly4.add(v1);
+            poly4.add(v[3]);
+            poly4.add(v[4]);
+            poly4.add(v[1]);
             polygons.add(Polygon.fromPolygons(poly4, COLOR));
         }
 
@@ -232,31 +247,60 @@ public class BuildPrintSurface implements IBuildPrint {
 
         if (EShape.SQUARE.equals(eShape)) {
             if (i == 1) {
-                perimeter.add(v0);
-                perimeter.add(v2);
+                perimeter.add(v[0]);
+                perimeter.add(v[2]);
             } else if (i == map.getISize() - 1) {
-                perimeter.add(v3);
-                perimeter.add(v1);
+                perimeter.add(v[3]);
+                perimeter.add(v[1]);
             }
             if (j == 1) {
-                perimeter.add(v1);
-                perimeter.add(v0);
+                perimeter.add(v[1]);
+                perimeter.add(v[0]);
             } else if (j == map.getJSize() - 1) {
-                perimeter.add(v2);
-                perimeter.add(v3);
+                perimeter.add(v[2]);
+                perimeter.add(v[3]);
             }
         }
 
         return polygons;
     }
 
-    private Coords3d trimToRadius(Coords3d c) {
-        double alpha = Math.atan2(c.getY() - centre.getY(), c.getX() - centre.getX());
-        return new Coords3d(
-                Math.cos(alpha) * circleRadius + centre.getX(),
-                Math.sin(alpha) * circleRadius + centre.getY(),
-                c.getZ()
-        );
+    private List<Coords3d> getTriangle(int[] vInCircle, Coords3d[] vAll, Set<Coords3d> perimeter) {
+        throw new RuntimeException("Unsupported");
+        /*
+        // Find the valid triangle of structures list of vertices.
+        Coords3d v, vLeft, vRight;
+        if (vInCircle[0] == 1) {
+            v = vAll[0];
+            vLeft = vAll[2];
+            vRight = vAll[1];
+        } else if (vInCircle[1] == 1) {
+            v = vAll[1];
+            vLeft = vAll[0];
+            vRight = vAll[3];
+        } else if (vInCircle[2] == 1) {
+            v = vAll[2];
+            vLeft = vAll[3];
+            vRight = vAll[0];
+        } else if (vInCircle[3] == 1) {
+            v = vAll[3];
+            vLeft = vAll[1];
+            vRight = vAll[2];
+        }
+        vLeft = getRadiusCrossLine(v, vLeft);
+        vRight = getRadiusCrossLine(v, vRight);
+        perimeter.add(vLeft);
+        perimeter.add(vRight);
+        return List.of(v, vLeft, vRight);
+         */
+    }
+
+    private int[] getVertexInRadius(Coords3d[] vertexSet, int count) {
+        int[] bOut = new int[count];
+        for (int i = 0; i < count; i++) {
+            bOut[i] = (getRadiusSquare(vertexSet[i]) < circleRadiusSquared) ? 1 : 0;
+        }
+        return bOut;
     }
 
     private double getRadiusSquare(Coords3d c) {

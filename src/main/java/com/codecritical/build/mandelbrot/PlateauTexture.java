@@ -60,16 +60,13 @@ public class PlateauTexture {
     }
 
     public Optional<IMapArray> getTexture() {
-        if (eTextureMapName.equals(ETextureName.NONE)) {
-            return Optional.empty();
-        }
-
-        return Optional.of(switch (eTextureMapName) {
-            case HIGH -> getHigh(map);
-            case LOW -> getLow(map);
-            case HOLLOW -> getHollow(map, hollowDepth);
+        return switch (eTextureMapName) {
+            case NONE -> Optional.empty();
+            case HIGH -> Optional.of(getHigh(map));
+            case LOW -> Optional.of(getLow(map));
+            case HOLLOW -> Optional.of(getHollow(map, hollowDepth));
             default -> throw new RuntimeException("Texture map " + eTextureMapName + " is not known");
-        });
+        };
     }
 
     //region Hollow

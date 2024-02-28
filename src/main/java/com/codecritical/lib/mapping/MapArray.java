@@ -5,6 +5,7 @@ package com.codecritical.lib.mapping;
  */
 
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Verify;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -52,14 +53,14 @@ public class MapArray implements IMapArray {
 
     @Override
     public double get(int i, int j) {
-        return mapArray[i + j * jSize];
+        return mapArray[i + j * iSize];
     }
 
     public void set(Point p) {
         set(p.i, p.j, p.z);
     }
     public void set(int i, int j, Double z) {
-        mapArray[i + j * jSize] = z;
+        mapArray[i + j * iSize] = z;
     }
 
     public int getISize() {

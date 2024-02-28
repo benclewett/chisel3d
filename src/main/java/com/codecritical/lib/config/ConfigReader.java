@@ -30,6 +30,14 @@ public class ConfigReader {
         this.properties.setProperty(name, value);
         return this;
     }
+    public ConfigReader add(String name, Integer i) {
+        this.properties.setProperty(name, i.toString());
+        return this;
+    }
+    public ConfigReader add(String name, Double d) {
+        this.properties.setProperty(name, d.toString());
+        return this;
+    }
 
     public OptionalInt asOptionalInt(Enum config) {
         var i = get(config);

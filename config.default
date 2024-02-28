@@ -32,27 +32,30 @@ Config.StlPrint.Z_MIN=0
 Config.StlPrint.Z_MAX=50
 # Base is added onto the Z range.
 Config.StlPrint.BASE_THICKNESS=5
-# SHAPE=[SQUARE, CIRCLE]
-Config.StlPrint.SHAPE=CIRCLE
+# SHAPE=[SQUARE, CIRCLE]  Only SQUARE works today.
+Config.StlPrint.SHAPE=SQUARE
 
 
 #
 # Mandelbrot STL Print
 #
 
-Config.Mandelbrot.Model.MAX_ITERATIONS=9000
-Config.Mandelbrot.Model.I0=0.2860156016706
-Config.Mandelbrot.Model.I1=0.2860156017191
-Config.Mandelbrot.Model.J0=0.0115374860123
-Config.Mandelbrot.Model.J1=0.0115374859759
-Config.Mandelbrot.Model.I_COUNT=20
-Config.Mandelbrot.Model.J_COUNT=20
+Config.Mandelbrot.Model.MAX_ITERATIONS=4000
+Config.Mandelbrot.Model.I0=-1.2572854149705
+Config.Mandelbrot.Model.I1=-1.2572854081395
+Config.Mandelbrot.Model.J0=0.0382804994950
+Config.Mandelbrot.Model.J1=0.0382805062089
+Config.Mandelbrot.Model.I_COUNT=200
+Config.Mandelbrot.Model.J_COUNT=200
+# Tweak of model size.  Look for a log output for new I/J values.
+Config.Mandelbrot.Model.I_SCALE=1.0
+Config.Mandelbrot.Model.J_SCALE=1.0
 
 Config.Mandelbrot.Processing.SCALE_POWER=0.01
 # Plateau's of 0.1% area or greater are respected and ignored from Gaussian smoothing.
 Config.Mandelbrot.Processing.MIN_PLATEAU_COEFFICIENT=0.001
 # Plateau applied with texture, HIGH, LOW or HOLLOW -> hollow out the plateau leaving a border.
-Config.Mandelbrot.Processing.PLATEAU_TEXTURE_MAP=HIGH
+Config.Mandelbrot.Processing.PLATEAU_TEXTURE_MAP=HOLLOW
 Config.Mandelbrot.Processing.PLATEAU_HOLLOW_RADIUS=1.1
 Config.Mandelbrot.Processing.PLATEAU_HOLLOW_DEPTH=0.0
 # Gaussian Radius as coefficient of the size.  Optional.  0.005 (0.5%) is a good option.

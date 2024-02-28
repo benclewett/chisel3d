@@ -29,7 +29,9 @@ public enum Config {
             J0,
             J1,
             I_COUNT,
-            J_COUNT
+            J_COUNT,
+            I_SCALE,
+            J_SCALE
         }
 
         public enum Processing {
