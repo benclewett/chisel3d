@@ -1,25 +1,6 @@
 Config.RANDOM_SEED=1
 
 #
-# Infinite Machine
-#
-
-Config.InfiniteMachineConfig.OUTPUT_FILENAME=infinite_machine_small.stl
-Config.InfiniteMachineConfig.DEPTH=2
-
-Config.InfiniteMachineConfig.ROOT_BOX_ORIGIN=100000,100000,100000
-Config.InfiniteMachineConfig.ROOT_BOX_SIZE=1000,1000,1000
-
-Config.InfiniteMachineConfig.ShaftBoxBranch.MIN_BRANCH_COUNT=0
-Config.InfiniteMachineConfig.ShaftBoxBranch.MAX_BRANCH_COUNT=5
-
-Config.InfiniteMachineConfig.ShaftBoxBranch.SIZE_SCALE_MIN=0.7
-Config.InfiniteMachineConfig.ShaftBoxBranch.SIZE_SCALE_MAX=0.9
-
-Config.InfiniteMachineConfig.ShaftBoxBranch.SHAFT_LENGTH_MAX=4.0
-Config.InfiniteMachineConfig.ShaftBoxBranch.SHAFT_LENGTH_MIN=0.5
-
-#
 # Used for all STL prints
 # All dimensions are mm or coefficients.
 #
@@ -35,6 +16,7 @@ Config.StlPrint.SHAPE=SQUARE
 
 #
 # Mandelbrot & Burning Ship Fractal STL Prints
+# Program Options: MANDELBROT, BURNING_SHIP
 #
 
 Config.Fractal.Model.MAX_ITERATIONS=500
@@ -63,6 +45,7 @@ Config.Fractal.OUTPUT_FILENAME=fractal
 
 #
 # Gravitational Waves STL Print
+# Program Option: GRAVITATIONAL_WAVES
 #
 
 Config.GravitationalWaves.I0=0
@@ -81,3 +64,24 @@ Config.GravitationalWaves.MASS_RADIUS_COEFFICIENT=0.03
 Config.GravitationalWaves.PERSPECTIVE_ANGLE=0.523
 
 Config.GravitationalWaves.Print.OUTPUT_FILENAME=gravitationalWaves
+
+#
+# Infinite Machine
+# Program Option: INFINITE_MACHINE
+#
+
+Config.InfiniteMachineConfig.OUTPUT_FILENAME=infinite_machine_small.stl
+Config.InfiniteMachineConfig.DEPTH=2
+
+Config.InfiniteMachineConfig.ROOT_BOX_ORIGIN=100000,100000,100000
+Config.InfiniteMachineConfig.ROOT_BOX_SIZE=1000,1000,1000
+
+Config.InfiniteMachineConfig.ShaftBoxBranch.MIN_BRANCH_COUNT=0
+Config.InfiniteMachineConfig.ShaftBoxBranch.MAX_BRANCH_COUNT=5
+
+Config.InfiniteMachineConfig.ShaftBoxBranch.SIZE_SCALE_MIN=0.7
+Config.InfiniteMachineConfig.ShaftBoxBranch.SIZE_SCALE_MAX=0.9
+
+Config.InfiniteMachineConfig.ShaftBoxBranch.SHAFT_LENGTH_MAX=4.0
+Config.InfiniteMachineConfig.ShaftBoxBranch.SHAFT_LENGTH_MIN=0.5
+

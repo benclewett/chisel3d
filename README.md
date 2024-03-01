@@ -86,6 +86,19 @@ Config.Fractal.Model.J0=0.0382804994950
 Config.Fractal.Model.J1=0.0382805062089
 </pre>
 
+## Classic Burning Ship
+
+<img src="images/burning_ship.png" height="200" width="300" />
+
+<pre>
+Config.Fractal.Model.MAX_ITERATIONS=500
+Config.Fractal.Model.I0=-1.8
+Config.Fractal.Model.I1=-1.7
+Config.Fractal.Model.J0=-0.08
+Config.Fractal.Model.J1=0.01
+</pre>
+
+
 ## Infinite Machine
 
 Production of fractal structures.  With the help of Blender, images like this may be produced.
