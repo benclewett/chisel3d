@@ -4,6 +4,7 @@ import com.codecritical.lib.config.Config;
 import com.codecritical.lib.config.ConfigReader;
 import com.codecritical.lib.mapping.CircularSorter;
 import com.codecritical.lib.mapping.IMapArray;
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import eu.printingin3d.javascad.basic.Radius;
 import eu.printingin3d.javascad.coords.Coords3d;
@@ -50,12 +51,12 @@ public class BuildPrintSurface implements IBuildPrint {
     private IMapArray map;
 
     public BuildPrintSurface(ConfigReader config) {
-        this.xMin = config.asDouble(Config.StlPrint.X_MIN);
-        this.xMax = config.asDouble(Config.StlPrint.X_MAX);
-        this.yMin = config.asDouble(Config.StlPrint.Y_MIN);
-        this.yMax = config.asDouble(Config.StlPrint.Y_MAX);
-        this.zMin = config.asDouble(Config.StlPrint.Z_MIN);
-        this.zMax = config.asDouble(Config.StlPrint.Z_MAX);
+        this.xMin = 0.0;
+        this.xMax = config.asDouble(Config.StlPrint.X_SIZE);
+        this.yMin = 0.0;
+        this.yMax = config.asDouble(Config.StlPrint.Y_SIZE);
+        this.zMin = 0.0;
+        this.zMax = config.asDouble(Config.StlPrint.Z_SIZE);
         this.xRange = this.xMax - this.xMin;
         this.yRange = this.yMax - this.yMin;
         this.zRange = this.zMax - this.zMin;
@@ -69,6 +70,8 @@ public class BuildPrintSurface implements IBuildPrint {
         this.circularSorter = new CircularSorter(this.centre);
         this.circleRadius = (xMax - xMin) / 2;
         this.circleRadiusSquared = this.circleRadius * this.circleRadius;
+
+        logger.info(this.toString());
     }
 
     @Override
@@ -320,8 +323,27 @@ public class BuildPrintSurface implements IBuildPrint {
     }
 
     private double mapZ(double k) {
-        return (k * (zRange - baseThickness)) + baseThickness + zMin;
+        return (k * zRange) + baseThickness + zMin;
     }
 
     //endregion
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("xMin", xMin)
+                .add("xMax", xMax)
+                .add("yMin", yMin)
+                .add("yMax", yMax)
+                .add("zMin", zMin)
+                .add("zMax", zMax)
+                .add("xRange", xRange)
+                .add("yRange", yRange)
+                .add("zRange", zRange)
+                .add("baseThickness", baseThickness)
+                .add("eShape", eShape)
+                .add("centre", centre)
+                .add("circleRadius", circleRadius)
+                .toString();
+    }
 }

@@ -27,15 +27,15 @@ public class BuildPrintBox implements IBuildPrint {
     private final int baseThickness;
 
     public BuildPrintBox(ConfigReader config) {
-        this.xMin = config.asDouble(Config.StlPrint.X_MIN);
-        this.xMax = config.asDouble(Config.StlPrint.X_MAX);
-        this.yMin = config.asDouble(Config.StlPrint.Y_MIN);
-        this.yMax = config.asDouble(Config.StlPrint.Y_MAX);
-        this.zMin = config.asDouble(Config.StlPrint.Z_MIN);
-        this.zMax = config.asDouble(Config.StlPrint.Z_MAX);
-        this.maxIterations = config.asInt(Config.Mandelbrot.Model.MAX_ITERATIONS);
-        this.iCount = config.asInt(Config.Mandelbrot.Model.I_COUNT);
-        this.jCount = config.asInt(Config.Mandelbrot.Model.J_COUNT);
+        this.xMin = 0.0;
+        this.xMax = config.asDouble(Config.StlPrint.X_SIZE);
+        this.yMin = 0.0;
+        this.yMax = config.asDouble(Config.StlPrint.Y_SIZE);
+        this.zMin = 0.0;
+        this.zMax = config.asDouble(Config.StlPrint.Z_SIZE);
+        this.maxIterations = config.asInt(Config.Fractal.Model.MAX_ITERATIONS);
+        this.iCount = config.asInt(Config.Fractal.Model.I_COUNT);
+        this.jCount = config.asInt(Config.Fractal.Model.J_COUNT);
         this.overlap = config.asDouble(Config.StlPrint.BOX_OVERLAP);
         this.baseThickness = config.asInt(Config.StlPrint.BASE_THICKNESS);
 

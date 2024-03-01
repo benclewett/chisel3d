@@ -1,22 +1,24 @@
-package com.codecritical.build.mandelbrot;
-
-/*
- * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
- */
+package com.codecritical.build.burningship;
 
 import com.codecritical.build.Builder;
+import com.codecritical.build.mandelbrot.MandelbrotMap;
 import com.codecritical.lib.config.Config;
 import com.codecritical.lib.config.ConfigReader;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.logging.Logger;
 
+/*
+ * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
+ */
+
 @ParametersAreNonnullByDefault
-public class MandelbrotBuilder {
+public class BurningShipBuilder {
+
     static final Logger logger = Logger.getLogger("");
     private final ConfigReader config;
 
-    public MandelbrotBuilder(ConfigReader config) {
+    public BurningShipBuilder(ConfigReader config) {
         this.config = config;
 
         try {
@@ -28,7 +30,7 @@ public class MandelbrotBuilder {
     }
 
     private void build() {
-        var map = new MandelbrotMap(config).getMap();
+        var map = new BurningShipMap(config).getMap();
 
         Builder.create(config, map)
                 .normalise()
@@ -40,4 +42,5 @@ public class MandelbrotBuilder {
                 .mapToCsg()
                 .savePrint(config.asString(Config.Fractal.OUTPUT_FILENAME));
     }
+
 }

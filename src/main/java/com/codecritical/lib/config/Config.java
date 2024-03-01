@@ -8,18 +8,15 @@ public enum Config {
     RANDOM_SEED;
 
     public enum StlPrint {
-        X_MIN,
-        X_MAX,
-        Y_MIN,
-        Y_MAX,
-        Z_MIN,
-        Z_MAX,
+        X_SIZE,
+        Y_SIZE,
+        Z_SIZE,
         BOX_OVERLAP,
         BASE_THICKNESS,
         SHAPE
     }
 
-    public enum Mandelbrot {
+    public enum Fractal {
         OUTPUT_FILENAME;
 
         public enum Model {

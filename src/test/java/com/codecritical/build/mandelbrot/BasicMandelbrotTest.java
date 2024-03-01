@@ -25,19 +25,19 @@ class BasicMandelbrotTest {
     void test() {
 
         ConfigReader config = new ConfigReader()
-                .add("Config.Mandelbrot.Model.MAX_ITERATIONS", MAX_ITERATIONS)
-                .add("Config.Mandelbrot.Model.I0", I0)
-                .add("Config.Mandelbrot.Model.I1", I1)
-                .add("Config.Mandelbrot.Model.J0", J0)
-                .add("Config.Mandelbrot.Model.J1", J1)
-                .add("Config.Mandelbrot.Model.I_COUNT", I_COUNT)
-                .add("Config.Mandelbrot.Model.J_COUNT", J_COUNT);
+                .add("Config.Fractal.Model.MAX_ITERATIONS", MAX_ITERATIONS)
+                .add("Config.Fractal.Model.I0", I0)
+                .add("Config.Fractal.Model.I1", I1)
+                .add("Config.Fractal.Model.J0", J0)
+                .add("Config.Fractal.Model.J1", J1)
+                .add("Config.Fractal.Model.I_COUNT", I_COUNT)
+                .add("Config.Fractal.Model.J_COUNT", J_COUNT);
 
         var map = new MandelbrotMap(config).getMap();
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Mandelbrot:\r\n  +");
+        sb.append("Fractal:\r\n  +");
         for (int i = 0; i < map.getISize(); i++) {
             sb.append("-");
         }

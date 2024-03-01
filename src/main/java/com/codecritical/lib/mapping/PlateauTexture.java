@@ -1,4 +1,4 @@
-package com.codecritical.build.mandelbrot;
+package com.codecritical.lib.mapping;
 
 /*
  * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
@@ -6,9 +6,6 @@ package com.codecritical.build.mandelbrot;
 
 import com.codecritical.lib.config.Config;
 import com.codecritical.lib.config.ConfigReader;
-import com.codecritical.lib.mapping.IMapArray;
-import com.codecritical.lib.mapping.MapArray;
-import com.codecritical.lib.mapping.PlateauCollections;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 
@@ -49,14 +46,15 @@ public class PlateauTexture {
         this.config = config;
         this.map = map;
         this.plateauCollection = plateauCollection;
-        this.eTextureMapName = (ETextureName)config.asOptionalEnum(ETextureName.class, Config.Mandelbrot.Processing.PLATEAU_TEXTURE_MAP)
+        this.eTextureMapName = (ETextureName)config.asOptionalEnum(ETextureName.class, Config.Fractal.Processing.PLATEAU_TEXTURE_MAP)
                 .orElse(ETextureName.NONE);
-        this.hollowCountRadius = config.asDouble(Config.Mandelbrot.Processing.PLATEAU_HOLLOW_RADIUS);
-        this.hollowDepth = config.asDouble(Config.Mandelbrot.Processing.PLATEAU_HOLLOW_DEPTH);
-        this.holeRadiosCountOnMap = (int)(hollowCountRadius /
-                (config.asDouble(Config.StlPrint.X_MAX) - config.asDouble(Config.StlPrint.X_MIN))
+        this.hollowCountRadius = config.asDouble(Config.Fractal.Processing.PLATEAU_HOLLOW_RADIUS);
+        this.hollowDepth = config.asDouble(Config.Fractal.Processing.PLATEAU_HOLLOW_DEPTH);
+        this.holeRadiosCountOnMap = (int)(hollowCountRadius / config.asDouble(Config.StlPrint.X_SIZE)
                 * map.getISize());
         logger.info(this.toString());
+
+        assert(this.hollowDepth >= 0.0 && this.hollowDepth <= 1.0);
     }
 
     public Optional<IMapArray> getTexture() {

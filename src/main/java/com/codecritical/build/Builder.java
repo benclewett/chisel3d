@@ -4,7 +4,6 @@ package com.codecritical.build;
  * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
  */
 
-import com.codecritical.build.mandelbrot.*;
 import com.codecritical.lib.config.Config;
 import com.codecritical.lib.config.ConfigReader;
 import com.codecritical.lib.mapping.*;
@@ -41,16 +40,19 @@ public class Builder {
 
     public Builder normalise() {
         map = Mapping.normalise(map, false);
+        logger.info(String.format("Normalise without zero (1%% above zero): min=%.3f, max=%.3f, mean=%.3f",
+                map.getMin(), map.getMax(), map.getMean()));
         return this;
     }
-    public Builder normalise(double min, double max) {
+        public Builder normalise(double min, double max) {
         map = Mapping.normalise(map, false, min, max);
         return this;
     }
 
     public Builder scale() {
-        map = Mapping.scale(map, IScale.toPower(config.asDouble(Config.Mandelbrot.Processing.SCALE_POWER)));
+        map = Mapping.scale(map, IScale.toPower(config.asDouble(Config.Fractal.Processing.SCALE_POWER)));
         map = Mapping.normalise(map);
+        logger.info(String.format("Scale: min=%.3f, max=%.3f, mean=%.3f", map.getMin(), map.getMax(), map.getMean()));
         return this;
     }
 
@@ -73,7 +75,7 @@ public class Builder {
     public Builder reportPlateau() {
 
         StringBuilder log = new StringBuilder();
-        double minPlateauSize = config.asDouble(Config.Mandelbrot.Processing.MIN_PLATEAU_COEFFICIENT);
+        double minPlateauSize = config.asDouble(Config.Fractal.Processing.MIN_PLATEAU_COEFFICIENT);
         int allSize = plateauCollection.size();
 
         log.append(String.format("Plateaus all=%d. Plateaus greater than %.3f%% size=%d:",
@@ -114,10 +116,10 @@ public class Builder {
 
 
     public Builder applyGaussian() {
-        map = Mapping.gaussian(map, config.asOptionalDouble(Config.Mandelbrot.Processing.GAUSSIAN_RADIUS), plateauCollection, plateauTexture);
+        map = Mapping.gaussian(map, config.asOptionalDouble(Config.Fractal.Processing.GAUSSIAN_RADIUS), plateauCollection, plateauTexture);
+        logger.info(String.format("Gaussian: min=%.3f, max=%.3f, mean=%.3f", map.getMin(), map.getMax(), map.getMean()));
         map = Mapping.normalise(map);
-        logger.info("Gaussian applied.");
-
+        logger.info(String.format("Normalised: min=%.3f, max=%.3f, mean=%.3f", map.getMin(), map.getMax(), map.getMean()));
         return this;
     }
 
@@ -139,7 +141,7 @@ public class Builder {
     }
 
     private PlateauCollections getPlateauCollection(IMapArray map) {
-        double minPlateauSize = config.asDouble(Config.Mandelbrot.Processing.MIN_PLATEAU_COEFFICIENT);
+        double minPlateauSize = config.asDouble(Config.Fractal.Processing.MIN_PLATEAU_COEFFICIENT);
 
         PlateauCollections plateauSet = new PlateauCollections(map);
 
@@ -154,8 +156,8 @@ public class Builder {
 
     public Builder addTwoGravitationalMass() {
 
-        double x0 = config.asDouble(Config.StlPrint.X_MIN);
-        double x1 = config.asDouble(Config.StlPrint.X_MAX);
+        double x0 = 0.0;
+        double x1 = config.asDouble(Config.StlPrint.X_SIZE);
 
         double width = x1 - x0;
 
@@ -166,8 +168,9 @@ public class Builder {
         double massDistFromCentre = width / waveRidgeCountInXAxis / 5.0;    // Why 5?  Nobody knows.
         double massRadius = massRadiusCoefficient * width;
 
-        double z0 = config.asDouble(Config.StlPrint.Z_MIN) + config.asDouble(Config.StlPrint.BASE_THICKNESS);
-        double z1 = config.asDouble(Config.StlPrint.Z_MAX);
+        double baseThickness = config.asDouble(Config.StlPrint.BASE_THICKNESS);
+        double z0 = baseThickness;
+        double z1 = config.asDouble(Config.StlPrint.Z_SIZE) + baseThickness;
 
         double[] massAngles = new double[] {
                 spiralDegreesOffset - Math.PI / 2,

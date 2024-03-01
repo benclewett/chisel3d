@@ -98,6 +98,21 @@ public class MapArray implements IMapArray {
                 .orElse(0.0);
     }
 
+    public double getMin() {
+        return Arrays.stream(mapArray)
+                .filter(Objects::nonNull)
+                .min(Double::compareTo)
+                .orElse(0.0);
+    }
+
+    public double getMean() {
+        return Arrays.stream(mapArray)
+                .filter(Objects::nonNull)
+                .mapToDouble(Double::doubleValue)
+                .summaryStatistics()
+                .getAverage();
+    }
+
     public IMapArray setAllValues(double z) {
         Arrays.fill(mapArray, z);
         return this;
