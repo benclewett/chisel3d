@@ -8,6 +8,7 @@ import com.codecritical.lib.config.ConfigReader;
 import com.codecritical.lib.mapping.IMapArray;
 import com.codecritical.lib.mapping.MapArray;
 import com.codecritical.lib.mapping.PlateauCollections;
+import com.codecritical.lib.mapping.PlateauTexture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -61,9 +62,9 @@ class PlateauTextureTest {
                 .add("Config.StlPrint.Y_MAX", 10.0)
                 .add("Config.StlPrint.X_MIN", 0.0)
                 .add("Config.StlPrint.Y_MIN", 0.0)
-                .add("Config.Mandelbrot.Processing.PLATEAU_TEXTURE_MAP", "HOLLOW")
-                .add("Config.Mandelbrot.Processing.PLATEAU_HOLLOW_RADIUS", 1.0)
-                .add("Config.Mandelbrot.Processing.PLATEAU_HOLLOW_DEPTH", 0.5);
+                .add("Config.Fractal.Processing.PLATEAU_TEXTURE_MAP", "HOLLOW")
+                .add("Config.Fractal.Processing.PLATEAU_HOLLOW_RADIUS", 1.0)
+                .add("Config.Fractal.Processing.PLATEAU_HOLLOW_DEPTH", 0.5);
 
         var plateauTexture = new PlateauTexture(config, map, plateauCollection).getTexture();
 

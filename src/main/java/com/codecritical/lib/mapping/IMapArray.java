@@ -17,6 +17,8 @@ public interface IMapArray {
     int getJSize();
 
     double getMax();
+    double getMin();
+    double getMean();
 
     int size();
 

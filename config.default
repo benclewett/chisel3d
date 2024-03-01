@@ -24,44 +24,42 @@ Config.InfiniteMachineConfig.ShaftBoxBranch.SHAFT_LENGTH_MIN=0.5
 # All dimensions are mm or coefficients.
 #
 
-Config.StlPrint.X_MIN=-50
-Config.StlPrint.X_MAX=50
-Config.StlPrint.Y_MIN=-50
-Config.StlPrint.Y_MAX=50
-Config.StlPrint.Z_MIN=0
-Config.StlPrint.Z_MAX=50
-# Base is added onto the Z range.
+Config.StlPrint.X_SIZE=75
+Config.StlPrint.Y_SIZE=75
+Config.StlPrint.Z_SIZE=30
+# The base is added onto the Z size.
 Config.StlPrint.BASE_THICKNESS=5
 # SHAPE=[SQUARE, CIRCLE]  Only SQUARE works today.
 Config.StlPrint.SHAPE=SQUARE
 
 
 #
-# Mandelbrot STL Print
+# Mandelbrot & Burning Ship Fractal STL Prints
 #
 
-Config.Mandelbrot.Model.MAX_ITERATIONS=4000
-Config.Mandelbrot.Model.I0=-1.2572854149705
-Config.Mandelbrot.Model.I1=-1.2572854081395
-Config.Mandelbrot.Model.J0=0.0382804994950
-Config.Mandelbrot.Model.J1=0.0382805062089
-Config.Mandelbrot.Model.I_COUNT=200
-Config.Mandelbrot.Model.J_COUNT=200
+Config.Fractal.Model.MAX_ITERATIONS=500
+Config.Fractal.Model.I0=-1.8
+Config.Fractal.Model.I1=-1.7
+Config.Fractal.Model.J0=-0.08
+Config.Fractal.Model.J1=0.01
+Config.Fractal.Model.I_COUNT=1000
+Config.Fractal.Model.J_COUNT=1000
 # Tweak of model size.  Look for a log output for new I/J values.
-Config.Mandelbrot.Model.I_SCALE=1.0
-Config.Mandelbrot.Model.J_SCALE=1.0
+Config.Fractal.Model.I_SCALE=1.0
+Config.Fractal.Model.J_SCALE=1.0
 
-Config.Mandelbrot.Processing.SCALE_POWER=0.01
+Config.Fractal.Processing.SCALE_POWER=0.01
 # Plateau's of 0.1% area or greater are respected and ignored from Gaussian smoothing.
-Config.Mandelbrot.Processing.MIN_PLATEAU_COEFFICIENT=0.001
+Config.Fractal.Processing.MIN_PLATEAU_COEFFICIENT=0.001
 # Plateau applied with texture, HIGH, LOW or HOLLOW -> hollow out the plateau leaving a border.
-Config.Mandelbrot.Processing.PLATEAU_TEXTURE_MAP=HOLLOW
-Config.Mandelbrot.Processing.PLATEAU_HOLLOW_RADIUS=1.1
-Config.Mandelbrot.Processing.PLATEAU_HOLLOW_DEPTH=0.0
-# Gaussian Radius as coefficient of the size.  Optional.  0.005 (0.5%) is a good option.
-Config.Mandelbrot.Processing.GAUSSIAN_RADIUS=0.003
+Config.Fractal.Processing.PLATEAU_TEXTURE_MAP=HOLLOW
+Config.Fractal.Processing.PLATEAU_HOLLOW_RADIUS=1.1
+# Depth is between 0.0 and 1.0
+Config.Fractal.Processing.PLATEAU_HOLLOW_DEPTH=0.0
+# Gaussian Radius as coefficient of the size.  Optional.  0.005 (0.5%) to 0.001 are a good options.
+Config.Fractal.Processing.GAUSSIAN_RADIUS=0.002
 
-Config.Mandelbrot.OUTPUT_FILENAME=mandelbrot
+Config.Fractal.OUTPUT_FILENAME=fractal
 
 #
 # Gravitational Waves STL Print
