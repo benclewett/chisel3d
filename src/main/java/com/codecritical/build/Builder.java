@@ -8,7 +8,7 @@ import com.codecritical.lib.config.Config;
 import com.codecritical.lib.config.ConfigReader;
 import com.codecritical.lib.mapping.*;
 import com.codecritical.lib.model.BuildPrintSurface;
-import com.codecritical.lib.model.FastUnion;
+import com.codecritical.lib.mapping.FastUnion;
 import com.codecritical.lib.model.IBuildPrint;
 import com.codecritical.parts.ExportStl;
 import com.codecritical.parts.Hemisphere;

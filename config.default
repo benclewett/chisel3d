@@ -5,9 +5,9 @@ Config.RANDOM_SEED=1
 # All dimensions are mm or coefficients.
 #
 
-Config.StlPrint.X_SIZE=75
-Config.StlPrint.Y_SIZE=75
-Config.StlPrint.Z_SIZE=30
+Config.StlPrint.X_SIZE=50
+Config.StlPrint.Y_SIZE=15
+Config.StlPrint.Z_SIZE=15
 # The base is added onto the Z size.
 Config.StlPrint.BASE_THICKNESS=5
 # SHAPE=[SQUARE, CIRCLE]  Only SQUARE works today.
@@ -20,24 +20,27 @@ Config.StlPrint.SHAPE=SQUARE
 #
 
 Config.Fractal.Model.MAX_ITERATIONS=500
-Config.Fractal.Model.I0=-1.8
-Config.Fractal.Model.I1=-1.7
-Config.Fractal.Model.J0=-0.08
-Config.Fractal.Model.J1=0.01
-Config.Fractal.Model.I_COUNT=1000
-Config.Fractal.Model.J_COUNT=1000
+Config.Fractal.Model.I0=-1
+Config.Fractal.Model.I1=1
+Config.Fractal.Model.J0=0.2
+Config.Fractal.Model.J1=2.1
+Config.Fractal.Model.I_COUNT=1200
+Config.Fractal.Model.J_COUNT=800
 # Tweak of model size.  Look for a log output for new I/J values.
 Config.Fractal.Model.I_SCALE=1.0
 Config.Fractal.Model.J_SCALE=1.0
+# Polar map the x axis to degrees.  Where i is angle: -1 to 1 -> -pi to pi.  j is radius: j = 0 to 1 -> r = 0 to 1.
+Config.Fractal.Model.POLAR_COORDINATES=true
 
 Config.Fractal.Processing.SCALE_POWER=0.01
 # Plateau's of 0.1% area or greater are respected and ignored from Gaussian smoothing.
-Config.Fractal.Processing.MIN_PLATEAU_COEFFICIENT=0.001
+Config.Fractal.Processing.MIN_PLATEAU_COEFFICIENT=0.01
 # Plateau applied with texture, HIGH, LOW or HOLLOW -> hollow out the plateau leaving a border.
 Config.Fractal.Processing.PLATEAU_TEXTURE_MAP=HOLLOW
-Config.Fractal.Processing.PLATEAU_HOLLOW_RADIUS=1.1
+Config.Fractal.Processing.PLATEAU_HOLLOW_RADIUS=0.5
 # Depth is between 0.0 and 1.0
 Config.Fractal.Processing.PLATEAU_HOLLOW_DEPTH=0.0
+
 # Gaussian Radius as coefficient of the size.  Optional.  0.005 (0.5%) to 0.001 are a good options.
 Config.Fractal.Processing.GAUSSIAN_RADIUS=0.002
 

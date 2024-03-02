@@ -166,4 +166,12 @@ public class ConfigReader {
         }
         return Enum.valueOf(clazz, val.get());
     }
+
+    public boolean asBoolean(Enum config) {
+        var val = get(config);
+        if (val.isEmpty()) {
+            throw new RuntimeException("Missing value for: " + config);
+        }
+        return Boolean.parseBoolean(val.get());
+    }
 }

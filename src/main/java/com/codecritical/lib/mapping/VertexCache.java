@@ -1,4 +1,4 @@
-package com.codecritical.lib.model;
+package com.codecritical.lib.mapping;
 
 /*
  * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
@@ -12,11 +12,11 @@ import java.util.HashSet;
 import java.util.stream.Stream;
 
 @ParametersAreNonnullByDefault
-public class Coords3dCache {
+public class VertexCache {
 
     final HashSet<Coords3d> cache = new HashSet<>();
 
-    public Coords3dCache() {
+    public VertexCache() {
     }
 
     public Coords3d get(double x, double y, double z) {

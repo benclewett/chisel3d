@@ -24,6 +24,7 @@ public abstract class Fractal {
     protected final double iDelta, jDelta;
 
     protected final MapArray map;
+    protected final boolean polarCoordinates;
 
 
     protected Fractal(ConfigReader config) {
@@ -59,6 +60,8 @@ public abstract class Fractal {
         this.iDelta = (i1 - i0) / (double) iCount;
         this.jDelta = (j1 - j0) / (double) jCount;
 
+        this.polarCoordinates = config.asBoolean(Config.Fractal.Model.POLAR_COORDINATES);
+
         logger.info(this.toString());
 
         this.map = new MapArray(iCount, jCount);
@@ -69,15 +72,33 @@ public abstract class Fractal {
     private void buildMap() {
         for (int j = 0; j < jCount; j++) {
             for (int i = 0; i < iCount; i++) {
+                double ii = i * iDelta + i0;
+                double jj = j * jDelta + j0;
                 map.set(i, j, buildPoint(
-                        i * iDelta + i0,
-                        j * jDelta + j0)
+                        mapI(ii, jj),
+                        mapJ(ii, jj))
                 );
             }
         }
     }
 
-    protected abstract Double buildPoint(double imaginaryC, double realC);
+    private double mapI(double i, double j) {
+        if (polarCoordinates) {
+            return Math.cos(i * Math.PI + Math.PI) * j;
+        } else {
+            return i;
+        }
+    }
+
+    private double mapJ(double i, double j) {
+        if (polarCoordinates) {
+            return Math.sin(i * Math.PI + Math.PI) * j;
+        } else {
+            return j;
+        }
+    }
+
+    protected abstract Double buildPoint(double i, double j);
 
     public IMapArray getMap() {
         return map;
@@ -92,6 +113,7 @@ public abstract class Fractal {
                 .add("j1", j1)
                 .add("iCount", iCount)
                 .add("jCount", jCount)
+                .add("polarCoordinates", polarCoordinates)
                 .toString();
     }
 }

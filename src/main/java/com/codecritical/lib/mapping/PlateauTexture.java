@@ -22,16 +22,14 @@ public class PlateauTexture {
 
     static final Logger logger = Logger.getLogger("");
 
-    /** HOLE texture, where a hole when more than this mm from the edge of the plateau. */
-    // final static double HOLE_COUNT_RADIUS = 1.0;
-    final static double HIGH = 1.0;
-    final static double LOW = 0.0;
+    final static double HIGH_Z = 1.0;
+    final static double LOW_Z = 0.0;
 
     final ConfigReader config;
     final ETextureName eTextureMapName;
     final IMapArray map;
     final PlateauCollections plateauCollection;
-    final int holeRadiosCountOnMap;
+    final int iHoleRadiosCountOnMap, jHoleRadiosCountOnMap;
     final double hollowCountRadius;
     final double hollowDepth;
 
@@ -50,8 +48,10 @@ public class PlateauTexture {
                 .orElse(ETextureName.NONE);
         this.hollowCountRadius = config.asDouble(Config.Fractal.Processing.PLATEAU_HOLLOW_RADIUS);
         this.hollowDepth = config.asDouble(Config.Fractal.Processing.PLATEAU_HOLLOW_DEPTH);
-        this.holeRadiosCountOnMap = (int)(hollowCountRadius / config.asDouble(Config.StlPrint.X_SIZE)
+        this.iHoleRadiosCountOnMap = (int)(hollowCountRadius / config.asDouble(Config.StlPrint.X_SIZE)
                 * map.getISize());
+        this.jHoleRadiosCountOnMap = (int)(hollowCountRadius / config.asDouble(Config.StlPrint.Y_SIZE)
+                * map.getJSize());
         logger.info(this.toString());
 
         assert(this.hollowDepth >= 0.0 && this.hollowDepth <= 1.0);
@@ -82,7 +82,7 @@ public class PlateauTexture {
     }
 
     private Double getHollowDepth(MapArray.Point p, ImmutableList<MapPoint> circle, double hollowDepth) {
-        return (inCentreOfPlateau(p.i, p.j, circle)) ? hollowDepth : HIGH;
+        return (inCentreOfPlateau(p.i, p.j, circle)) ? hollowDepth : HIGH_Z;
     }
 
     private boolean inCentreOfPlateau(int i, int j, ImmutableList<MapPoint> circle) {
@@ -95,9 +95,10 @@ public class PlateauTexture {
 
     private ImmutableList<MapPoint> getCircleOfPoints() {
         ImmutableList.Builder<MapPoint> builder = new ImmutableList.Builder<>();
-        IntStream.range(-holeRadiosCountOnMap, holeRadiosCountOnMap + 1).forEach(i ->
-                IntStream.range(-holeRadiosCountOnMap, holeRadiosCountOnMap + 1).forEach(j -> {
-                    if (i*i + j*j <= holeRadiosCountOnMap * holeRadiosCountOnMap) {
+        double maxRadiusSquared = iHoleRadiosCountOnMap * jHoleRadiosCountOnMap;
+        IntStream.range(-iHoleRadiosCountOnMap, iHoleRadiosCountOnMap + 1).forEach(i ->
+                IntStream.range(-jHoleRadiosCountOnMap, jHoleRadiosCountOnMap + 1).forEach(j -> {
+                    if (i*i + j*j <= maxRadiusSquared) {
                         builder.add(new MapPoint(i, j));
                     }
                 })
@@ -109,12 +110,12 @@ public class PlateauTexture {
 
     /** Low is the default of all 0.0 */
     private IMapArray getLow(IMapArray map) {
-        return new MapArray(map.getISize(), map.getJSize()).setAllValues(LOW);
+        return new MapArray(map.getISize(), map.getJSize()).setAllValues(LOW_Z);
     }
 
     /** High is the top value, = 1.0 */
     private IMapArray getHigh(IMapArray map) {
-        return new MapArray(map.getISize(), map.getJSize()).setAllValues(HIGH);
+        return new MapArray(map.getISize(), map.getJSize()).setAllValues(HIGH_Z);
     }
 
     record MapPoint(int i, int j) {
@@ -131,7 +132,8 @@ public class PlateauTexture {
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("holeCountRadius", hollowCountRadius)
-                .add("holeRadiusCountOnMap", holeRadiosCountOnMap)
+                .add("iHoleRadiusCountOnMap", iHoleRadiosCountOnMap)
+                .add("jHoleRadiusCountOnMap", jHoleRadiosCountOnMap)
                 .add("plateauCollection.size", plateauCollection.size())
                 .add("textureMapName", eTextureMapName)
                 .toString();

@@ -74,7 +74,7 @@ Config.Fractal.Model.J0=0.0006481238065
 Config.Fractal.Model.J1=0.0006481240343
 </pre>
 
-## Fractal Boss
+## Mandelbrot Boss
 
 <img src="images/mandelbrot_boss_2.png" height="200" width="300" />
 
@@ -84,6 +84,19 @@ Config.Fractal.Model.I0=-1.2572854149705
 Config.Fractal.Model.I1=-1.2572854081395
 Config.Fractal.Model.J0=0.0382804994950
 Config.Fractal.Model.J1=0.0382805062089
+</pre>
+
+## Mandelbrot in Polar Coordinates
+
+<img src="images/mandelbrot_polar_coordinates.png" height="200" width="300" />
+
+<pre>
+Config.Fractal.Model.MAX_ITERATIONS=500
+Config.Fractal.Model.I0=-1
+Config.Fractal.Model.I1=1
+Config.Fractal.Model.J0=0.2
+Config.Fractal.Model.J1=2.1
+Config.Fractal.Model.POLAR_COORDINATES=true
 </pre>
 
 ## Classic Burning Ship

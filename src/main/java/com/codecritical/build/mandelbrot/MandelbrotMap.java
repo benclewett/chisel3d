@@ -17,7 +17,7 @@ public class MandelbrotMap extends Fractal {
     }
 
     @Override
-    protected Double buildPoint(double imaginaryC, double realC) {
+    protected Double buildPoint(double i, double j) {
 
         // With complex numbers: z = z^2 + c
         // Iterate until exit circle, or give up.
@@ -26,8 +26,8 @@ public class MandelbrotMap extends Fractal {
 
         double imaginaryZ = 0, realZ = 0;
         while (imaginaryZ * imaginaryZ + realZ * realZ <= 4 && iterations < maxIterations) {
-            double imaginaryZTmp = imaginaryZ * imaginaryZ - realZ * realZ + imaginaryC;
-            realZ = 2 * imaginaryZ * realZ + realC;
+            double imaginaryZTmp = imaginaryZ * imaginaryZ - realZ * realZ + i;
+            realZ = 2 * imaginaryZ * realZ + j;
             imaginaryZ = imaginaryZTmp;
             iterations++;
         }
