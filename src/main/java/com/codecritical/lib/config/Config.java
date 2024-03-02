@@ -28,7 +28,8 @@ public enum Config {
             I_COUNT,
             J_COUNT,
             I_SCALE,
-            J_SCALE
+            J_SCALE,
+            POLAR_COORDINATES
         }
 
         public enum Processing {

@@ -28,10 +28,10 @@ public class PlateauCollections {
 
     /** Create new plateau set from map. */
     public PlateauCollections(IMapArray map) {
-        plateaus = buildPlateau(map);
+        plateaus = buildPlateaus(map);
     }
 
-    private ImmutableList<Plateau> buildPlateau(IMapArray map) {
+    private ImmutableList<Plateau> buildPlateaus(IMapArray map) {
         ImmutableList.Builder<Plateau> builder = new ImmutableList.Builder<>();
 
         Plateau[] plateau = new Plateau[1];
