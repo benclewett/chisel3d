@@ -4,13 +4,17 @@ package com.codecritical.lib.mapping;
  * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
  */
 
+import com.codecritical.lib.config.ConfigReader;
 import com.google.common.annotations.VisibleForTesting;
+import eu.printingin3d.javascad.coords2d.Coords2d;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.OptionalDouble;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 @ParametersAreNonnullByDefault
@@ -55,108 +59,63 @@ public class Mapping {
         );
     }
 
-    /**
-     * Applies a 2D gaussian weighting.
-     * <br>
-     * The area inside the plateauSet is ignored.  This will be replaced by the texture from plateauMap, or MAX is this is null.
-     */
-    public static IMapArray gaussian(IMapArray map, OptionalDouble gaussianRadius, @CheckForNull PlateauCollections plateauSet, Optional<IMapArray> plateauTextureMap) {
-        if (gaussianRadius.isEmpty()) {
-            return map;
-        }
-
-        // Normalise for the size of the map
-        double radius = gaussianRadius.getAsDouble() * Math.sqrt(map.getISize() * map.getISize() + map.getJSize() * map.getJSize());
-
-        return getGaussianMapped(map, radius, plateauSet, plateauTextureMap);
-    }
-
-    private static IMapArray getGaussianMapped(IMapArray map, double radiusConst, @CheckForNull PlateauCollections plateauSet, Optional<IMapArray> plateauTextureMap) {
-
+    public static IMapArray applyPlateauTexture(PlateauCollections plateauCollection, IMapArray plateauTextureMap, IMapArray map) {
         MapArray newMap = new MapArray(map);
 
-        var gaussianMap = createGaussianMap(radiusConst);
-
-        map.streamPoints().forEach(p -> sumGaussian(newMap, map, p, gaussianMap, plateauSet, plateauTextureMap));
+        map.streamPoints()
+                .filter(plateauCollection::isPlateau)
+                .forEach(p -> {
+                    newMap.set(p.i, p.j, plateauTextureMap.get(p));
+                });
 
         return newMap;
-
     }
 
-    private static void sumGaussian(MapArray mapOut, IMapArray mapIn, MapArray.Point p, IMapArray gaussianMap, @CheckForNull PlateauCollections plateauSet, Optional<IMapArray> plateauTextureMap) {
+    /** This doesn't work where boundary bends in on it's self as the anti-clockwise sorting miss-orders */
+    public static IMapArray trimOutsideBase(IMapArray map) {
+        var newMap = new MapArray(map);
+        Set<MapArray.Point> perimeterChecked = new HashSet<>();
+        // Bottom & Top
+        IntStream.range(0, map.getISize()).forEach(i -> {
+            trimOutsideBaseEdge(i, 0, map, newMap, perimeterChecked);
+            trimOutsideBaseEdge(i, map.getJSize() - 1, map, newMap, perimeterChecked);
+        });
+        // Left & right
+        IntStream.range(0, map.getJSize()).forEach(j -> {
+            trimOutsideBaseEdge(0, j, map, newMap, perimeterChecked);
+            trimOutsideBaseEdge(map.getISize() - 1, j, map, newMap, perimeterChecked);
+        });
+        return newMap;
+    }
 
-        if (plateauSet != null && plateauSet.isPlateau(p)) {
-            if (plateauTextureMap.isPresent()) {
-                mapOut.set(p.i, p.j, plateauTextureMap.get().get(p.i, p.j));
-            } else {
-                mapOut.set(p);
-            }
+    private static void trimOutsideBaseEdge(int i, int j, IMapArray map, MapArray newMap, Set<MapArray.Point> perimeterChecked) {
+        if (map.isNull(i, j)) {
+            return;
+        }
+        var p = map.getPoint(i, j);
+        if (perimeterChecked.contains(p)) {
+            return;
+        }
+        perimeterChecked.add(p);
+        if (p.z != 0.0) {
             return;
         }
 
-        int radius = gaussianMap.getISize() / 2;
-        double mean = getMean(p, mapIn, radius);
+        // Remove position
+        newMap.set(i, j, null);
 
-        mapOut.set(p.i, p.j, getGaussianSum(mapIn, p, gaussianMap, radius, mean));
-    }
-
-    private static double getGaussianSum(IMapArray map, MapArray.Point p, IMapArray gaussianMap, int r, double mean) {
-        return IntStream.range(-r, r + 1)
-                .mapToDouble(i -> IntStream.range(-r, r + 1)
-                        .mapToDouble(
-                                j -> map.getIfInRange(i + p.i, j + p.j).orElse(mean)
-                                        * gaussianMap.get(i + r, j + r)
-                        ).sum()
-                ).sum();
-    }
-
-    private static double getMean(MapArray.Point p, IMapArray map, int gaussianMapRadius) {
-        double mean = 0;
-        int count = 0;
-        for (int i = p.i - gaussianMapRadius; i <= p.i + gaussianMapRadius; i++) {
-            for (int j = p.j - gaussianMapRadius; j <= p.j + gaussianMapRadius; j++) {
-                var z = map.getIfInRange(i, j);
-                if (z.isPresent()) {
-                    mean += z.getAsDouble();
-                    count++;
-                }
-            }
+        // Recursive
+        if (i < map.getISize() - 1) {
+            trimOutsideBaseEdge(i + 1, j, map, newMap, perimeterChecked);
         }
-        if (count != 0) {
-            mean /= count;
+        if (i > 0) {
+            trimOutsideBaseEdge(i - 1, j, map, newMap, perimeterChecked);
         }
-        return mean;
-    }
-
-    @VisibleForTesting
-    static IMapArray createGaussianMap(double radiusConst) {
-
-        int mapSize = (int)(radiusConst * 5);
-        if (mapSize < 3) {
-            mapSize = 3;
+        if (j < map.getJSize() - 1) {
+            trimOutsideBaseEdge(i, j + 1, map, newMap, perimeterChecked);
         }
-
-        // Must be odd so that we have a centre cell at max value.
-        if (mapSize % 2 == 0) {
-            mapSize += 1;
+        if (j > 0) {
+            trimOutsideBaseEdge(i, j - 1, map, newMap, perimeterChecked);
         }
-        int mapMiddle = (int)(mapSize / 2.0);
-
-        MapArray map = new MapArray(mapSize, mapSize);
-        map.streamPoints().forEach(p -> {
-            var r = Math.sqrt(Math.pow((double)mapMiddle - p.i, 2) + Math.pow((double)mapMiddle - p.j, 2));
-            map.set(p.i, p.j, gaussian(r / radiusConst));
-        });
-
-        // Normalise so total == 1
-        var sum = map.stream().mapToDouble(Double::doubleValue).sum();
-        MapArray mapN = new MapArray(mapSize, mapSize);
-        map.streamPoints().forEach(p -> mapN.set(p.i, p.j, p.z / sum));
-
-        return mapN;
-    }
-
-    public static double gaussian(double r) {
-        return Math.exp(-r*r/2) / Math.sqrt(2*Math.PI);
     }
 }

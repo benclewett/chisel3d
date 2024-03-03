@@ -6,6 +6,7 @@ package com.codecritical.lib.mapping;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Verify;
+import com.google.common.hash.Hashing;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -55,11 +56,24 @@ public class MapArray implements IMapArray {
     public double get(int i, int j) {
         return mapArray[i + j * iSize];
     }
+    @Override
+    public MapArray.Point getPoint(int i, int j) {
+        return new Point(i, j, mapArray[i + j * iSize]);
+    }
+
+    @Override
+    public boolean isNull(int i, int j) {
+        return (mapArray[i + j * iSize] == null);
+    }
+
+    public double get(Point p) {
+        return mapArray[p.i + p.j * iSize];
+    }
 
     public void set(Point p) {
         set(p.i, p.j, p.z);
     }
-    public void set(int i, int j, Double z) {
+    public void set(int i, int j, @CheckForNull Double z) {
         mapArray[i + j * iSize] = z;
     }
 
@@ -133,6 +147,19 @@ public class MapArray implements IMapArray {
                     .add("j", j)
                     .add("z", z)
                     .toString();
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(i, j);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Point that = (Point) o;
+            return i == that.i && j == that.j;
         }
     }
 

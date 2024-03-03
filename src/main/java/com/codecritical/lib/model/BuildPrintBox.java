@@ -27,10 +27,12 @@ public class BuildPrintBox implements IBuildPrint {
     private final int baseThickness;
 
     public BuildPrintBox(ConfigReader config) {
-        this.xMin = 0.0;
-        this.xMax = config.asDouble(Config.StlPrint.X_SIZE);
-        this.yMin = 0.0;
-        this.yMax = config.asDouble(Config.StlPrint.Y_SIZE);
+        double x = config.asDouble(Config.StlPrint.X_SIZE);
+        double y = config.asDouble(Config.StlPrint.Y_SIZE);
+        this.xMin = -x/2;
+        this.xMax = x/2;
+        this.yMin = -y/2;
+        this.yMax = y/2;
         this.zMin = 0.0;
         this.zMax = config.asDouble(Config.StlPrint.Z_SIZE);
         this.maxIterations = config.asInt(Config.Fractal.Model.MAX_ITERATIONS);

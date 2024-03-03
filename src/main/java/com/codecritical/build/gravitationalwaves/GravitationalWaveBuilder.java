@@ -36,7 +36,7 @@ public class GravitationalWaveBuilder {
                 .showRoughMap()
                 .mapToCsg()
                 .addTwoGravitationalMass()
-                .savePrint(config.asString(Config.GravitationalWaves.Print.OUTPUT_FILENAME));
+                .savePrint();
     }
 
 }

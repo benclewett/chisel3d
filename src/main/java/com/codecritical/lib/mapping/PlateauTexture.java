@@ -32,8 +32,14 @@ public class PlateauTexture {
     final int iHoleRadiosCountOnMap, jHoleRadiosCountOnMap;
     final double hollowCountRadius;
     final double hollowDepth;
+    final boolean plateauHollowIncludeEdge;
 
-    enum ETextureName {
+    public static ETextureName getTextureName(ConfigReader config) {
+        return (PlateauTexture.ETextureName)config.asOptionalEnum(PlateauTexture.ETextureName.class, Config.Fractal.Processing.PLATEAU_TEXTURE_MAP)
+                .orElse(PlateauTexture.ETextureName.NONE);
+    }
+
+    public enum ETextureName {
         NONE,
         HIGH,
         LOW,
@@ -44,14 +50,15 @@ public class PlateauTexture {
         this.config = config;
         this.map = map;
         this.plateauCollection = plateauCollection;
-        this.eTextureMapName = (ETextureName)config.asOptionalEnum(ETextureName.class, Config.Fractal.Processing.PLATEAU_TEXTURE_MAP)
-                .orElse(ETextureName.NONE);
+        this.eTextureMapName = getTextureName(config);
         this.hollowCountRadius = config.asDouble(Config.Fractal.Processing.PLATEAU_HOLLOW_RADIUS);
         this.hollowDepth = config.asDouble(Config.Fractal.Processing.PLATEAU_HOLLOW_DEPTH);
         this.iHoleRadiosCountOnMap = (int)(hollowCountRadius / config.asDouble(Config.StlPrint.X_SIZE)
                 * map.getISize());
         this.jHoleRadiosCountOnMap = (int)(hollowCountRadius / config.asDouble(Config.StlPrint.Y_SIZE)
                 * map.getJSize());
+        this.plateauHollowIncludeEdge = config.asBoolean(Config.Fractal.Processing.PLATEAU_HOLLOW_INCLUDE_EDGE);
+
         logger.info(this.toString());
 
         assert(this.hollowDepth >= 0.0 && this.hollowDepth <= 1.0);
@@ -82,16 +89,19 @@ public class PlateauTexture {
     }
 
     private Double getHollowDepth(MapArray.Point p, ImmutableList<MapPoint> circle, double hollowDepth) {
-        return (inCentreOfPlateau(p.i, p.j, circle)) ? hollowDepth : HIGH_Z;
+        return (inHollowPlateau(p.i, p.j, circle))
+                ? hollowDepth
+                : HIGH_Z;
     }
 
-    private boolean inCentreOfPlateau(int i, int j, ImmutableList<MapPoint> circle) {
+    private boolean inHollowPlateau(int i, int j, ImmutableList<MapPoint> circle) {
         if (!plateauCollection.isPlateau(i, j)) {
-                return false;
+            return false;
         }
         return circle.stream()
-                .allMatch(c -> map.isInRange(c.i + i, c.j + j) && plateauCollection.isPlateau(c.i + i, c.j + j));
-   }
+                .filter(c -> map.isInRange(c.i + i, c.j + j) && !plateauHollowIncludeEdge)
+                .allMatch(c -> plateauCollection.isPlateau(c.i + i, c.j + j));
+    }
 
     private ImmutableList<MapPoint> getCircleOfPoints() {
         ImmutableList.Builder<MapPoint> builder = new ImmutableList.Builder<>();

@@ -24,7 +24,7 @@ public class Builder {
 
     private IMapArray map;
     private final ConfigReader config;
-    private Optional<IMapArray> plateauTexture = Optional.empty();
+    private Optional<IMapArray> plateauTextureMap = Optional.empty();
     private PlateauCollections plateauCollection;
     private final ImmutableList.Builder<CSG> csg = ImmutableList.builder();
 
@@ -66,7 +66,7 @@ public class Builder {
 
         plateauCollection = getPlateauCollection(map);
 
-        plateauTexture = new PlateauTexture(config, map, plateauCollection)
+        plateauTextureMap = new PlateauTexture(config, map, plateauCollection)
                 .getTexture();
 
         return this;
@@ -99,7 +99,9 @@ public class Builder {
 
     private static final String STL = ".stl";
 
-    public Builder savePrint(String fileName) {
+    public Builder savePrint() {
+
+        String fileName = config.asString(Config.OUTPUT_FILENAME);
 
         if (!fileName.toLowerCase().endsWith(STL)) {
             fileName = fileName + STL;
@@ -116,12 +118,41 @@ public class Builder {
 
 
     public Builder applyGaussian() {
-        map = Mapping.gaussian(map, config.asOptionalDouble(Config.Fractal.Processing.GAUSSIAN_RADIUS), plateauCollection, plateauTexture);
+
+        var plateauTextureName = PlateauTexture.getTextureName(config);
+        boolean smoothTextureInsideHollow = plateauTextureName.equals(PlateauTexture.ETextureName.HOLLOW)
+                && config.asBoolean(Config.Fractal.Processing.PLATEAU_HOLLOW_SMOOTH_INSIDE);
+
+        map = Gaussian.applyToMap(
+                map,
+                config.asOptionalDouble(Config.Fractal.Processing.GAUSSIAN_RADIUS),
+                plateauCollection,
+                plateauTextureMap,
+                smoothTextureInsideHollow);
         logger.info(String.format("Gaussian: min=%.3f, max=%.3f, mean=%.3f", map.getMin(), map.getMax(), map.getMean()));
+
         map = Mapping.normalise(map);
         logger.info(String.format("Normalised: min=%.3f, max=%.3f, mean=%.3f", map.getMin(), map.getMax(), map.getMean()));
+
         return this;
     }
+
+    public Builder applyPlateauTexture() {
+
+        if (plateauTextureMap.isEmpty()) {
+            return this;
+        }
+
+        var plateauTextureName = PlateauTexture.getTextureName(config);
+        if (PlateauTexture.ETextureName.NONE.equals(plateauTextureName)) {
+            return this;
+        }
+
+        map = Mapping.applyPlateauTexture(plateauCollection, plateauTextureMap.get(), map);
+
+        return this;
+    }
+
 
     private String getRoughMap(IMapArray map) {
         StringBuilder sb = new StringBuilder();
@@ -193,6 +224,12 @@ public class Builder {
         csg.add(mass1);
         csg.add(mass2);
 
+        return this;
+    }
+
+    /** This doesn't work where boundary bends in on it's self as the anti-clockwise sorting miss-orders */
+    public Builder trimOutsideBase() {
+        map = Mapping.trimOutsideBase(map);
         return this;
     }
 }

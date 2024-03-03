@@ -64,7 +64,7 @@ public class InfiniteMachineBuilder {
 
         csg = buildCsgFast(transform);
 
-        ExportStl.export(config.asString(Config.InfiniteMachineConfig.OUTPUT_FILENAME), csg);
+        ExportStl.export(config.asString(Config.OUTPUT_FILENAME), csg);
     }
 
 

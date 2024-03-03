@@ -5,7 +5,8 @@ package com.codecritical.lib.config;
  */
 
 public enum Config {
-    RANDOM_SEED;
+    RANDOM_SEED,
+    OUTPUT_FILENAME;
 
     public enum StlPrint {
         X_SIZE,
@@ -16,8 +17,7 @@ public enum Config {
         SHAPE
     }
 
-    public enum Fractal {
-        OUTPUT_FILENAME;
+    public enum Fractal { ;
 
         public enum Model {
             MAX_ITERATIONS,
@@ -29,7 +29,8 @@ public enum Config {
             J_COUNT,
             I_SCALE,
             J_SCALE,
-            POLAR_COORDINATES
+            POLAR_COORDINATES,
+            INSIDE_OUT
         }
 
         public enum Processing {
@@ -38,13 +39,15 @@ public enum Config {
             MIN_PLATEAU_COEFFICIENT,
             PLATEAU_HOLLOW_RADIUS,
             GAUSSIAN_RADIUS,
-            PLATEAU_HOLLOW_DEPTH
+            PLATEAU_HOLLOW_DEPTH,
+            PLATEAU_HOLLOW_INCLUDE_EDGE,
+            PLATEAU_HOLLOW_SMOOTH_INSIDE,
+            TRIM_OUTSIDE_BASE
         }
 
     }
 
     public enum InfiniteMachineConfig {
-        OUTPUT_FILENAME,
         DEPTH,
         ROOT_BOX_ORIGIN,
         ROOT_BOX_SIZE;
@@ -72,9 +75,5 @@ public enum Config {
         MASS_RADIUS_COEFFICIENT,
         WAVE_HEIGHT,
         PERSPECTIVE_ANGLE;
-
-        public enum Print {
-            OUTPUT_FILENAME
-        }
     }
 }
