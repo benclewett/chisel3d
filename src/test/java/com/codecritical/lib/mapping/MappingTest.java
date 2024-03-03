@@ -23,7 +23,7 @@ class MappingTest {
         double sum = 0;
         for (int i = -50; i <= 50; i++) {
             double r = i / 10.0;
-            double g = Mapping.gaussian(r);
+            double g = Gaussian.gaussianFunction(r);
             sum += g / 10.0;
             System.out.printf("| %6.1f | %5.5f | %5.5f |%n",
                     r, g, sum);
@@ -38,7 +38,7 @@ class MappingTest {
     @CsvSource({"0.1", "0.5", "1", "2"})
     void testGaussianMapping(double gaussianRadius) {
 
-        var map = Mapping.createGaussianMap(gaussianRadius);
+        var map = Gaussian.createGaussianMap(gaussianRadius);
 
         double sum = map.stream().mapToDouble(Double::doubleValue).sum();
         System.out.println("Test with radios = " + gaussianRadius + ", sum = " + String.format("%.3f", sum));
@@ -54,7 +54,7 @@ class MappingTest {
         MapArray map = new MapArray(10, 10);
         map.streamPoints().forEach(p -> map.set(p.i, p.j, 1.0));
 
-        var gMap = Mapping.createGaussianMap(gaussianRadius);
+        var gMap = Gaussian.createGaussianMap(gaussianRadius);
         System.out.println("Gaussian Map, radius=" + String.format("%.1f", gaussianRadius)
                 + " (Sum=" + String.format("%.3f", gMap.stream().mapToDouble(Double::doubleValue).sum()) + ")");
         showMap(gMap);
@@ -63,7 +63,7 @@ class MappingTest {
         showMap(map);
         OptionalDouble radius = OptionalDouble.of(1.0);
 
-        var newMap = Mapping.gaussian(map, radius, null, null);
+        var newMap = Gaussian.applyToMap(map, radius, null, null, false);
 
         System.out.printf("After:%n");
         showMap(newMap);

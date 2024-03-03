@@ -38,9 +38,11 @@ public class BurningShipBuilder {
                 .showRoughMap()
                 .buildPlateau()
                 .reportPlateau()
+                .applyPlateauTexture()
                 .applyGaussian()
+                // .trimOutsideBase()
                 .mapToCsg()
-                .savePrint(config.asString(Config.Fractal.OUTPUT_FILENAME));
+                .savePrint();
     }
 
 }

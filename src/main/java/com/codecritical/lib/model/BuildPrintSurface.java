@@ -12,9 +12,11 @@ import eu.printingin3d.javascad.coords.Coords3d;
 import eu.printingin3d.javascad.vrl.CSG;
 import eu.printingin3d.javascad.vrl.Polygon;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -47,10 +49,12 @@ public class BuildPrintSurface implements IBuildPrint {
     private IMapArray map;
 
     public BuildPrintSurface(ConfigReader config) {
-        this.xMin = 0.0;
-        this.xMax = config.asDouble(Config.StlPrint.X_SIZE);
-        this.yMin = 0.0;
-        this.yMax = config.asDouble(Config.StlPrint.Y_SIZE);
+        double x = config.asDouble(Config.StlPrint.X_SIZE);
+        double y = config.asDouble(Config.StlPrint.Y_SIZE);
+        this.xMin = -x/2;
+        this.xMax = x/2;
+        this.yMin = -y/2;
+        this.yMax = y/2;
         this.zMin = 0.0;
         this.zMax = config.asDouble(Config.StlPrint.Z_SIZE);
         this.xRange = this.xMax - this.xMin;
@@ -96,7 +100,7 @@ public class BuildPrintSurface implements IBuildPrint {
 
         builder.addAll(buildPerimeterPolygons(perimeterSorted));
 
-        builder.add(buildFloorPolygon(perimeterSorted));
+        buildFloorPolygon(perimeterSorted).map(builder::add);
 
         return builder.build();
     }
@@ -105,6 +109,7 @@ public class BuildPrintSurface implements IBuildPrint {
 
         if (perimeter.size() == 0) {
             logger.severe("We don't seem to have a perimeter.");
+            return ImmutableList.of();
         }
 
         ImmutableList.Builder<Polygon> builder = ImmutableList.builder();
@@ -126,7 +131,11 @@ public class BuildPrintSurface implements IBuildPrint {
     /*
      * Add the floor to seal the model.  Point must have been ordered anti-clockwise.
      */
-    private Polygon buildFloorPolygon(ImmutableList<Coords3d> perimeter) {
+    private Optional<Polygon> buildFloorPolygon(ImmutableList<Coords3d> perimeter) {
+
+        if (perimeter.size() == 0) {
+            return Optional.empty();
+        }
 
         List<Coords3d> baseVertices = new ArrayList<>();
 
@@ -136,15 +145,37 @@ public class BuildPrintSurface implements IBuildPrint {
                 zMin
         )));
 
-        return Polygon.fromPolygons(baseVertices, COLOR);
+        return Optional.of(Polygon.fromPolygons(baseVertices, COLOR));
     }
 
     //region Get the surface and sides
 
     private List<Polygon> buildSurfacePolygons(int i, int j, Set<Coords3d> perimeter) {
 
+        // Check for missing base
+        if (map.isNull(i, j) || map.isNull(i - 1, j) || map.isNull(i, j - 1) || map.isNull(i - 1, j - 1)) {
+            // Create perimeter for any consecutive non-null
+            if (!map.isNull(i, j) && !map.isNull(i - 1, j)) {
+                perimeter.add(vertexCache.get(mapX(i), mapY(j), mapZ(map.get(i, j))));
+                perimeter.add(vertexCache.get(mapX(i - 1), mapY(j), mapZ(map.get(i - 1, j))));
+            }
+            if (!map.isNull(i, j) && !map.isNull(i, j - 1)) {
+                perimeter.add(vertexCache.get(mapX(i), mapY(j), mapZ(map.get(i, j))));
+                perimeter.add(vertexCache.get(mapX(i), mapY(j - 1), mapZ(map.get(i, j - 1))));
+            }
+            if (!map.isNull(i - 1, j) && !map.isNull(i - 1, j - 1)) {
+                perimeter.add(vertexCache.get(mapX(i - 1), mapY(j), mapZ(map.get(i - 1, j))));
+                perimeter.add(vertexCache.get(mapX(i - 1), mapY(j - 1), mapZ(map.get(i - 1, j - 1))));
+            }
+            if (!map.isNull(i, j - 1) && !map.isNull(i - 1, j - 1)) {
+                perimeter.add(vertexCache.get(mapX(i), mapY(j - 1), mapZ(map.get(i, j - 1))));
+                perimeter.add(vertexCache.get(mapX(i - 1), mapY(j - 1), mapZ(map.get(i - 1, j - 1))));
+            }
+            return EMPTY_POLYGON_LIST;
+        }
+
         if (EShape.CIRCLE.equals(eShape)) {
-            // throw new RuntimeException("CIRCLE not yet supported.");
+            throw new RuntimeException("CIRCLE not yet supported.");
         }
 
         // Remember, a correctly defined polygons is ANTI-CLOCKWISE on the surface.
@@ -186,8 +217,6 @@ public class BuildPrintSurface implements IBuildPrint {
         };
 
         if (EShape.CIRCLE.equals(eShape)) {
-            throw new RuntimeException("CIRCLE not supported.");
-            /*
             // Pre-process cut-off on the radius of the circle.
             int[] vsInRadius = getVertexInRadius(vs, 4);
             int countIn = Arrays.stream(vsInRadius).sum();
@@ -209,7 +238,6 @@ public class BuildPrintSurface implements IBuildPrint {
             } else {
                 throw new RuntimeException("Math is wrong somewhere, we have " + countIn + " vertices in square.  Should be between 0 and 3.");
             }
-             */
         }
 
         if ((vs[0] == vs[1] && vs[2] == vs[3]) || (vs[0] == vs[2] && vs[1] == vs[3])) {

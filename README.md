@@ -99,6 +99,19 @@ Config.Fractal.Model.J1=2.1
 Config.Fractal.Model.POLAR_COORDINATES=true
 </pre>
 
+## Mandelbrot Insideout
+
+<img src="images/mandelbrot_insideout.png" height="200" width="300" />
+
+<pre>
+Config.Fractal.Model.MAX_ITERATIONS=500
+Config.Fractal.Model.I0=-1.15
+Config.Fractal.Model.I1=3.75
+Config.Fractal.Model.J0=-1.35
+Config.Fractal.Model.J1=1.35
+Config.Fractal.Model.INSIDE_OUT=true
+</pre>
+
 ## Classic Burning Ship
 
 <img src="images/burning_ship.png" height="200" width="300" />

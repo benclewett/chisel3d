@@ -9,6 +9,7 @@ import com.codecritical.lib.config.ConfigReader;
 import com.codecritical.lib.mapping.IMapArray;
 import com.codecritical.lib.mapping.MapArray;
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableList;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.logging.Logger;
@@ -24,8 +25,9 @@ public abstract class Fractal {
     protected final double iDelta, jDelta;
 
     protected final MapArray map;
-    protected final boolean polarCoordinates;
+    protected final boolean polarCoordinates, insideOut;
 
+    protected ImmutableList<ITranslate> translates;
 
     protected Fractal(ConfigReader config) {
 
@@ -61,40 +63,41 @@ public abstract class Fractal {
         this.jDelta = (j1 - j0) / (double) jCount;
 
         this.polarCoordinates = config.asBoolean(Config.Fractal.Model.POLAR_COORDINATES);
+        this.insideOut = config.asBoolean(Config.Fractal.Model.INSIDE_OUT);
 
         logger.info(this.toString());
 
         this.map = new MapArray(iCount, jCount);
 
+        this.translates = getMappings();
+
         buildMap();
+    }
+
+    private ImmutableList<ITranslate> getMappings() {
+        ImmutableList.Builder<ITranslate> builder = new ImmutableList.Builder<>();
+        builder.add(ITranslate.ONE_TO_ONE);
+        if (insideOut) {
+            builder.add(ITranslate.INSIDE_OUT);
+        }
+        if (polarCoordinates) {
+            builder.add(ITranslate.POLAR_COORDINATES);
+        }
+        return builder.build();
     }
 
     private void buildMap() {
         for (int j = 0; j < jCount; j++) {
             for (int i = 0; i < iCount; i++) {
-                double ii = i * iDelta + i0;
-                double jj = j * jDelta + j0;
-                map.set(i, j, buildPoint(
-                        mapI(ii, jj),
-                        mapJ(ii, jj))
-                );
+                double[] p = new double[] {
+                        i * iDelta + i0,
+                        j * jDelta + j0
+                };
+                for (var translate : translates) {
+                    p = translate.translate(p);
+                }
+                map.set(i, j, buildPoint(p[0], p[1]));
             }
-        }
-    }
-
-    private double mapI(double i, double j) {
-        if (polarCoordinates) {
-            return Math.cos(i * Math.PI + Math.PI) * j;
-        } else {
-            return i;
-        }
-    }
-
-    private double mapJ(double i, double j) {
-        if (polarCoordinates) {
-            return Math.sin(i * Math.PI + Math.PI) * j;
-        } else {
-            return j;
         }
     }
 
