@@ -11,6 +11,7 @@ public class Main {
     enum EModel {
         INFINITE_MACHINE,
         MANDELBROT,
+        MANDELBROT_CUBIC,
         GRAVITATIONAL_WAVES,
         BURNING_SHIP
     }

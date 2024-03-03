@@ -49,7 +49,7 @@ Config.Fractal.Model.J1=0.1336901
 
 <a href="https://www.thingiverse.com/thing:6500841">thingiverse.com</a>
 
-## Valley
+## Valley of the Seahorses
 
 <img src="images/mandelbrot_valley.png" height="200" width="300" />
 
@@ -111,6 +111,21 @@ Config.Fractal.Model.J0=-1.35
 Config.Fractal.Model.J1=1.35
 Config.Fractal.Model.INSIDE_OUT=true
 </pre>
+
+## Mandelbrot Shelf
+
+<img src="images/mandelbrot_shelf.png" height="200" width="300" />
+
+<pre>
+Config.Fractal.Model.MAX_ITERATIONS=500
+Config.Fractal.Model.I0=-3
+Config.Fractal.Model.I1=3.021
+Config.Fractal.Model.J0=0
+Config.Fractal.Model.J1=4
+Config.Fractal.Model.POLAR_COORDINATES=true
+Config.Fractal.Model.INSIDE_OUT=true
+</pre>
+
 
 ## Classic Burning Ship
 
