@@ -29,6 +29,8 @@ public enum Config {
             J_COUNT,
             I_SCALE,
             J_SCALE,
+            I_SHIFT,
+            J_SHIFT,
             POLAR_COORDINATES,
             INSIDE_OUT
         }

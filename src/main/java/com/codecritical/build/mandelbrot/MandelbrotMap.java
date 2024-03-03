@@ -17,18 +17,18 @@ public class MandelbrotMap extends Fractal {
     }
 
     @Override
-    protected Double buildPoint(double i, double j) {
+    protected Double buildPoint(double rC, double iC) {
 
         // With complex numbers: z = z^2 + c
         // Iterate until exit circle, or give up.
 
         int iterations = 0;
 
-        double imaginaryZ = 0, realZ = 0;
-        while (imaginaryZ * imaginaryZ + realZ * realZ <= 4 && iterations < maxIterations) {
-            double imaginaryZTmp = imaginaryZ * imaginaryZ - realZ * realZ + i;
-            realZ = 2 * imaginaryZ * realZ + j;
-            imaginaryZ = imaginaryZTmp;
+        double rZ = 0, iZ = 0, iZtmp;
+        while (rZ * rZ + iZ * iZ <= 4 && iterations < maxIterations) {
+            iZtmp = rZ * rZ - iZ * iZ + rC;
+            iZ = 2 * rZ * iZ + iC;
+            rZ = iZtmp;
             iterations++;
         }
 

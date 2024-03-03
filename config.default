@@ -7,9 +7,9 @@ Config.OUTPUT_FILENAME=fractal
 # All dimensions are mm or coefficients.
 #
 
-Config.StlPrint.X_SIZE=100
-Config.StlPrint.Y_SIZE=100
-Config.StlPrint.Z_SIZE=15
+Config.StlPrint.X_SIZE=80
+Config.StlPrint.Y_SIZE=130
+Config.StlPrint.Z_SIZE=30
 # The base is added onto the Z size.
 Config.StlPrint.BASE_THICKNESS=5
 # SHAPE=[SQUARE, CIRCLE]  Only SQUARE works today.
@@ -21,35 +21,36 @@ Config.StlPrint.SHAPE=SQUARE
 # Program Options: MANDELBROT, BURNING_SHIP
 #
 
-Config.Fractal.Model.MAX_ITERATIONS=500
-Config.Fractal.Model.I0=-1.15
-Config.Fractal.Model.I1=3.75
-Config.Fractal.Model.J0=-1.35
-Config.Fractal.Model.J1=1.35
-Config.Fractal.Model.I_COUNT=200
-Config.Fractal.Model.J_COUNT=200
+Config.Fractal.Model.MAX_ITERATIONS=400
+Config.Fractal.Model.I0=-0.8
+Config.Fractal.Model.I1=0.8
+Config.Fractal.Model.J0=-1.4
+Config.Fractal.Model.J1=1.4
+Config.Fractal.Model.I_COUNT=800
+Config.Fractal.Model.J_COUNT=1200
 # Tweak of model size.  Look for a log output for new I/J values.
-Config.Fractal.Model.I_SCALE=1.0
-Config.Fractal.Model.J_SCALE=1.0
+Config.Fractal.Model.I_SCALE=1
+Config.Fractal.Model.J_SCALE=1
+Config.Fractal.Model.I_SHIFT=0
+Config.Fractal.Model.J_SHIFT=0
 # Polar map the x axis to degrees.  Where i is angle: -1 to 1 -> -pi to pi.  j is radius: j = 0 to 1 -> r = 0 to 1.
 Config.Fractal.Model.POLAR_COORDINATES=false
-Config.Fractal.Model.INSIDE_OUT=true
+Config.Fractal.Model.INSIDE_OUT=false
 
 Config.Fractal.Processing.SCALE_POWER=0.01
 # Plateau's of 0.1% area or greater are respected and ignored from Gaussian smoothing.
 Config.Fractal.Processing.MIN_PLATEAU_COEFFICIENT=0.01
 # Plateau applied with texture, HIGH, LOW or HOLLOW -> hollow out the plateau leaving a border.
 Config.Fractal.Processing.PLATEAU_TEXTURE_MAP=HOLLOW
-Config.Fractal.Processing.PLATEAU_HOLLOW_RADIUS=1.5
+Config.Fractal.Processing.PLATEAU_HOLLOW_RADIUS=2
 Config.Fractal.Processing.PLATEAU_HOLLOW_INCLUDE_EDGE=false
 Config.Fractal.Processing.PLATEAU_HOLLOW_SMOOTH_INSIDE=true
 # Depth is between 0.0 and 1.0
 Config.Fractal.Processing.PLATEAU_HOLLOW_DEPTH=0.0
 # Trim outside base.  This fails at this time.
-Config.Fractal.Processing.TRIM_OUTSIDE_BASE
-
+Config.Fractal.Processing.TRIM_OUTSIDE_BASE=false
 # Gaussian Radius as coefficient of the size.  Optional.  0.005 (0.5%) to 0.001 are a good options.
-Config.Fractal.Processing.GAUSSIAN_RADIUS=0.0015
+Config.Fractal.Processing.GAUSSIAN_RADIUS=0.002
 
 #
 # Gravitational Waves STL Print
