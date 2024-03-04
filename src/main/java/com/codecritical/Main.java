@@ -12,6 +12,7 @@ public class Main {
         INFINITE_MACHINE,
         MANDELBROT,
         MANDELBROT_CUBIC,
+        MANDELBROT_BUDDHA,
         GRAVITATIONAL_WAVES,
         BURNING_SHIP
     }

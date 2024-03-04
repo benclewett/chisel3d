@@ -5,14 +5,15 @@ package com.codecritical.build.mandelbrot;
  */
 
 import com.codecritical.lib.config.ConfigReader;
+import com.codecritical.lib.mapping.MapArray;
 import com.codecritical.lib.model.Fractal;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class MandelbrotMap extends Fractal {
+public class MandelbrotVanillaMap extends Fractal {
 
-    public MandelbrotMap(ConfigReader config) {
+    public MandelbrotVanillaMap(ConfigReader config) {
         super(config);
     }
 

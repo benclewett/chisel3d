@@ -15,6 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.OptionalDouble;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 @ParametersAreNonnullByDefault
@@ -130,6 +132,11 @@ public class MapArray implements IMapArray {
     public IMapArray setAllValues(double z) {
         Arrays.fill(mapArray, z);
         return this;
+    }
+
+    public void map(int i, int j, Function<Double, Double> action) {
+        int z = i + j * iSize;
+        mapArray[z] = action.apply(mapArray[z]);
     }
 
     public static class Point {
