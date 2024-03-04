@@ -139,6 +139,18 @@ Config.Fractal.Model.J0=-1.35
 Config.Fractal.Model.J1=1.35
 </pre>
 
+## Mandelbrot Buddha
+
+<img src="images/mandelbrot_buddha.png" height="200" width="300" />
+
+<pre>
+Config.Fractal.Model.MAX_ITERATIONS=400
+Config.Fractal.Model.I0=-1.7
+Config.Fractal.Model.I1=0.7
+Config.Fractal.Model.J0=0.99
+Config.Fractal.Model.J1=-0.99
+</pre>
+
 ## Classic Burning Ship
 
 <img src="images/burning_ship.png" height="200" width="300" />

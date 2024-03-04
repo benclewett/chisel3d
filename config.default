@@ -20,7 +20,7 @@ Config.StlPrint.SHAPE=SQUARE
 
 #
 # Mandelbrot & Burning Ship Fractal STL Prints
-# Program Options: MANDELBROT, BURNING_SHIP
+# Program Options: MANDELBROT*, BURNING_SHIP
 #
 
 Config.Fractal.Model.MAX_ITERATIONS=400
@@ -28,7 +28,7 @@ Config.Fractal.Model.I0=-1.7
 Config.Fractal.Model.I1=0.7
 Config.Fractal.Model.J0=0.99
 Config.Fractal.Model.J1=-0.99
-# Tweak of model size.  Look for a log output for new I/J values.
+# Tweaks of model size/shift.  Look for a log output for new I/J values.  Default [1,1,0,0]
 Config.Fractal.Model.I_SCALE=1
 Config.Fractal.Model.J_SCALE=1
 Config.Fractal.Model.I_SHIFT=0
