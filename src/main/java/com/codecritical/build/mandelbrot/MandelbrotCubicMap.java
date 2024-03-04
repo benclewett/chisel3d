@@ -5,6 +5,7 @@ package com.codecritical.build.mandelbrot;
  */
 
 import com.codecritical.lib.config.ConfigReader;
+import com.codecritical.lib.mapping.MapArray;
 import com.codecritical.lib.model.Fractal;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -26,8 +27,8 @@ public class MandelbrotCubicMap extends Fractal {
         // => (rZ + iZ)(rZ + iZ)(rZ + iZ) + rC + iC
         // => (rZ^2 + 2*rZ*iZ - [i]Z^2)(rZ + iZ) + rC + iC
         // => rZ^3 + 2*rZ^2*iZ - rZ*[i]Z^2 + rZ^2*iZ - 2*rZ*[i]Z^2 - iZ^3 + rC + iC
-        // Real:  Zr = rZ^3 - 3*iZ^2*rZ + rC
-        // Imag:  zi = 2*rZ^2*iZ + rZ^s*iZ - iZ^3 + iC
+        // Real:       Zr = rZ^3 - 3*iZ^2*rZ + rC
+        // Imaginary:  zi = 2*rZ^2*iZ + rZ^s*iZ - iZ^3 + iC
 
         int iterations = 0;
 

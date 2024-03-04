@@ -36,10 +36,14 @@ public class BuildPrintBox implements IBuildPrint {
         this.zMin = 0.0;
         this.zMax = config.asDouble(Config.StlPrint.Z_SIZE);
         this.maxIterations = config.asInt(Config.Fractal.Model.MAX_ITERATIONS);
-        this.iCount = config.asInt(Config.Fractal.Model.I_COUNT);
-        this.jCount = config.asInt(Config.Fractal.Model.J_COUNT);
         this.overlap = config.asDouble(Config.StlPrint.BOX_OVERLAP);
         this.baseThickness = config.asInt(Config.StlPrint.BASE_THICKNESS);
+
+        double pixelSize = config.asDouble(Config.StlPrint.PIXEL_SIZE);
+        double xSize = config.asDouble(Config.StlPrint.X_SIZE);
+        double ySize = config.asDouble(Config.StlPrint.Y_SIZE);
+        this.iCount = (int)(xSize / pixelSize);
+        this.jCount = (int)(ySize / pixelSize);
 
         this.xCellSize = (xMax - xMin) / iCount;
         this.yCellSize = (yMax - yMin) / jCount;

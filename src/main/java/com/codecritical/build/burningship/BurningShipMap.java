@@ -5,6 +5,7 @@ package com.codecritical.build.burningship;
  */
 
 import com.codecritical.lib.config.ConfigReader;
+import com.codecritical.lib.mapping.MapArray;
 import com.codecritical.lib.model.Fractal;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -17,14 +18,14 @@ public class BurningShipMap extends Fractal {
     }
 
     @Override
-    protected Double buildPoint(double i, double j) {
+    protected Double buildPoint(double rC, double iC) {
         int iterations = 0;
 
-        double iZ = 0, jZ = 0;
+        double iZ = 0, jZ = 0, iZtmp;
         while (iZ * iZ + jZ * jZ <= 4 && iterations < maxIterations) {
-            double iZTmp = iZ*iZ - jZ*jZ + i;
-            jZ = Math.abs(2 * iZ * jZ) + j;
-            iZ = iZTmp;
+            iZtmp = iZ*iZ - jZ*jZ + rC;
+            jZ = Math.abs(2 * iZ * jZ) + iC;
+            iZ = iZtmp;
             iterations++;
         }
 

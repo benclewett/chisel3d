@@ -7,7 +7,8 @@ package com.codecritical;
 import com.codecritical.build.burningship.BurningShipBuilder;
 import com.codecritical.build.gravitationalwaves.GravitationalWaveBuilder;
 import com.codecritical.build.infinitemachine.InfiniteMachineBuilder;
-import com.codecritical.build.mandelbrot.MandelbrotBuilder;
+import com.codecritical.build.mandelbrot.MandelbrotBuddhaBuilder;
+import com.codecritical.build.mandelbrot.MandelbrotVanillaBuilder;
 import com.codecritical.build.mandelbrot.MandelbrotCubicBuilder;
 import com.codecritical.lib.config.ConfigReader;
 import com.codecritical.lib.config.Config;
@@ -28,14 +29,17 @@ public class Container {
 
     public Container(Main.EModel model) {
 
+        logger.info("Model: " + model);
+
         config = loadConfig();
 
         random = new Random(config.asLong(Config.RANDOM_SEED));
 
         switch (model) {
             case INFINITE_MACHINE -> new InfiniteMachineBuilder(config, random);
-            case MANDELBROT -> new MandelbrotBuilder(config);
+            case MANDELBROT -> new MandelbrotVanillaBuilder(config);
             case MANDELBROT_CUBIC -> new MandelbrotCubicBuilder(config);
+            case MANDELBROT_BUDDHA -> new MandelbrotBuddhaBuilder(config);
             case GRAVITATIONAL_WAVES -> new GravitationalWaveBuilder(config);
             case BURNING_SHIP -> new BurningShipBuilder(config);
             default -> throw new IllegalStateException("Unexpected value: " + model);

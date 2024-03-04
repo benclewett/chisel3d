@@ -12,6 +12,9 @@ import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.logging.Logger;
 
 @ParametersAreNonnullByDefault
@@ -63,8 +66,12 @@ public abstract class Fractal {
                 i0, i1, j0, j1));
 
         this.maxIterations = config.asInt(Config.Fractal.Model.MAX_ITERATIONS);
-        this.iCount = config.asInt(Config.Fractal.Model.I_COUNT);
-        this.jCount = config.asInt(Config.Fractal.Model.J_COUNT);
+
+        double pixelSize = config.asDouble(Config.StlPrint.PIXEL_SIZE);
+        double xSize = config.asDouble(Config.StlPrint.X_SIZE);
+        double ySize = config.asDouble(Config.StlPrint.Y_SIZE);
+        this.iCount = (int)(xSize / pixelSize);
+        this.jCount = (int)(ySize / pixelSize);
 
         this.iDelta = (i1 - i0) / (double) iCount;
         this.jDelta = (j1 - j0) / (double) jCount;
@@ -103,12 +110,27 @@ public abstract class Fractal {
                 for (var translate : translates) {
                     p = translate.translate(p);
                 }
-                map.set(i, j, buildPoint(p[0], p[1]));
+                Double z = buildPoint(p[0], p[1]);
+                if (z != null) {
+                    map.set(i, j, z);
+                }
             }
         }
     }
 
     protected abstract Double buildPoint(double i, double j);
+
+    protected void plotOnMap(double rZ, double iZ, Function<Double, Double> action) {
+        int i = (int)((rZ - i0) / iDelta);
+        int j = (int)((iZ - j0) / jDelta);
+
+        if (i < 0 || i > map.getISize() - 1 || j < 0 || j > map.getJSize() - 1) {
+            return;
+        }
+
+        map.map(i, j, action);
+    }
+
 
     public IMapArray getMap() {
         return map;

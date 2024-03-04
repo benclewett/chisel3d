@@ -12,6 +12,7 @@ public enum Config {
         X_SIZE,
         Y_SIZE,
         Z_SIZE,
+        PIXEL_SIZE,
         BOX_OVERLAP,
         BASE_THICKNESS,
         SHAPE
@@ -25,8 +26,6 @@ public enum Config {
             I1,
             J0,
             J1,
-            I_COUNT,
-            J_COUNT,
             I_SCALE,
             J_SCALE,
             I_SHIFT,

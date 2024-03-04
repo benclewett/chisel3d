@@ -33,7 +33,7 @@ class BasicMandelbrotTest {
                 .add("Config.Fractal.Model.I_COUNT", I_COUNT)
                 .add("Config.Fractal.Model.J_COUNT", J_COUNT);
 
-        var map = new MandelbrotMap(config).getMap();
+        var map = new MandelbrotVanillaMap(config).getMap();
 
         StringBuilder sb = new StringBuilder();
 
