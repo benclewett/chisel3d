@@ -57,8 +57,11 @@ public class Builder {
     }
 
     public Builder showRoughMap() {
-        String rough = getRoughMap(map);
-        logger.info("Normalised Map:\r\n" + rough);
+        boolean showRoughMap = config.asBoolean(Config.Fractal.Model.SHOW_ROUGH_MAP);
+        if (showRoughMap) {
+            String rough = getRoughMap(map);
+            logger.info("Normalised Map:\r\n" + rough);
+        }
         return this;
     }
 

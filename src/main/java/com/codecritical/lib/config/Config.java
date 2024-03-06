@@ -31,7 +31,8 @@ public enum Config {
             I_SHIFT,
             J_SHIFT,
             POLAR_COORDINATES,
-            INSIDE_OUT
+            INSIDE_OUT,
+            SHOW_ROUGH_MAP
         }
 
         public enum Processing {
@@ -43,7 +44,8 @@ public enum Config {
             PLATEAU_HOLLOW_DEPTH,
             PLATEAU_HOLLOW_INCLUDE_EDGE,
             PLATEAU_HOLLOW_SMOOTH_INSIDE,
-            TRIM_OUTSIDE_BASE
+            TRIM_OUTSIDE_BASE,
+            PROJECT_CENTRE_SPHERE
         }
 
     }
