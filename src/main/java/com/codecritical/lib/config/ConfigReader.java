@@ -124,6 +124,21 @@ public class ConfigReader {
         );
     }
 
+    public Optional<Coords3d> asOptionalCoors3d(Enum config) {
+        var l = asOptionalImmutableList(config);
+        if (l.isEmpty()) {
+            return Optional.empty();
+        }
+        if (3 != l.get().size()) {
+            throw new RuntimeException("Config " + config + " should have 3 values");
+        }
+        return Optional.of(new Coords3d(
+                Double.parseDouble(l.get().get(0)),
+                Double.parseDouble(l.get().get(1)),
+                Double.parseDouble(l.get().get(2)))
+        );
+    }
+
     public ImmutableList<String> asImmutableList(Enum config) {
         var i = get(config);
         if (i.isEmpty()) {
@@ -135,6 +150,19 @@ public class ConfigReader {
             builder.add(t);
         }
         return builder.build();
+    }
+
+    public Optional<ImmutableList<String>> asOptionalImmutableList(Enum config) {
+        var i = get(config);
+        if (i.isEmpty()) {
+            return Optional.empty();
+        }
+        var tokens = i.get().split("[:,]");
+        ImmutableList.Builder<String> builder = ImmutableList.builder();
+        for (var t : tokens) {
+            builder.add(t);
+        }
+        return Optional.of(builder.build());
     }
 
     private Optional<String> get(Enum config) {
@@ -174,4 +202,5 @@ public class ConfigReader {
         }
         return Boolean.parseBoolean(val.get());
     }
+
 }

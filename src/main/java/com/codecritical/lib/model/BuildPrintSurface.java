@@ -12,16 +12,17 @@ import eu.printingin3d.javascad.coords.Coords3d;
 import eu.printingin3d.javascad.vrl.CSG;
 import eu.printingin3d.javascad.vrl.Polygon;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @ParametersAreNonnullByDefault
@@ -45,6 +46,7 @@ public class BuildPrintSurface implements IBuildPrint {
     private final double circleRadiusSquared;
     private final double circleRadius;
     private final ImmutableList<Coords3d> boundingCircumference;
+    private final Optional<Coords3d> projectCentreSphere;
 
     private IMapArray map;
 
@@ -70,7 +72,8 @@ public class BuildPrintSurface implements IBuildPrint {
         this.circularSorter = new CircularSorter(this.centre);
         this.circleRadius = (xMax - xMin) / 2;
         this.circleRadiusSquared = this.circleRadius * this.circleRadius;
-        this.boundingCircumference = buindBoundingCircumference();
+        this.boundingCircumference = buildBoundingCircumference();
+        this.projectCentreSphere = config.asOptionalCoors3d(Config.Fractal.Processing.PROJECT_CENTRE_SPHERE);
 
         logger.info(this.toString());
     }
@@ -90,12 +93,9 @@ public class BuildPrintSurface implements IBuildPrint {
 
         Set<Coords3d> perimeter = new HashSet<>();
 
-        IntStream.range(1, map.getJSize()).forEach(j ->
-                IntStream.range(1, map.getISize()).forEach(i ->
-                        builder.addAll(buildSurfacePolygons(i, j, perimeter))
-                )
-        );
+        builder.addAll(getMappedModelPoints(perimeter));
 
+        // TODO, this needs to be a rubber-band, or some better way: if the border is not strictly convex, this goes badly wrong.
         var perimeterSorted = circularSorter.sortAntiClockwiseZPlane(perimeter);
 
         builder.addAll(buildPerimeterPolygons(perimeterSorted));
@@ -105,10 +105,31 @@ public class BuildPrintSurface implements IBuildPrint {
         return builder.build();
     }
 
+    private ImmutableList<Polygon> getMappedModelPoints(Set<Coords3d> perimeter) {
+        ImmutableList<Polygon> model = buildModelFromMap(perimeter);
+
+        if (projectCentreSphere.isPresent()) {
+            model = projectSurfaceFromCentrePoint(model);
+        }
+
+        return model;
+    }
+
+    private ImmutableList<Polygon> buildModelFromMap(Set<Coords3d> perimeter) {
+        ImmutableList.Builder<Polygon> builder = new ImmutableList.Builder<>();
+        IntStream.range(1, map.getJSize()).forEach(j ->
+                IntStream.range(1, map.getISize()).forEach(i ->
+                        builder.addAll(buildSurfacePolygons(i, j, perimeter))
+                )
+        );
+        return builder.build();
+    }
+
+    /** Create polygons from bottom of base (z=0) to bottom map (x=baseThickness) */
     private ImmutableList<Polygon> buildPerimeterPolygons(ImmutableList<Coords3d> perimeter) {
 
-        if (perimeter.size() == 0) {
-            logger.severe("We don't seem to have a perimeter.");
+        if (perimeter.isEmpty()) {
+            logger.severe("We don't seem to have a perimeter?");
             return ImmutableList.of();
         }
 
@@ -117,10 +138,10 @@ public class BuildPrintSurface implements IBuildPrint {
         var prevVertex = perimeter.get(perimeter.size() - 1);
         for (var p : perimeter) {
             List<Coords3d> poly = new ArrayList<>();
-            poly.add(p);
-            poly.add(prevVertex);
-            poly.add(new Coords3d(prevVertex.getX(), prevVertex.getY(), zMin));
-            poly.add(new Coords3d(p.getX(), p.getY(), zMin));
+            poly.add(vertexCache.get(p.getX(), p.getY(), 0.0));
+            poly.add(vertexCache.get(prevVertex.getX(), prevVertex.getY(), 0.0));
+            poly.add(vertexCache.get(prevVertex.getX(), prevVertex.getY(), baseThickness));
+            poly.add(vertexCache.get(p.getX(), p.getY(), baseThickness));
             builder.add(Polygon.fromPolygons(poly, COLOR));
             prevVertex = p;
         }
@@ -133,7 +154,7 @@ public class BuildPrintSurface implements IBuildPrint {
      */
     private Optional<Polygon> buildFloorPolygon(ImmutableList<Coords3d> perimeter) {
 
-        if (perimeter.size() == 0) {
+        if (perimeter.isEmpty()) {
             return Optional.empty();
         }
 
@@ -152,7 +173,7 @@ public class BuildPrintSurface implements IBuildPrint {
 
     private List<Polygon> buildSurfacePolygons(int i, int j, Set<Coords3d> perimeter) {
 
-        // Check for missing base
+        // Check for missing base (where base deleted to trim to shape.)  (This doesn't work very well.)
         if (map.isNull(i, j) || map.isNull(i - 1, j) || map.isNull(i, j - 1) || map.isNull(i - 1, j - 1)) {
             // Create perimeter for any consecutive non-null
             if (!map.isNull(i, j) && !map.isNull(i - 1, j)) {
@@ -250,52 +271,73 @@ public class BuildPrintSurface implements IBuildPrint {
             polygons.add(Polygon.fromPolygons(poly, COLOR));
         } else {
             // Complex.  Break up into 4x polygons.
-
-            List<Coords3d> poly1 = new ArrayList<>();
-            poly1.add(vs[1]);
-            poly1.add(vs[4]);
-            poly1.add(vs[0]);
-            polygons.add(Polygon.fromPolygons(poly1, COLOR));
-
-            List<Coords3d> poly2 = new ArrayList<>();
-            poly2.add(vs[2]);
-            poly2.add(vs[3]);
-            poly2.add(vs[4]);
-            polygons.add(Polygon.fromPolygons(poly2, COLOR));
-
-            List<Coords3d> poly3 = new ArrayList<>();
-            poly3.add(vs[4]);
-            poly3.add(vs[3]);
-            poly3.add(vs[0]);
-            polygons.add(Polygon.fromPolygons(poly3, COLOR));
-
-            List<Coords3d> poly4 = new ArrayList<>();
-            poly4.add(vs[2]);
-            poly4.add(vs[4]);
-            poly4.add(vs[1]);
-            polygons.add(Polygon.fromPolygons(poly4, COLOR));
+            addPolygons(polygons, vs[1], vs[4], vs[0]);
+            addPolygons(polygons, vs[2], vs[3], vs[4]);
+            addPolygons(polygons, vs[4], vs[3], vs[0]);
+            addPolygons(polygons, vs[2], vs[4], vs[1]);
         }
 
         // Square Edge walls
-
         if (EShape.SQUARE.equals(eShape)) {
+            // One polygon down to the base.  Register of perimeter position to construct the base.
             if (i == 1) {
                 perimeter.add(vs[0]);
                 perimeter.add(vs[3]);
+                if (z0 > 0.0 || z3 > 0.0) {
+                    addNonCoplanarSquare(polygons,
+                            vs[0],
+                            vs[3],
+                            vertexCache.get(mapX(i), mapY(j), mapZ(0.0)),
+                            vertexCache.get(mapX(i), mapY(j - 1), mapZ(0.0))
+                    );
+                }
             } else if (i == map.getISize() - 1) {
                 perimeter.add(vs[2]);
                 perimeter.add(vs[1]);
+                if (z2 > 0.0 || z1 > 0.0) {
+                    addNonCoplanarSquare(polygons,
+                            vs[2],
+                            vs[1],
+                            vertexCache.get(mapX(i), mapY(j - 1), mapZ(0.0)),
+                            vertexCache.get(mapX(i), mapY(j), mapZ(0.0))
+                    );
+                }
             }
             if (j == 1) {
                 perimeter.add(vs[1]);
                 perimeter.add(vs[0]);
+                if (z1 > 0.0 || z0 > 0.0) {
+                    addNonCoplanarSquare(polygons,
+                            vs[1],
+                            vs[0],
+                            vertexCache.get(mapX(i - 1), mapY(j), mapZ(0.0)),
+                            vertexCache.get(mapX(i), mapY(j), mapZ(0.0))
+                    );
+                }
             } else if (j == map.getJSize() - 1) {
                 perimeter.add(vs[3]);
                 perimeter.add(vs[2]);
+                if (z3 > 0.0 || z2 > 0.0) {
+                    addNonCoplanarSquare(polygons,
+                            vs[3],
+                            vs[2],
+                            vertexCache.get(mapX(i), mapY(j), mapZ(0.0)),
+                            vertexCache.get(mapX(i - 1), mapY(j), mapZ(0.0))
+                    );
+                }
             }
         }
 
         return polygons;
+    }
+
+    private void addNonCoplanarSquare(List<Polygon> polygons, Coords3d v0, Coords3d v1, Coords3d v2, Coords3d v3) {
+        addPolygons(polygons, v0, v1, v2);
+        addPolygons(polygons, v2, v3, v0);
+    }
+
+    private void addPolygons(List<Polygon> polygons, Coords3d... v) {
+        polygons.add(Polygon.fromPolygons(List.of(v), COLOR));
     }
 
     //endregion
@@ -398,7 +440,7 @@ public class BuildPrintSurface implements IBuildPrint {
 
     //region Get the bounding circumference, where not a square.
 
-    private ImmutableList<Coords3d> buindBoundingCircumference() {
+    private ImmutableList<Coords3d> buildBoundingCircumference() {
         ImmutableList.Builder<Coords3d> builder = new ImmutableList.Builder<>();
         switch (eShape) {
             case CIRCLE -> getBoundingCircumferenceCircle(builder);
@@ -421,6 +463,56 @@ public class BuildPrintSurface implements IBuildPrint {
 
     //endregion
 
+    //region Project model from centre point
+
+    private ImmutableList<Polygon> projectSurfaceFromCentrePoint(ImmutableList<Polygon> surface) {
+        return surface.stream()
+                .map(this::projectPolygonFromCentrePoint)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    private Polygon projectPolygonFromCentrePoint(Polygon polygon) {
+        return Polygon.fromPolygons(
+                polygon.toFacets()
+                        .stream()
+                        .map(f -> f.getTriangle().getPoints())
+                        .flatMap(Collection::stream)
+                        .map(this::projectCoord3dFromCentrePoint)
+                        .collect(Collectors.toList()),
+                COLOR);
+    }
+
+    private Coords3d projectCoord3dFromCentrePoint(Coords3d c) {
+
+        // Project from origin, o, through plane of z = BASE_THICKNESS.
+
+        Coords3d o = projectCentreSphere.orElseThrow();
+
+        // Angle along a vertical projection
+        double alpha = Math.atan2(
+                - o.getZ() + baseThickness,
+                Math.sqrt(Math.pow(c.getX() - o.getX(), 2) + Math.pow(c.getY() - o.getY(), 2))
+        );
+
+        // Angle on the horizontal projection
+        double theta = Math.atan2(
+                c.getY() - o.getY(),
+                c.getX() - o.getX()
+        );
+
+        // Radius of shadow of point on the plane.
+        double r = Math.cos(alpha) * (c.getZ() - baseThickness);
+
+        return new Coords3d(
+                Math.cos(theta) * r + c.getX(),
+                Math.sin(theta) * r + c.getY(),
+                Math.sin(alpha) * (c.getZ() - baseThickness) + baseThickness
+        );
+    }
+
+    //endregion
+
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
@@ -437,6 +529,7 @@ public class BuildPrintSurface implements IBuildPrint {
                 .add("eShape", eShape)
                 .add("centre", centre)
                 .add("circleRadius", circleRadius)
+                .add("projectCentreSphere", projectCentreSphere)
                 .toString();
     }
 }
