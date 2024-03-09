@@ -62,7 +62,7 @@ public class BuildPrintSurface implements IBuildPrint {
         this.xRange = this.xMax - this.xMin;
         this.yRange = this.yMax - this.yMin;
         this.zRange = this.zMax - this.zMin;
-        this.baseThickness = config.asInt(Config.StlPrint.BASE_THICKNESS);
+        this.baseThickness = config.asInt(Config.StlPrint.BASE_HEIGHT);
         this.eShape = (EShape)config.asEnum(EShape.class, Config.StlPrint.SHAPE);
         this.centre = new Coords3d(
                 (xMin + xMax) / 2,
@@ -494,6 +494,10 @@ public class BuildPrintSurface implements IBuildPrint {
                 Math.sqrt(Math.pow(c.getX() - o.getX(), 2) + Math.pow(c.getY() - o.getY(), 2))
         );
 
+        if (o.getZ() > 0) {
+            alpha += Math.PI;
+        }
+
         // Angle on the horizontal projection
         double theta = Math.atan2(
                 c.getY() - o.getY(),
@@ -511,7 +515,6 @@ public class BuildPrintSurface implements IBuildPrint {
     }
 
     //endregion
-
 
     @Override
     public String toString() {

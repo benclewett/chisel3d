@@ -13,10 +13,15 @@ import com.codecritical.lib.model.IBuildPrint;
 import com.codecritical.parts.ExportStl;
 import com.codecritical.parts.Hemisphere;
 import com.google.common.collect.ImmutableList;
+import eu.printingin3d.javascad.coords.Coords3d;
+import eu.printingin3d.javascad.coords.Dims3d;
+import eu.printingin3d.javascad.models.Cube;
+import eu.printingin3d.javascad.tranform.TransformationFactory;
 import eu.printingin3d.javascad.vrl.CSG;
 
 import java.util.Comparator;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.logging.Logger;
 
 public class Builder {
@@ -188,10 +193,51 @@ public class Builder {
         return plateauSet;
     }
 
+    public Builder addBoundary() {
+
+        OptionalDouble borderHeight = config.asOptionalDouble(Config.StlPrint.BORDER_HEIGHT);
+        OptionalDouble borderWidth = config.asOptionalDouble(Config.StlPrint.BORDER_WIDTH);
+
+        if (borderHeight.isEmpty() || borderWidth.isEmpty()) {
+            logger.info("No border");
+            return this;
+        }
+
+        logger.info(String.format("Border width=%.1f height=%.1f", borderWidth.getAsDouble(), borderHeight.getAsDouble()));
+
+        double xSize = config.asDouble(Config.StlPrint.X_SIZE);
+        double ySize = config.asDouble(Config.StlPrint.Y_SIZE);
+
+        double halfBorderWidth = borderWidth.getAsDouble() / 2.0;
+        double halfBorderHeight = borderHeight.getAsDouble() / 2.0;
+
+        double slither = -0.1;
+
+        var topBorder = new Cube(new Dims3d(xSize, borderWidth.getAsDouble() - slither, borderHeight.getAsDouble())).toCSG();
+        var bottomBorder = new Cube(new Dims3d(xSize, borderWidth.getAsDouble() - slither, borderHeight.getAsDouble())).toCSG();
+
+        var leftBorder = new Cube(new Dims3d(borderWidth.getAsDouble() - slither, ySize + 2 * borderWidth.getAsDouble(), borderHeight.getAsDouble())).toCSG();
+        var rightBorder = new Cube(new Dims3d(borderWidth.getAsDouble() - slither, ySize + 2 * borderWidth.getAsDouble(), borderHeight.getAsDouble())).toCSG();
+
+        topBorder = topBorder.transformed(TransformationFactory.getTranlationMatrix(new Coords3d(0, ySize / 2.0 + halfBorderWidth, halfBorderHeight)));
+        bottomBorder = bottomBorder.transformed(TransformationFactory.getTranlationMatrix(new Coords3d(0, -ySize / 2.0 - halfBorderWidth, halfBorderHeight)));
+
+        leftBorder = leftBorder.transformed(TransformationFactory.getTranlationMatrix(new Coords3d(xSize / 2.0 + halfBorderWidth, 0, halfBorderHeight)));
+        rightBorder = rightBorder.transformed(TransformationFactory.getTranlationMatrix(new Coords3d(-xSize / 2.0 - halfBorderWidth, 0, halfBorderHeight)));
+
+        csg.add(topBorder);
+        csg.add(bottomBorder);
+        csg.add(rightBorder);
+        csg.add(leftBorder);
+
+        return this;
+    }
+
     public Builder addTwoGravitationalMass() {
 
-        double x0 = 0.0;
-        double x1 = config.asDouble(Config.StlPrint.X_SIZE);
+        double x= config.asDouble(Config.StlPrint.X_SIZE);
+        double x0 = -x / 2.0;
+        double x1 = x / 2.0;
 
         double width = x1 - x0;
 
@@ -202,7 +248,7 @@ public class Builder {
         double massDistFromCentre = width / waveRidgeCountInXAxis / 5.0;    // Why 5?  Nobody knows.
         double massRadius = massRadiusCoefficient * width;
 
-        double baseThickness = config.asDouble(Config.StlPrint.BASE_THICKNESS);
+        double baseThickness = config.asDouble(Config.StlPrint.BASE_HEIGHT);
         double z0 = baseThickness;
         double z1 = config.asDouble(Config.StlPrint.Z_SIZE) + baseThickness;
 

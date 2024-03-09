@@ -14,8 +14,10 @@ public enum Config {
         Z_SIZE,
         PIXEL_SIZE,
         BOX_OVERLAP,
-        BASE_THICKNESS,
-        SHAPE
+        BASE_HEIGHT,
+        SHAPE,
+        BORDER_WIDTH,
+        BORDER_HEIGHT
     }
 
     public enum Fractal { ;

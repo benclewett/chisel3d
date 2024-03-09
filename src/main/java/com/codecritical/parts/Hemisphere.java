@@ -5,12 +5,14 @@ package com.codecritical.parts;
  */
 
 import eu.printingin3d.javascad.basic.Radius;
+import eu.printingin3d.javascad.context.ColorHandlingContext;
 import eu.printingin3d.javascad.coords.Coords3d;
 import eu.printingin3d.javascad.coords.Dims3d;
 import eu.printingin3d.javascad.models.Cube;
 import eu.printingin3d.javascad.models.Sphere;
 import eu.printingin3d.javascad.tranform.TransformationFactory;
 import eu.printingin3d.javascad.vrl.CSG;
+import eu.printingin3d.javascad.vrl.FacetGenerationContext;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 

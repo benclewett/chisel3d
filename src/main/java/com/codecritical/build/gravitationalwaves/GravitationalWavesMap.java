@@ -36,8 +36,12 @@ public class GravitationalWavesMap {
         this.i1 = config.asDouble(Config.GravitationalWaves.I1);
         this.j0 = config.asDouble(Config.GravitationalWaves.J0);
         this.j1 = config.asDouble(Config.GravitationalWaves.J1);
-        this.iCount = config.asInt(Config.GravitationalWaves.I_COUNT);
-        this.jCount = config.asInt(Config.GravitationalWaves.J_COUNT);
+
+        double pixelSize = config.asDouble(Config.StlPrint.PIXEL_SIZE);
+        double xSize = config.asDouble(Config.StlPrint.X_SIZE);
+        double ySize = config.asDouble(Config.StlPrint.Y_SIZE);
+        this.iCount = (int)(xSize / pixelSize);
+        this.jCount = (int)(ySize / pixelSize);
 
         this.spiralDegreesOffset = config.asDouble(Config.GravitationalWaves.SPIRAL_DEGREES_OFFSET);
         this.waveFadeInWidth = config.asOptionalDouble(Config.GravitationalWaves.WAVE_FADE_IN_WIDTH);
