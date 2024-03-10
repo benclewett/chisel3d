@@ -13,10 +13,15 @@ import com.codecritical.lib.model.IBuildPrint;
 import com.codecritical.parts.ExportStl;
 import com.codecritical.parts.Hemisphere;
 import com.google.common.collect.ImmutableList;
+import eu.printingin3d.javascad.coords.Coords3d;
+import eu.printingin3d.javascad.coords.Dims3d;
+import eu.printingin3d.javascad.models.Cube;
+import eu.printingin3d.javascad.tranform.TransformationFactory;
 import eu.printingin3d.javascad.vrl.CSG;
 
 import java.util.Comparator;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.logging.Logger;
 
 public class Builder {
@@ -44,7 +49,8 @@ public class Builder {
                 map.getMin(), map.getMax(), map.getMean()));
         return this;
     }
-        public Builder normalise(double min, double max) {
+
+    public Builder normalise(double min, double max) {
         map = Mapping.normalise(map, false, min, max);
         return this;
     }
@@ -53,6 +59,26 @@ public class Builder {
         map = Mapping.scale(map, IScale.toPower(config.asDouble(Config.Fractal.Processing.SCALE_POWER)));
         map = Mapping.normalise(map);
         logger.info(String.format("Scale: min=%.3f, max=%.3f, mean=%.3f", map.getMin(), map.getMax(), map.getMean()));
+        return this;
+    }
+
+    public Builder applyLog() {
+        switch (config.asInt(Config.Fractal.Processing.APPLY_LOG)) {
+            case 0 -> {
+            }
+            case -1 -> {
+                map = Mapping.mapFunction(map, p -> Math.exp(p.z));
+                map = Mapping.normalise(map);
+                logger.info(String.format("Apply e^z: min=%.3f, max=%.3f, mean=%.3f", map.getMin(), map.getMax(), map.getMean()));
+            }
+            case 1 -> {
+                map = Mapping.normalise(map, true, 1, 10);
+                map = Mapping.mapFunction(map, p -> Math.log(p.z));
+                map = Mapping.normalise(map);
+                logger.info(String.format("Apply ln(z): min=%.3f, max=%.3f, mean=%.3f", map.getMin(), map.getMax(), map.getMean()));
+            }
+            default -> throw new RuntimeException("Bad option for Config.Fractal.Processing.APPLY_LOG: " + config.asInt(Config.Fractal.Processing.APPLY_LOG));
+        }
         return this;
     }
 
@@ -206,7 +232,7 @@ public class Builder {
         double z0 = baseThickness;
         double z1 = config.asDouble(Config.StlPrint.Z_SIZE) + baseThickness;
 
-        double[] massAngles = new double[] {
+        double[] massAngles = new double[]{
                 spiralDegreesOffset - Math.PI / 2,
                 spiralDegreesOffset + Math.PI / 2
         };
@@ -230,7 +256,48 @@ public class Builder {
         return this;
     }
 
-    /** This doesn't work where boundary bends in on it's self as the anti-clockwise sorting miss-orders */
+    public Builder addBoundary() {
+
+        OptionalDouble borderHeight = config.asOptionalDouble(Config.StlPrint.BORDER_HEIGHT);
+        OptionalDouble borderWidth = config.asOptionalDouble(Config.StlPrint.BORDER_WIDTH);
+
+        if (borderHeight.isEmpty() || borderWidth.isEmpty()) {
+            logger.info("No border");
+            return this;
+        }
+
+        logger.info(String.format("Border width=%.1f height=%.1f", borderWidth.getAsDouble(), borderHeight.getAsDouble()));
+
+        double xSize = config.asDouble(Config.StlPrint.X_SIZE);
+        double ySize = config.asDouble(Config.StlPrint.Y_SIZE);
+
+        double halfBorderWidth = borderWidth.getAsDouble() / 2.0;
+        double halfBorderHeight = borderHeight.getAsDouble() / 2.0;
+
+        double slither = -0.1;
+
+        var topBorder = new Cube(new Dims3d(xSize, borderWidth.getAsDouble() - slither, borderHeight.getAsDouble())).toCSG();
+        var bottomBorder = new Cube(new Dims3d(xSize, borderWidth.getAsDouble() - slither, borderHeight.getAsDouble())).toCSG();
+
+        var leftBorder = new Cube(new Dims3d(borderWidth.getAsDouble() - slither, ySize + 2 * borderWidth.getAsDouble(), borderHeight.getAsDouble())).toCSG();
+        var rightBorder = new Cube(new Dims3d(borderWidth.getAsDouble() - slither, ySize + 2 * borderWidth.getAsDouble(), borderHeight.getAsDouble())).toCSG();
+
+        topBorder = topBorder.transformed(TransformationFactory.getTranlationMatrix(new Coords3d(0, ySize / 2.0 + halfBorderWidth, halfBorderHeight)));
+        bottomBorder = bottomBorder.transformed(TransformationFactory.getTranlationMatrix(new Coords3d(0, -ySize / 2.0 - halfBorderWidth, halfBorderHeight)));
+
+        leftBorder = leftBorder.transformed(TransformationFactory.getTranlationMatrix(new Coords3d(xSize / 2.0 + halfBorderWidth, 0, halfBorderHeight)));
+        rightBorder = rightBorder.transformed(TransformationFactory.getTranlationMatrix(new Coords3d(-xSize / 2.0 - halfBorderWidth, 0, halfBorderHeight)));
+
+        var csgBorder = topBorder.union(leftBorder).union(rightBorder).union(bottomBorder);
+
+        csg.add(csgBorder);
+
+        return this;
+    }
+
+    /**
+     * This doesn't work where boundary bends in on it's self as the anti-clockwise sorting miss-orders
+     */
     public Builder trimOutsideBase() {
         map = Mapping.trimOutsideBase(map);
         return this;

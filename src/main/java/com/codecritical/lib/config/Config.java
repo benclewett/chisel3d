@@ -15,7 +15,9 @@ public enum Config {
         PIXEL_SIZE,
         BOX_OVERLAP,
         BASE_THICKNESS,
-        SHAPE
+        SHAPE,
+        BORDER_HEIGHT,
+        BORDER_WIDTH
     }
 
     public enum Fractal { ;
@@ -45,7 +47,8 @@ public enum Config {
             PLATEAU_HOLLOW_INCLUDE_EDGE,
             PLATEAU_HOLLOW_SMOOTH_INSIDE,
             TRIM_OUTSIDE_BASE,
-            PROJECT_CENTRE_SPHERE
+            PROJECT_CENTRE_SPHERE,
+            APPLY_LOG
         }
 
     }
