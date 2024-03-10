@@ -38,6 +38,7 @@ public class MandelbrotVanillaBuilder {
                 .applyPlateauTexture()
                 .applyGaussian()
                 // .trimOutsideBase()
+                .
                 .mapToCsg()
                 .savePrint();
     }

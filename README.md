@@ -182,3 +182,7 @@ Config.Fractal.Model.J1=0.01
 Production of fractal structures.  With the help of Blender, images like this may be produced.
 
 <img src="images/infinite_machine.jpeg" height="200" width="350" />
+
+## Gravitational Waves
+
+<img src="images/gravitational_waves_fine.png" height="200" width="350" />
