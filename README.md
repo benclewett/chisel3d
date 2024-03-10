@@ -164,6 +164,18 @@ Config.Fractal.Model.J1=-1
 Config.Fractal.Processing.PROJECT_CENTRE_SPHERE=10,0,-50
 </pre>
 
+## Mandelbrot Ridge Crossing
+
+<img src="images/mandelbrot_ridge_crossing.png" height="200" width="300" />
+
+<pre>
+Config.Fractal.Model.MAX_ITERATIONS=4000
+Config.Fractal.Model.I0=-1.5554762330030398
+Config.Fractal.Model.I1=-1.555476232994389
+Config.Fractal.Model.J0=0.0000000000031651
+Config.Fractal.Model.J1=-0.0000000000033231
+</pre>
+
 ## Classic Burning Ship
 
 <img src="images/burning_ship.png" height="200" width="300" />
@@ -182,3 +194,7 @@ Config.Fractal.Model.J1=0.01
 Production of fractal structures.  With the help of Blender, images like this may be produced.
 
 <img src="images/infinite_machine.jpeg" height="200" width="350" />
+
+## Gravitational Waves
+
+<img src="images/gravitational_waves_fine.png" height="200" width="350" />

@@ -32,12 +32,14 @@ public class MandelbrotVanillaBuilder {
         Builder.create(config, map)
                 .normalise()
                 .scale()
+                .applyLog()
                 .showRoughMap()
                 .buildPlateau()
                 .reportPlateau()
                 .applyPlateauTexture()
                 .applyGaussian()
                 // .trimOutsideBase()
+                .addBoundary()
                 .mapToCsg()
                 .savePrint();
     }

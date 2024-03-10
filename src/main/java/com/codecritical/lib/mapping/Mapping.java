@@ -4,17 +4,11 @@ package com.codecritical.lib.mapping;
  * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
  */
 
-import com.codecritical.lib.config.ConfigReader;
-import com.google.common.annotations.VisibleForTesting;
-import eu.printingin3d.javascad.coords2d.Coords2d;
-
-import javax.annotation.CheckForNull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Optional;
-import java.util.OptionalDouble;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.IntStream;
 
 @ParametersAreNonnullByDefault
@@ -31,10 +25,12 @@ public class Mapping {
     public static IMapArray normalise(IMapArray map, boolean allowZero, double minOut, double maxOut) {
 
         var max = map.stream()
+                .filter(z -> !z.isNaN() && !z.isInfinite())
                 .max(Comparator.naturalOrder())
                 .orElse(0.0);
 
         var min = map.stream()
+                .filter(z -> !z.isNaN() && !z.isInfinite())
                 .min(Comparator.naturalOrder())
                 .orElse(0.0);
 
@@ -47,8 +43,13 @@ public class Mapping {
         return new MapArray(
                 map.getISize(),
                 map.getJSize(),
-                map.stream().map(p -> ((p - min2) / range) * (maxOut - minOut) + minOut)
-        );
+                map.stream().map(p -> {
+                    if (p.isNaN() || p.isInfinite()) {
+                        return min;
+                    } else {
+                        return ((p - min2) / range) * (maxOut - minOut) + minOut;
+                    }
+                }));
     }
 
     public static IMapArray scale(IMapArray map, IScale toPower) {
@@ -64,14 +65,12 @@ public class Mapping {
 
         map.streamPoints()
                 .filter(plateauCollection::isPlateau)
-                .forEach(p -> {
-                    newMap.set(p.i, p.j, plateauTextureMap.get(p));
-                });
+                .forEach(p -> newMap.set(p.i, p.j, plateauTextureMap.get(p)));
 
         return newMap;
     }
 
-    /** This doesn't work where boundary bends in on it's self as the anti-clockwise sorting miss-orders */
+    /** This doesn't work where boundary bends in on its self as the anti-clockwise sorting miss-orders */
     public static IMapArray trimOutsideBase(IMapArray map) {
         var newMap = new MapArray(map);
         Set<MapArray.Point> perimeterChecked = new HashSet<>();
@@ -117,5 +116,12 @@ public class Mapping {
         if (j > 0) {
             trimOutsideBaseEdge(i, j - 1, map, newMap, perimeterChecked);
         }
+    }
+
+    public static IMapArray mapFunction(IMapArray map, Function<MapArray.Point, Double> func) {
+        MapArray newMap = new MapArray(map);
+        newMap.streamPoints()
+                .forEach(p -> newMap.set(p.i, p.j, func.apply(p)));
+        return newMap;
     }
 }

@@ -6,27 +6,31 @@ Config.OUTPUT_FILENAME=fractal
 # All dimensions are mm or coefficients.
 #
 
-Config.StlPrint.X_SIZE=100
-Config.StlPrint.Y_SIZE=75
-Config.StlPrint.Z_SIZE=40
+Config.StlPrint.X_SIZE=140
+Config.StlPrint.Y_SIZE=100
+Config.StlPrint.Z_SIZE=23
 # Fine: down to 0.1.  Course: 0.5 or above.
-Config.StlPrint.PIXEL_SIZE=0.1
+Config.StlPrint.PIXEL_SIZE=.35
 # The base is added onto the Z size.
-Config.StlPrint.BASE_THICKNESS=5
+Config.StlPrint.BASE_THICKNESS=3
 # SHAPE=[SQUARE, CIRCLE]  Only SQUARE works today.
 Config.StlPrint.SHAPE=SQUARE
+# Optional Border, added round the print increasing the width.
+Config.StlPrint.BORDER_WIDTH=3
+Config.StlPrint.BORDER_HEIGHT=21
 
 
 #
 # Mandelbrot & Burning Ship Fractal STL Prints
 # Program Options: MANDELBROT*, BURNING_SHIP
+# Useful site: https://usefuljs.net/fractals/
 #
 
-Config.Fractal.Model.MAX_ITERATIONS=400
-Config.Fractal.Model.I0=-1.5
-Config.Fractal.Model.I1=0.7
-Config.Fractal.Model.J0=1
-Config.Fractal.Model.J1=-1
+Config.Fractal.Model.MAX_ITERATIONS=4000
+Config.Fractal.Model.I0=-1.5554762330030398
+Config.Fractal.Model.I1=-1.555476232994389
+Config.Fractal.Model.J0=0.0000000000031651
+Config.Fractal.Model.J1=-0.0000000000033231
 # Tweaks of model size/shift.  Look for a log output for new I/J values.  Default [1,1,0,0]
 Config.Fractal.Model.I_SCALE=1
 Config.Fractal.Model.J_SCALE=1
@@ -50,9 +54,12 @@ Config.Fractal.Processing.PLATEAU_HOLLOW_DEPTH=0.0
 # Trim outside base.  This fails at this time.
 Config.Fractal.Processing.TRIM_OUTSIDE_BASE=false
 # Gaussian Radius as coefficient of the size.  Optional.  0.005 (0.5%) to 0.001 are a good options.
-Config.Fractal.Processing.GAUSSIAN_RADIUS=0.003
+Config.Fractal.Processing.GAUSSIAN_RADIUS=0.0015
 # Optional projection from centre of a spear as x,y,z.  Above for concave, below for convex.  Stl print units.
-Config.Fractal.Processing.PROJECT_CENTRE_SPHERE=10,0,-50
+Config.Fractal.Processing.PROJECT_CENTRE_SPHERE=
+# Natural Log.  -1 -> e^z, 0 -> z, 1 -> ln(z).  -1 exaggerates hills, 1 softens hills.
+Config.Fractal.Processing.APPLY_LOG=-1
+
 
 
 #
