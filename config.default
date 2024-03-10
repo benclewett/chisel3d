@@ -15,6 +15,9 @@ Config.StlPrint.PIXEL_SIZE=0.5
 Config.StlPrint.BASE_THICKNESS=5
 # SHAPE=[SQUARE, CIRCLE]  Only SQUARE works today.
 Config.StlPrint.SHAPE=SQUARE
+# Optional Border, added round the print increasing the width.
+Config.StlPrint.BORDER_WIDTH=5
+Config.StlPrint.BORDER_HEIGHT=20
 
 
 #
