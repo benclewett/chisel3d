@@ -62,16 +62,24 @@ public class Builder {
         return this;
     }
 
+    public enum ExpLnValue {
+        NONE,
+        LN,
+        EXP
+    }
+
     public Builder applyLog() {
-        switch (config.asInt(Config.Fractal.Processing.APPLY_LOG)) {
-            case 0 -> {
+        ExpLnValue expLnValue = (ExpLnValue)config.asOptionalEnum(ExpLnValue.class, Config.Fractal.Processing.APPLY_LOG).orElse(ExpLnValue.NONE);
+        switch (expLnValue) {
+            case NONE -> {
+                return this;
             }
-            case -1 -> {
+            case EXP -> {
                 map = Mapping.mapFunction(map, p -> Math.exp(p.z));
                 map = Mapping.normalise(map);
                 logger.info(String.format("Apply e^z: min=%.3f, max=%.3f, mean=%.3f", map.getMin(), map.getMax(), map.getMean()));
             }
-            case 1 -> {
+            case LN -> {
                 map = Mapping.normalise(map, true, 1, 10);
                 map = Mapping.mapFunction(map, p -> Math.log(p.z));
                 map = Mapping.normalise(map);
@@ -149,7 +157,7 @@ public class Builder {
     public Builder applyGaussian() {
 
         var plateauTextureName = PlateauTexture.getTextureName(config);
-        boolean smoothTextureInsideHollow = plateauTextureName.equals(PlateauTexture.ETextureName.HOLLOW)
+        boolean smoothTextureInsideHollow = plateauTextureName.equals(PlateauTexture.TextureName.HOLLOW)
                 && config.asBoolean(Config.Fractal.Processing.PLATEAU_HOLLOW_SMOOTH_INSIDE);
 
         map = Gaussian.applyToMap(
@@ -173,7 +181,7 @@ public class Builder {
         }
 
         var plateauTextureName = PlateauTexture.getTextureName(config);
-        if (PlateauTexture.ETextureName.NONE.equals(plateauTextureName)) {
+        if (PlateauTexture.TextureName.NONE.equals(plateauTextureName)) {
             return this;
         }
 

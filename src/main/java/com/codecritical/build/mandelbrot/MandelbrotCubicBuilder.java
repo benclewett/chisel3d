@@ -32,11 +32,13 @@ public class MandelbrotCubicBuilder {
         Builder.create(config, map)
                 .normalise()
                 .scale()
+                .applyLog()
                 .showRoughMap()
                 .buildPlateau()
                 .reportPlateau()
                 .applyPlateauTexture()
                 .applyGaussian()
+                .addBoundary()
                 .mapToCsg()
                 .savePrint();
     }
