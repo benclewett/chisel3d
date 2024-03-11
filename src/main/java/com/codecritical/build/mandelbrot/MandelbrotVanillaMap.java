@@ -14,7 +14,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class MandelbrotVanillaMap extends Fractal {
 
     public MandelbrotVanillaMap(ConfigReader config) {
-        super(config);
+        super(config, true);
     }
 
     @Override

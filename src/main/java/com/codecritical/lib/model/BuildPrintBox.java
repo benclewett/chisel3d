@@ -39,7 +39,7 @@ public class BuildPrintBox implements IBuildPrint {
         this.overlap = config.asDouble(Config.StlPrint.BOX_OVERLAP);
         this.baseThickness = config.asInt(Config.StlPrint.BASE_THICKNESS);
 
-        double pixelSize = config.asDouble(Config.StlPrint.PIXEL_SIZE);
+        double pixelSize = config.asDouble(Config.StlPrint.PIXEL_SIZE_XY);
         double xSize = config.asDouble(Config.StlPrint.X_SIZE);
         double ySize = config.asDouble(Config.StlPrint.Y_SIZE);
         this.iCount = (int)(xSize / pixelSize);

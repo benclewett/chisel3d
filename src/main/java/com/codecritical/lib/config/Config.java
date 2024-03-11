@@ -12,7 +12,8 @@ public enum Config {
         X_SIZE,
         Y_SIZE,
         Z_SIZE,
-        PIXEL_SIZE,
+        PIXEL_SIZE_XY,
+        PIXEL_SIZE_Z,
         BOX_OVERLAP,
         BASE_THICKNESS,
         SHAPE,
@@ -49,6 +50,11 @@ public enum Config {
             TRIM_OUTSIDE_BASE,
             PROJECT_CENTRE_SPHERE,
             APPLY_LOG
+        }
+
+        public enum JuliaSet {
+            IC,
+            RC
         }
 
     }

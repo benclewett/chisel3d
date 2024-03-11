@@ -7,6 +7,7 @@ package com.codecritical;
 import com.codecritical.build.burningship.BurningShipBuilder;
 import com.codecritical.build.gravitationalwaves.GravitationalWaveBuilder;
 import com.codecritical.build.infinitemachine.InfiniteMachineBuilder;
+import com.codecritical.build.mandelbrot.JuliaSetBuilder;
 import com.codecritical.build.mandelbrot.MandelbrotBuddhaBuilder;
 import com.codecritical.build.mandelbrot.MandelbrotVanillaBuilder;
 import com.codecritical.build.mandelbrot.MandelbrotCubicBuilder;
@@ -42,6 +43,7 @@ public class Container {
             case MANDELBROT_BUDDHA -> new MandelbrotBuddhaBuilder(config);
             case GRAVITATIONAL_WAVES -> new GravitationalWaveBuilder(config);
             case BURNING_SHIP -> new BurningShipBuilder(config);
+            case JULIA_SET -> new JuliaSetBuilder(config);
             default -> throw new IllegalStateException("Unexpected value: " + model);
         }
     }

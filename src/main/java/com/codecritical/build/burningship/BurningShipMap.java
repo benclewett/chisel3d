@@ -14,7 +14,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class BurningShipMap extends Fractal {
 
     public BurningShipMap(ConfigReader config) {
-        super(config);
+        super(config, true);
     }
 
     @Override

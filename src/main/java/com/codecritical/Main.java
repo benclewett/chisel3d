@@ -14,7 +14,8 @@ public class Main {
         MANDELBROT_CUBIC,
         MANDELBROT_BUDDHA,
         GRAVITATIONAL_WAVES,
-        BURNING_SHIP
+        BURNING_SHIP,
+        JULIA_SET
     }
 
     public static void main(String[] args) {

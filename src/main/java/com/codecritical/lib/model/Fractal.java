@@ -12,15 +12,13 @@ import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
 @ParametersAreNonnullByDefault
 public abstract class Fractal {
 
-    static final Logger logger = Logger.getLogger("");
+    protected static final Logger logger = Logger.getLogger("");
 
     protected final int maxIterations;
     protected final double i0, i1, j0, j1, iScale, jScale, iShift, jShift;
@@ -32,7 +30,7 @@ public abstract class Fractal {
 
     protected ImmutableList<ITranslate> translates;
 
-    protected Fractal(ConfigReader config) {
+    protected Fractal(ConfigReader config, boolean buildMap) {
 
         double i0tmp = config.asDouble(Config.Fractal.Model.I0);
         double i1tmp = config.asDouble(Config.Fractal.Model.I1);
@@ -67,7 +65,7 @@ public abstract class Fractal {
 
         this.maxIterations = config.asInt(Config.Fractal.Model.MAX_ITERATIONS);
 
-        double pixelSize = config.asDouble(Config.StlPrint.PIXEL_SIZE);
+        double pixelSize = config.asDouble(Config.StlPrint.PIXEL_SIZE_XY);
         double xSize = config.asDouble(Config.StlPrint.X_SIZE);
         double ySize = config.asDouble(Config.StlPrint.Y_SIZE);
         this.iCount = (int)(xSize / pixelSize);
@@ -79,13 +77,14 @@ public abstract class Fractal {
         this.polarCoordinates = config.asBoolean(Config.Fractal.Model.POLAR_COORDINATES);
         this.insideOut = config.asBoolean(Config.Fractal.Model.INSIDE_OUT);
 
-        logger.info(this.toString());
-
         this.map = new MapArray(iCount, jCount);
 
         this.translates = getMappings();
 
-        buildMap();
+        if (buildMap) {
+            logger.info(this.toString());
+            buildMap();
+        }
     }
 
     private ImmutableList<ITranslate> getMappings() {
@@ -100,7 +99,7 @@ public abstract class Fractal {
         return builder.build();
     }
 
-    private void buildMap() {
+    protected void buildMap() {
         for (int j = 0; j < jCount; j++) {
             for (int i = 0; i < iCount; i++) {
                 double[] p = new double[] {

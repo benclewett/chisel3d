@@ -176,6 +176,15 @@ Config.Fractal.Model.J0=0.0000000000031651
 Config.Fractal.Model.J1=-0.0000000000033231
 </pre>
 
+## Julia Set
+
+<img src="images/julia_set.png" height="200" width="300" />
+
+<pre>
+Config.Fractal.JuliaSet.RC=-0.8
+Config.Fractal.JuliaSet.IC=0.156
+</pre>
+
 ## Classic Burning Ship
 
 <img src="images/burning_ship.png" height="200" width="300" />
