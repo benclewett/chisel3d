@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import eu.printingin3d.javascad.coords.Coords3d;
 
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 public abstract class JuliaSet3D {
     protected static final Logger logger = Logger.getLogger("");
@@ -89,9 +90,10 @@ public abstract class JuliaSet3D {
         for (int j = 0; j < jCount; j++) {
             for (int i = 0; i < iCount; i++) {
                 for (int k = 0; k < kCount; k++) {
-                    boolean b = buildPoint(i * iDelta + i0, j * jDelta + j0, k * kDelta + k0);
+                    Coords3d coord = new Coords3d(i * iDelta + i0, j * jDelta + j0, k * kDelta + k0);
+                    boolean b = buildPoint(coord.getX(), coord.getY(), coord.getZ());
                     if (b) {
-                        builder.add(new Coords3d(i, j, k));
+                        builder.add(coord);
                     }
                 }
             }
@@ -104,6 +106,35 @@ public abstract class JuliaSet3D {
     public ImmutableList<Coords3d> getMap() {
         return map;
     }
+
+    public Stream<Coords3d> stream() {
+        return map.stream();
+    }
+
+    public double getISize() {
+        return this.i1 - this.i0;
+    }
+
+    public double getJSize() {
+        return this.j1 - this.j0;
+    }
+
+    public double getKSize() {
+        return this.k1 - this.k0;
+    }
+
+    public double getIMin() {
+        return this.i0;
+    }
+
+    public double getJMin() {
+        return this.j0;
+    }
+
+    public double getKMin() {
+        return this.j0;
+    }
+
 
     public String toString() {
         return MoreObjects.toStringHelper(this)

@@ -40,7 +40,8 @@ public class BuildPrintSurface implements IBuildPrint {
     }
 
     private static final Color COLOR = Color.WHITE;
-    private final double xMin, xMax, yMin, yMax, zMin, zMax, xRange, yRange, zRange;
+    private final double xMin, xMax, yMin, yMax, zMin, zMax;
+    private final double xRange, yRange, zRange;
     private final double baseThickness;
     private final BaseShape baseShape;
     private final CircularSorter circularSorter;

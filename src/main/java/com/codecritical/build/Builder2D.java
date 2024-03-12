@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.logging.Logger;
 
-public class Builder {
+public class Builder2D {
     static final Logger logger = Logger.getLogger("");
 
     private IMapArray map;
@@ -33,29 +33,29 @@ public class Builder {
     private PlateauCollections plateauCollection;
     private final ImmutableList.Builder<CSG> csg = ImmutableList.builder();
 
-    public static Builder create(ConfigReader config, IMapArray map) {
-        return new Builder(config, map);
+    public static Builder2D create(ConfigReader config, IMapArray map) {
+        return new Builder2D(config, map);
     }
 
-    private Builder(ConfigReader config, IMapArray map) {
+    private Builder2D(ConfigReader config, IMapArray map) {
         this.config = config;
         this.map = map;
         logger.info("Map build, points=" + map.stream().count());
     }
 
-    public Builder normalise() {
+    public Builder2D normalise() {
         map = Mapping.normalise(map, false);
         logger.info(String.format("Normalise without zero (1%% above zero): min=%.3f, max=%.3f, mean=%.3f",
                 map.getMin(), map.getMax(), map.getMean()));
         return this;
     }
 
-    public Builder normalise(double min, double max) {
+    public Builder2D normalise(double min, double max) {
         map = Mapping.normalise(map, false, min, max);
         return this;
     }
 
-    public Builder scale() {
+    public Builder2D scale() {
         map = Mapping.scale(map, IScale.toPower(config.asDouble(Config.Fractal.Processing.SCALE_POWER)));
         map = Mapping.normalise(map);
         logger.info(String.format("Scale: min=%.3f, max=%.3f, mean=%.3f", map.getMin(), map.getMax(), map.getMean()));
@@ -68,7 +68,7 @@ public class Builder {
         EXP
     }
 
-    public Builder applyLog() {
+    public Builder2D applyLog() {
         ExpLnValue expLnValue = (ExpLnValue)config.asOptionalEnum(ExpLnValue.class, Config.Fractal.Processing.APPLY_LOG).orElse(ExpLnValue.NONE);
         switch (expLnValue) {
             case NONE -> {
@@ -90,7 +90,7 @@ public class Builder {
         return this;
     }
 
-    public Builder showRoughMap() {
+    public Builder2D showRoughMap() {
         boolean showRoughMap = config.asBoolean(Config.Fractal.Model.SHOW_ROUGH_MAP);
         if (showRoughMap) {
             String rough = getRoughMap(map);
@@ -99,7 +99,7 @@ public class Builder {
         return this;
     }
 
-    public Builder buildPlateau() {
+    public Builder2D buildPlateau() {
 
         plateauCollection = getPlateauCollection(map);
 
@@ -109,7 +109,7 @@ public class Builder {
         return this;
     }
 
-    public Builder reportPlateau() {
+    public Builder2D reportPlateau() {
 
         StringBuilder log = new StringBuilder();
         double minPlateauSize = config.asDouble(Config.Fractal.Processing.MIN_PLATEAU_COEFFICIENT);
@@ -124,7 +124,7 @@ public class Builder {
         return this;
     }
 
-    public Builder mapToCsg() {
+    public Builder2D mapToCsg() {
         IBuildPrint buildPrint = new BuildPrintSurface(config);
         ImmutableList<CSG> mapPrint = buildPrint.getPrint(map);
         logger.info("Print cells defined, count=" + mapPrint.size());
@@ -134,27 +134,7 @@ public class Builder {
         return this;
     }
 
-    private static final String STL = ".stl";
-
-    public Builder savePrint() {
-
-        String fileName = config.asString(Config.OUTPUT_FILENAME);
-
-        if (!fileName.toLowerCase().endsWith(STL)) {
-            fileName = fileName + STL;
-        }
-
-        var csgUnion = FastUnion.fastUnion(csg.build());
-        logger.info("Union complete.");
-
-        ExportStl.export(fileName, csgUnion);
-        logger.info("STL file written to: " + fileName);
-
-        return this;
-    }
-
-
-    public Builder applyGaussian() {
+    public Builder2D applyGaussian() {
 
         var plateauTextureName = PlateauTexture.getTextureName(config);
         boolean smoothTextureInsideHollow = plateauTextureName.equals(PlateauTexture.TextureName.HOLLOW)
@@ -174,7 +154,7 @@ public class Builder {
         return this;
     }
 
-    public Builder applyPlateauTexture() {
+    public Builder2D applyPlateauTexture() {
 
         if (plateauTextureMap.isEmpty()) {
             return this;
@@ -222,7 +202,7 @@ public class Builder {
         return plateauSet;
     }
 
-    public Builder addTwoGravitationalMass() {
+    public Builder2D addTwoGravitationalMass() {
 
         double x0 = 0.0;
         double x1 = config.asDouble(Config.StlPrint.X_SIZE);
@@ -264,7 +244,7 @@ public class Builder {
         return this;
     }
 
-    public Builder addBoundary() {
+    public Builder2D addBoundary() {
 
         OptionalDouble borderHeight = config.asOptionalDouble(Config.StlPrint.BORDER_HEIGHT);
         OptionalDouble borderWidth = config.asOptionalDouble(Config.StlPrint.BORDER_WIDTH);
@@ -306,8 +286,28 @@ public class Builder {
     /**
      * This doesn't work where boundary bends in on it's self as the anti-clockwise sorting miss-orders
      */
-    public Builder trimOutsideBase() {
+    public Builder2D trimOutsideBase() {
         map = Mapping.trimOutsideBase(map);
         return this;
     }
+
+    private static final String STL = ".stl";
+
+    public Builder2D savePrint() {
+
+        String fileName = config.asString(Config.OUTPUT_FILENAME);
+
+        if (!fileName.toLowerCase().endsWith(STL)) {
+            fileName = fileName + STL;
+        }
+
+        var csgUnion = FastUnion.fastUnion(csg.build());
+        logger.info("Union complete.");
+
+        ExportStl.export(fileName, csgUnion);
+        logger.info("STL file written to: " + fileName);
+
+        return this;
+    }
+
 }

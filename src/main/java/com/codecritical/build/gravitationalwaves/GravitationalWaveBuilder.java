@@ -5,7 +5,7 @@ package com.codecritical.build.gravitationalwaves;
  */
 
 
-import com.codecritical.build.Builder;
+import com.codecritical.build.Builder2D;
 import com.codecritical.lib.config.Config;
 import com.codecritical.lib.config.ConfigReader;
 
@@ -31,7 +31,7 @@ public class GravitationalWaveBuilder {
 
         double waveHeight = config.asDouble(Config.GravitationalWaves.WAVE_HEIGHT);
 
-        Builder.create(config, map)
+        Builder2D.create(config, map)
                 .normalise(0.0, waveHeight)
                 .showRoughMap()
                 .mapToCsg()

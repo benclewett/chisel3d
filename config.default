@@ -28,11 +28,11 @@ Config.StlPrint.BORDER_HEIGHT=10
 # Useful site: https://usefuljs.net/fractals/
 #
 
-Config.Fractal.Model.MAX_ITERATIONS=500
-Config.Fractal.Model.I0=-1.8
-Config.Fractal.Model.I1=-1.7
-Config.Fractal.Model.J0=-0.08
-Config.Fractal.Model.J1=0.01
+Config.Fractal.Model.MAX_ITERATIONS=400
+Config.Fractal.Model.I0=-2.1
+Config.Fractal.Model.I1=0.9
+Config.Fractal.Model.J0=-1.3
+Config.Fractal.Model.J1=1.3
 # Tweaks of model size/shift.  Look for a log output for new I/J values.  Default [1,1,0,0]
 Config.Fractal.Model.I_SCALE=1
 Config.Fractal.Model.J_SCALE=1
@@ -63,11 +63,19 @@ Config.Fractal.Processing.PROJECT_CENTRE_SPHERE=
 Config.Fractal.Processing.APPLY_LOG=NONE
 
 #
-# Julia Sets Only
+# Pure Julia Sets Only (Not Mandelbrots or Burning Ships)
 #
 Config.Fractal.JuliaSet.RC=-0.8
 Config.Fractal.JuliaSet.IC=0.156
 
+#
+# 3D Julia sets
+#
+Config.Fractal.Model.K0 = 0
+Config.Fractal.Model.K1 = 10
+Config.Fractal.Model.K_SCALE = 1.0
+Config.Fractal.Model.K_SHIFT = 0.0
+Config.StlPrint.BLOCK_SIZE_3D = 5
 
 #
 # Gravitational Waves STL Print

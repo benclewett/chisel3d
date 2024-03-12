@@ -6,7 +6,7 @@ package com.codecritical.build.juliasets;
 
 
 import com.codecritical.Main;
-import com.codecritical.build.Builder;
+import com.codecritical.build.Builder2D;
 import com.codecritical.lib.config.ConfigReader;
 import com.codecritical.lib.mapping.IMapArray;
 
@@ -45,7 +45,7 @@ public class JuliaSetsBuilder {
 
     private void build(IMapArray map) {
 
-        Builder.create(config, map)
+        Builder2D.create(config, map)
                 .normalise()
                 .scale()
                 .applyLog()
