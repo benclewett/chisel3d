@@ -1,17 +1,16 @@
-package com.codecritical.build.burningship;
+package com.codecritical.build.juliasets;
 
 /*
  * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
  */
 
 import com.codecritical.lib.config.ConfigReader;
-import com.codecritical.lib.mapping.MapArray;
-import com.codecritical.lib.model.Fractal;
+import com.codecritical.lib.model.JuliaSet;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class BurningShipMap extends Fractal {
+public class BurningShipMap extends JuliaSet {
 
     public BurningShipMap(ConfigReader config) {
         super(config, true);

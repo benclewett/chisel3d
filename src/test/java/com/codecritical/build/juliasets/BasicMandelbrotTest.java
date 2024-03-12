@@ -1,4 +1,4 @@
-package com.codecritical.build.mandelbrot;
+package com.codecritical.build.juliasets;
 
 /*
  * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
@@ -25,19 +25,19 @@ class BasicMandelbrotTest {
     void test() {
 
         ConfigReader config = new ConfigReader()
-                .add("Config.Fractal.Model.MAX_ITERATIONS", MAX_ITERATIONS)
-                .add("Config.Fractal.Model.I0", I0)
-                .add("Config.Fractal.Model.I1", I1)
-                .add("Config.Fractal.Model.J0", J0)
-                .add("Config.Fractal.Model.J1", J1)
-                .add("Config.Fractal.Model.I_COUNT", I_COUNT)
-                .add("Config.Fractal.Model.J_COUNT", J_COUNT);
+                .add("Config.JuliaSet.Model.MAX_ITERATIONS", MAX_ITERATIONS)
+                .add("Config.JuliaSet.Model.I0", I0)
+                .add("Config.JuliaSet.Model.I1", I1)
+                .add("Config.JuliaSet.Model.J0", J0)
+                .add("Config.JuliaSet.Model.J1", J1)
+                .add("Config.JuliaSet.Model.I_COUNT", I_COUNT)
+                .add("Config.JuliaSet.Model.J_COUNT", J_COUNT);
 
-        var map = new MandelbrotVanillaMap(config).getMap();
+        var map = new MandelbrotStandardMap(config).getMap();
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Fractal:\r\n  +");
+        sb.append("JuliaSet:\r\n  +");
         for (int i = 0; i < map.getISize(); i++) {
             sb.append("-");
         }

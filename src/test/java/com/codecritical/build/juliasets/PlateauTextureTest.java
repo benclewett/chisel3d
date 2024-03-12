@@ -1,4 +1,4 @@
-package com.codecritical.build.mandelbrot;
+package com.codecritical.build.juliasets;
 
 /*
  * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
@@ -62,9 +62,9 @@ class PlateauTextureTest {
                 .add("Config.StlPrint.Y_MAX", 10.0)
                 .add("Config.StlPrint.X_MIN", 0.0)
                 .add("Config.StlPrint.Y_MIN", 0.0)
-                .add("Config.Fractal.Processing.PLATEAU_TEXTURE_MAP", "HOLLOW")
-                .add("Config.Fractal.Processing.PLATEAU_HOLLOW_RADIUS", 1.0)
-                .add("Config.Fractal.Processing.PLATEAU_HOLLOW_DEPTH", 0.5);
+                .add("Config.JuliaSet.Processing.PLATEAU_TEXTURE_MAP", "HOLLOW")
+                .add("Config.JuliaSet.Processing.PLATEAU_HOLLOW_RADIUS", 1.0)
+                .add("Config.JuliaSet.Processing.PLATEAU_HOLLOW_DEPTH", 0.5);
 
         var plateauTexture = new PlateauTexture(config, map, plateauCollection).getTexture();
 

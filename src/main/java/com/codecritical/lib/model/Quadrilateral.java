@@ -56,7 +56,7 @@ public class Quadrilateral {
     private ImmutableList<Polygon> buildPolygons() {
         ImmutableList.Builder<Polygon> builder = ImmutableList.builder();
 
-        if ((v0.getZ() == v1.getZ() && v2.getZ() == v3.getZ()) || (v0.getZ() == v2.getZ() && v1.getZ() == v3.getZ())) {
+        if ((v0.getZ() == v1.getZ() && v2.getZ() == v3.getZ()) || (v0.getZ() == v1.getZ() && v2.getZ() == v3.getZ())) {
             // Coplanar, needs just one polygon.
             addPolygons(builder, v0, v1, v2, v3);
         } else {

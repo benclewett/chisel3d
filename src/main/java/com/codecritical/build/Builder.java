@@ -85,7 +85,7 @@ public class Builder {
                 map = Mapping.normalise(map);
                 logger.info(String.format("Apply ln(z): min=%.3f, max=%.3f, mean=%.3f", map.getMin(), map.getMax(), map.getMean()));
             }
-            default -> throw new RuntimeException("Bad option for Config.Fractal.Processing.APPLY_LOG: " + config.asInt(Config.Fractal.Processing.APPLY_LOG));
+            default -> throw new RuntimeException("Bad option for Config.JuliaSet.Processing.APPLY_LOG: " + config.asInt(Config.Fractal.Processing.APPLY_LOG));
         }
         return this;
     }

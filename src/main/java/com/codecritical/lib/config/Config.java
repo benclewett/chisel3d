@@ -18,7 +18,8 @@ public enum Config {
         BASE_THICKNESS,
         SHAPE,
         BORDER_HEIGHT,
-        BORDER_WIDTH
+        BORDER_WIDTH,
+        BLOCK_SIZE_3D
     }
 
     public enum Fractal { ;
@@ -29,10 +30,14 @@ public enum Config {
             I1,
             J0,
             J1,
+            K0,
+            K1,
             I_SCALE,
             J_SCALE,
+            K_SCALE,
             I_SHIFT,
             J_SHIFT,
+            K_SHIFT,
             POLAR_COORDINATES,
             INSIDE_OUT,
             SHOW_ROUGH_MAP

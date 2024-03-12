@@ -1,4 +1,4 @@
-package com.codecritical.build.mandelbrot;
+package com.codecritical.build.juliasets;
 
 /*
  * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
@@ -6,12 +6,12 @@ package com.codecritical.build.mandelbrot;
 
 import com.codecritical.lib.config.ConfigReader;
 import com.codecritical.lib.mapping.MapArray;
-import com.codecritical.lib.model.Fractal;
+import com.codecritical.lib.model.JuliaSet;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class MandelbrotBuddhaMap extends Fractal {
+public class MandelbrotBuddhaMap extends JuliaSet {
 
     public MandelbrotBuddhaMap(ConfigReader config) {
         super(config, true);

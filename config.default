@@ -8,9 +8,9 @@ Config.OUTPUT_FILENAME=fractal
 
 Config.StlPrint.X_SIZE=140
 Config.StlPrint.Y_SIZE=100
-Config.StlPrint.Z_SIZE=20
+Config.StlPrint.Z_SIZE=10
 # Fine: down to 0.1.  Course: 0.5 or above.
-Config.StlPrint.PIXEL_SIZE_XY=.3
+Config.StlPrint.PIXEL_SIZE_XY=.5
 # Z used for 3D effects. (Not supported)  If not needed, leave high as drastically increases polygon count.
 Config.StlPrint.PIXEL_SIZE_Z=10
 # The base is added onto the Z size.
@@ -28,11 +28,11 @@ Config.StlPrint.BORDER_HEIGHT=10
 # Useful site: https://usefuljs.net/fractals/
 #
 
-Config.Fractal.Model.MAX_ITERATIONS=400
-Config.Fractal.Model.I0=-1.6
-Config.Fractal.Model.I1=1.6
-Config.Fractal.Model.J0=-1.1
-Config.Fractal.Model.J1=1.1
+Config.Fractal.Model.MAX_ITERATIONS=500
+Config.Fractal.Model.I0=-1.8
+Config.Fractal.Model.I1=-1.7
+Config.Fractal.Model.J0=-0.08
+Config.Fractal.Model.J1=0.01
 # Tweaks of model size/shift.  Look for a log output for new I/J values.  Default [1,1,0,0]
 Config.Fractal.Model.I_SCALE=1
 Config.Fractal.Model.J_SCALE=1
@@ -43,11 +43,11 @@ Config.Fractal.Model.POLAR_COORDINATES=false
 Config.Fractal.Model.INSIDE_OUT=false
 Config.Fractal.Model.SHOW_ROUGH_MAP=false;
 
-Config.Fractal.Processing.SCALE_POWER=1
+Config.Fractal.Processing.SCALE_POWER=0.1
 # Plateau's of 0.1% area or greater are respected and ignored from Gaussian smoothing.
 Config.Fractal.Processing.MIN_PLATEAU_COEFFICIENT=0.01
 # Plateau applied with texture, HIGH, LOW or HOLLOW -> hollow out the plateau leaving a border.
-Config.Fractal.Processing.PLATEAU_TEXTURE_MAP=HIGH
+Config.Fractal.Processing.PLATEAU_TEXTURE_MAP=HOLLOW
 Config.Fractal.Processing.PLATEAU_HOLLOW_RADIUS=2
 Config.Fractal.Processing.PLATEAU_HOLLOW_INCLUDE_EDGE=false
 Config.Fractal.Processing.PLATEAU_HOLLOW_SMOOTH_INSIDE=true
@@ -56,7 +56,7 @@ Config.Fractal.Processing.PLATEAU_HOLLOW_DEPTH=0.0
 # Trim outside base.  This fails at this time.
 Config.Fractal.Processing.TRIM_OUTSIDE_BASE=false
 # Gaussian Radius as coefficient of the size.  Optional.  0.005 (0.5%) to 0.001 are a good options.
-Config.Fractal.Processing.GAUSSIAN_RADIUS=0.003
+Config.Fractal.Processing.GAUSSIAN_RADIUS=0.0015
 # Optional projection from centre of a spear as x,y,z.  Above for concave, below for convex.  Stl print units.
 Config.Fractal.Processing.PROJECT_CENTRE_SPHERE=
 # Natural Log.  EXP -> e^z, NONE -> z, LN -> ln(z).  EXP exaggerates hills, LN softens hills.

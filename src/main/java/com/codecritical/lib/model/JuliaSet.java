@@ -16,7 +16,7 @@ import java.util.function.Function;
 import java.util.logging.Logger;
 
 @ParametersAreNonnullByDefault
-public abstract class Fractal {
+public abstract class JuliaSet {
 
     protected static final Logger logger = Logger.getLogger("");
 
@@ -30,7 +30,7 @@ public abstract class Fractal {
 
     protected ImmutableList<ITranslate> translates;
 
-    protected Fractal(ConfigReader config, boolean buildMap) {
+    protected JuliaSet(ConfigReader config, boolean buildMap) {
 
         double i0tmp = config.asDouble(Config.Fractal.Model.I0);
         double i1tmp = config.asDouble(Config.Fractal.Model.I1);
@@ -57,10 +57,10 @@ public abstract class Fractal {
         logger.info(String.format("Width: i=%.20f j=%.20f", iLen, jLen));
 
         logger.info(String.format("Using:\r\n" +
-                "Config.Fractal.Model.I0=%.20f\r\n" +
-                "Config.Fractal.Model.I1=%.20f\r\n" +
-                "Config.Fractal.Model.J0=%.20f\r\n" +
-                "Config.Fractal.Model.J1=%.20f",
+                "Config.JuliaSet.Model.I0=%.20f\r\n" +
+                "Config.JuliaSet.Model.I1=%.20f\r\n" +
+                "Config.JuliaSet.Model.J0=%.20f\r\n" +
+                "Config.JuliaSet.Model.J1=%.20f",
                 i0, i1, j0, j1));
 
         this.maxIterations = config.asInt(Config.Fractal.Model.MAX_ITERATIONS);
