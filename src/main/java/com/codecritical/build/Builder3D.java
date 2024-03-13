@@ -50,7 +50,7 @@ public class Builder3D {
         this.zMin = 0.0;
         this.zMax = zRange;
 
-        this.blockSize = config.asDouble(Config.StlPrint.BLOCK_SIZE_3D);
+        this.blockSize = config.asDouble(Config.StlPrint.BLOCK_SIZE_3D) * 1.1;
         this.blockSize3D = new Dims3d(blockSize, blockSize, blockSize);
     }
 
@@ -59,6 +59,7 @@ public class Builder3D {
                 .map(this::translateCoordinateSet)
                 .map(this::createCube)
                 .forEach(csg::add);
+        logger.info("CSG blocks created.");
         return this;
     }
 
@@ -85,7 +86,7 @@ public class Builder3D {
     }
 
     private double mapZ(double k) {
-        return (k - map.getJMin()) / map.getKSize() * zRange + zMin;
+        return (k - map.getKMin()) / map.getKSize() * zRange + zMin;
     }
 
     private static final String STL = ".stl";

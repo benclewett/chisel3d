@@ -83,6 +83,8 @@ public abstract class JuliaSet3D {
 
         logger.info(this.toString());
         map = buildMap();
+
+        logger.info("Blocks created: " + map.size());
     }
 
     protected ImmutableList<Coords3d> buildMap() {
@@ -132,7 +134,7 @@ public abstract class JuliaSet3D {
     }
 
     public double getKMin() {
-        return this.j0;
+        return this.k0;
     }
 
 

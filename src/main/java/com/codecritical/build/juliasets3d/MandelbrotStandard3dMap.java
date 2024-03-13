@@ -23,7 +23,7 @@ public class MandelbrotStandard3dMap extends JuliaSet3D {
 
         int iterations = 0;
 
-        double rZ = 0, iZ = 0, iZtmp;
+        double rZ = 0, iZ = k, iZtmp;
         while (rZ * rZ + iZ * iZ <= 4 && iterations < maxIterations) {
             iZtmp = rZ * rZ - iZ * iZ + rC;
             iZ = 2 * rZ * iZ + iC;
