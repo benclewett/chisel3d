@@ -91,6 +91,6 @@ public enum Config {
         WAVE_RIDGE_COUNT_IN_X_AXIS,
         MASS_RADIUS_COEFFICIENT,
         WAVE_HEIGHT,
-        PERSPECTIVE_ANGLE;
+        PERSPECTIVE_ANGLE
     }
 }

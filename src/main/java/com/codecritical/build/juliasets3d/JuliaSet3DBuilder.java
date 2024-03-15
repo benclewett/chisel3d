@@ -6,7 +6,6 @@ package com.codecritical.build.juliasets3d;
 
 import com.codecritical.build.Builder3D;
 import com.codecritical.lib.config.ConfigReader;
-import com.codecritical.lib.model.JuliaSet3D;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.logging.Logger;

@@ -12,10 +12,7 @@ import com.codecritical.lib.mapping.IMapArray;
 import com.codecritical.lib.mapping.Trig;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
-import eu.printingin3d.javascad.basic.Radius;
 import eu.printingin3d.javascad.coords.Coords3d;
-import eu.printingin3d.javascad.models.Cylinder;
-import eu.printingin3d.javascad.tranform.TransformationFactory;
 import eu.printingin3d.javascad.vrl.CSG;
 import eu.printingin3d.javascad.vrl.Polygon;
 
@@ -25,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -336,8 +334,8 @@ public class BuildPrintSurface implements IBuildPrint {
 
     private ImmutableList<Coords3d> buildBoundingCircumference() {
         ImmutableList.Builder<Coords3d> builder = new ImmutableList.Builder<>();
-        switch (baseShape) {
-            case CIRCLE -> getBoundingCircumferenceCircle(builder);
+        if (Objects.requireNonNull(baseShape) == BaseShape.CIRCLE) {
+            getBoundingCircumferenceCircle(builder);
         }
         var out = builder.build();
         logger.info(String.format("Line segments in circumference=%d", out.size()));

@@ -39,6 +39,12 @@ public class ConfigReader {
         return this;
     }
 
+    public ConfigReader add(String name, boolean b) {
+        this.properties.setProperty(name, (b) ? "true" : "false");
+        return this;
+    }
+
+
     public OptionalInt asOptionalInt(Enum config) {
         var i = get(config);
         return i.map(s -> OptionalInt
@@ -202,5 +208,4 @@ public class ConfigReader {
         }
         return Boolean.parseBoolean(val.get());
     }
-
 }

@@ -25,22 +25,29 @@ class BasicMandelbrotTest {
     void test() {
 
         ConfigReader config = new ConfigReader()
-                .add("Config.JuliaSet.Model.MAX_ITERATIONS", MAX_ITERATIONS)
-                .add("Config.JuliaSet.Model.I0", I0)
-                .add("Config.JuliaSet.Model.I1", I1)
-                .add("Config.JuliaSet.Model.J0", J0)
-                .add("Config.JuliaSet.Model.J1", J1)
-                .add("Config.JuliaSet.Model.I_COUNT", I_COUNT)
-                .add("Config.JuliaSet.Model.J_COUNT", J_COUNT);
+                .add("Config.Fractal.Model.MAX_ITERATIONS", MAX_ITERATIONS)
+                .add("Config.Fractal.Model.I0", I0)
+                .add("Config.Fractal.Model.I1", I1)
+                .add("Config.Fractal.Model.J0", J0)
+                .add("Config.Fractal.Model.J1", J1)
+                .add("Config.Fractal.Model.I_COUNT", I_COUNT)
+                .add("Config.Fractal.Model.J_COUNT", J_COUNT)
+                .add("Config.Fractal.Model.I_SCALE", 1)
+                .add("Config.Fractal.Model.J_SCALE", 1)
+                .add("Config.Fractal.Model.I_SHIFT", 0)
+                .add("Config.Fractal.Model.J_SHIFT", 0)
+                .add("Config.StlPrint.PIXEL_SIZE_XY", 1)
+                .add("Config.StlPrint.X_SIZE", 100)
+                .add("Config.StlPrint.Y_SIZE", 20)
+                .add("Config.Fractal.Model.POLAR_COORDINATES", false)
+                .add("Config.Fractal.Model.INSIDE_OUT", false);
 
         var map = new MandelbrotStandardMap(config).getMap();
 
         StringBuilder sb = new StringBuilder();
 
         sb.append("JuliaSet:\r\n  +");
-        for (int i = 0; i < map.getISize(); i++) {
-            sb.append("-");
-        }
+        sb.append("-".repeat(Math.max(0, map.getISize())));
         sb.append("+");
         for (int j = 0; j < map.getJSize(); j++) {
             sb.append("\r\n  |");
@@ -50,9 +57,7 @@ class BasicMandelbrotTest {
             sb.append("|");
         }
         sb.append("\r\n  +");
-        for (int i = 0; i < map.getISize(); i++) {
-            sb.append("-");
-        }
+        sb.append("-".repeat(Math.max(0, map.getISize())));
         sb.append("+");
 
         logger.info(sb.toString());
