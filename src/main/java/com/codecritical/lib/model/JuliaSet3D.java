@@ -4,8 +4,10 @@ import com.codecritical.lib.config.Config;
 import com.codecritical.lib.config.ConfigReader;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import eu.printingin3d.javascad.coords.Coords3d;
 
+import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -18,10 +20,11 @@ public abstract class JuliaSet3D {
     protected final int iCount, jCount, kCount;
     protected final double iDelta, jDelta, kDelta;
 
-    protected final ImmutableList<Coords3d> map;
+    protected ImmutableList<Coords3d> map;
+    protected ImmutableSet<MapPoint3D> pointMap;
+
 
     protected JuliaSet3D(ConfigReader config) {
-
         double i0tmp = config.asDouble(Config.Fractal.Model.I0);
         double i1tmp = config.asDouble(Config.Fractal.Model.I1);
         double j0tmp = config.asDouble(Config.Fractal.Model.J0);
@@ -82,20 +85,56 @@ public abstract class JuliaSet3D {
         this.kDelta = (k1 - k0) / (double) kCount;
 
         logger.info(this.toString());
-        map = buildMap();
 
-        logger.info("Blocks created: " + map.size());
+        build();
     }
 
-    protected ImmutableList<Coords3d> buildMap() {
-        ImmutableList.Builder<Coords3d> builder = ImmutableList.builder();
-        for (int j = 0; j < jCount; j++) {
-            for (int i = 0; i < iCount; i++) {
-                for (int k = 0; k < kCount; k++) {
-                    Coords3d coord = new Coords3d(i * iDelta + i0, j * jDelta + j0, k * kDelta + k0);
-                    boolean b = buildPoint(coord.getX(), coord.getY(), coord.getZ());
+    void build() {
+
+        pointMap = buildMap();
+
+        logger.info("Points created: " + pointMap.size());
+
+        pointMap = pointMap.stream()
+                .filter(p -> !unjoinedPoint(p, pointMap))
+                .collect(ImmutableSet.toImmutableSet());
+        logger.info("Points after removal of unjoined: " + pointMap.size());
+
+        map = pointMap.stream()
+                .map(this::pointToCoordinates)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    private Coords3d pointToCoordinates(MapPoint3D point) {
+        return new Coords3d(
+                point.i * iDelta + i0,
+                point.j * jDelta + j0,
+                point.k * kDelta + k0
+        );
+    }
+
+    private boolean unjoinedPoint(MapPoint3D point, ImmutableSet<MapPoint3D> newMap) {
+        for (short i = -1; i <= 1; i += 2) {
+            for (short j = -1; j <= 1; j += 2) {
+                for (short k = -1; k <= 1; k += 2) {
+                    MapPoint3D p = new MapPoint3D((short)(point.i + i), (short)(point.j + j), (short)(point.k + k));
+                    if (newMap.contains(p)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    protected ImmutableSet<MapPoint3D> buildMap() {
+        ImmutableSet.Builder<MapPoint3D> builder = ImmutableSet.builder();
+        for (short j = 0; j < jCount; j++) {
+            for (short i = 0; i < iCount; i++) {
+                for (short k = 0; k < kCount; k++) {
+                    boolean b = buildPoint(i * iDelta + i0, j * jDelta + j0, k * kDelta + k0);
                     if (b) {
-                        builder.add(coord);
+                        builder.add(new MapPoint3D(i, j, k));
                     }
                 }
             }
@@ -137,7 +176,6 @@ public abstract class JuliaSet3D {
         return this.k0;
     }
 
-
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("maxIterations", maxIterations)
@@ -151,5 +189,30 @@ public abstract class JuliaSet3D {
                 .add("jCount", jCount)
                 .add("kCount", kCount)
                 .toString();
+    }
+
+    public record MapPoint3D(short i, short j, short k) {
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            MapPoint3D mapPoint = (MapPoint3D) o;
+            return i == mapPoint.i && j == mapPoint.j && k == mapPoint.k;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(i, j, k);
+        }
+
+        @Override
+        public String toString() {
+            return MoreObjects.toStringHelper(this)
+                    .add("i", i)
+                    .add("j", j)
+                    .add("k", k)
+                    .toString();
+        }
     }
 }

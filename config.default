@@ -6,9 +6,9 @@ Config.OUTPUT_FILENAME=fractal
 # All dimensions are mm or coefficients.
 #
 
-Config.StlPrint.X_SIZE=140
-Config.StlPrint.Y_SIZE=100
-Config.StlPrint.Z_SIZE=50
+Config.StlPrint.X_SIZE=160
+Config.StlPrint.Y_SIZE=120
+Config.StlPrint.Z_SIZE=30
 # Fine: down to 0.1.  Course: 0.5 or above.
 Config.StlPrint.PIXEL_SIZE_XY=.5
 # Z used for 3D effects. (Not supported)  If not needed, leave high as drastically increases polygon count.
@@ -19,7 +19,7 @@ Config.StlPrint.BASE_THICKNESS=3
 Config.StlPrint.SHAPE=SQUARE
 # Optional Border, added round the print increasing the width.
 Config.StlPrint.BORDER_WIDTH=3
-Config.StlPrint.BORDER_HEIGHT=10
+Config.StlPrint.BORDER_HEIGHT=20
 
 
 #
@@ -29,8 +29,8 @@ Config.StlPrint.BORDER_HEIGHT=10
 #
 
 Config.Fractal.Model.MAX_ITERATIONS=400
-Config.Fractal.Model.I0=-2.1
-Config.Fractal.Model.I1=0.9
+Config.Fractal.Model.I0=-1.8
+Config.Fractal.Model.I1=1.8
 Config.Fractal.Model.J0=-1.3
 Config.Fractal.Model.J1=1.3
 # Tweaks of model size/shift.  Look for a log output for new I/J values.  Default [1,1,0,0]
@@ -56,7 +56,7 @@ Config.Fractal.Processing.PLATEAU_HOLLOW_DEPTH=0.0
 # Trim outside base.  This fails at this time.
 Config.Fractal.Processing.TRIM_OUTSIDE_BASE=false
 # Gaussian Radius as coefficient of the size.  Optional.  0.005 (0.5%) to 0.001 are a good options.
-Config.Fractal.Processing.GAUSSIAN_RADIUS=0.0015
+Config.Fractal.Processing.GAUSSIAN_RADIUS=0.003
 # Optional projection from centre of a spear as x,y,z.  Above for concave, below for convex.  Stl print units.
 Config.Fractal.Processing.PROJECT_CENTRE_SPHERE=
 # Natural Log.  EXP -> e^z, NONE -> z, LN -> ln(z).  EXP exaggerates hills, LN softens hills.

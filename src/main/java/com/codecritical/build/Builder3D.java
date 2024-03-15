@@ -30,7 +30,6 @@ public class Builder3D {
     private final double blockSize;
     private final Dims3d blockSize3D;
 
-
     public static Builder3D create(ConfigReader config, JuliaSet3D map) {
         return new Builder3D(config, map);
     }

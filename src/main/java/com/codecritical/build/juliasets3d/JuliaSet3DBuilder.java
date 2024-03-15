@@ -21,9 +21,7 @@ public class JuliaSet3DBuilder {
         this.config = config;
 
         try {
-            var map = new MandelbrotStandard3dMap(config);
-
-            build(map);
+            build();
         } catch (Exception ex) {
             logger.severe("Exception: " + ex);
             throw new RuntimeException(ex);
@@ -31,13 +29,12 @@ public class JuliaSet3DBuilder {
 
     }
 
-    private void build(JuliaSet3D map) {
+    private void build() {
+
+        var map = new MandelbrotStandard3dMap(config);
 
         Builder3D.create(config, map)
                 .buildModel()
                 .savePrint();
-
     }
-
-
 }
