@@ -8,26 +8,28 @@ import java.util.Arrays;
 
 public class Main {
 
-    enum EModel {
+    public enum ModelName {
         INFINITE_MACHINE,
         MANDELBROT,
         MANDELBROT_CUBIC,
         MANDELBROT_BUDDHA,
         GRAVITATIONAL_WAVES,
-        BURNING_SHIP
+        BURNING_SHIP,
+        JULIA_SET,
+        MANDELBROT_3D
     }
 
     public static void main(String[] args) {
 
         if (args.length == 0) {
-            throw new RuntimeException("Please pass the model type as the only argument: " + Arrays.asList(EModel.values()));
+            throw new RuntimeException("Please pass the model type as the only argument: " + Arrays.asList(ModelName.values()));
         }
 
-        EModel model;
+        ModelName model;
         try {
-            model = EModel.valueOf(args[0]);
+            model = ModelName.valueOf(args[0]);
         } catch (Exception ex) {
-            throw new RuntimeException("Cannot convert '" + args[0] + "' to one of " + Arrays.asList(EModel.values()));
+            throw new RuntimeException("Cannot convert '" + args[0] + "' to one of " + Arrays.asList(ModelName.values()));
         }
 
         new Container(model);

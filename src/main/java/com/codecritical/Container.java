@@ -4,14 +4,12 @@ package com.codecritical;
  * Chisel3D, (C) 2024 Ben Clewett & Code Critical Ltd
  */
 
-import com.codecritical.build.burningship.BurningShipBuilder;
 import com.codecritical.build.gravitationalwaves.GravitationalWaveBuilder;
 import com.codecritical.build.infinitemachine.InfiniteMachineBuilder;
-import com.codecritical.build.mandelbrot.MandelbrotBuddhaBuilder;
-import com.codecritical.build.mandelbrot.MandelbrotVanillaBuilder;
-import com.codecritical.build.mandelbrot.MandelbrotCubicBuilder;
-import com.codecritical.lib.config.ConfigReader;
+import com.codecritical.build.juliasets.JuliaSetsBuilder;
+import com.codecritical.build.juliasets3d.JuliaSet3DBuilder;
 import com.codecritical.lib.config.Config;
+import com.codecritical.lib.config.ConfigReader;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.FileInputStream;
@@ -27,7 +25,7 @@ public class Container {
     private final ConfigReader config;
     private final Random random;
 
-    public Container(Main.EModel model) {
+    public Container(Main.ModelName model) {
 
         logger.info("Model: " + model);
 
@@ -37,11 +35,9 @@ public class Container {
 
         switch (model) {
             case INFINITE_MACHINE -> new InfiniteMachineBuilder(config, random);
-            case MANDELBROT -> new MandelbrotVanillaBuilder(config);
-            case MANDELBROT_CUBIC -> new MandelbrotCubicBuilder(config);
-            case MANDELBROT_BUDDHA -> new MandelbrotBuddhaBuilder(config);
+            case MANDELBROT, MANDELBROT_CUBIC, MANDELBROT_BUDDHA, JULIA_SET, BURNING_SHIP -> new JuliaSetsBuilder(config, model);
             case GRAVITATIONAL_WAVES -> new GravitationalWaveBuilder(config);
-            case BURNING_SHIP -> new BurningShipBuilder(config);
+            case MANDELBROT_3D -> new JuliaSet3DBuilder(config);
             default -> throw new IllegalStateException("Unexpected value: " + model);
         }
     }

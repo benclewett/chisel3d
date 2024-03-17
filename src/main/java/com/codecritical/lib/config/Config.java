@@ -12,12 +12,25 @@ public enum Config {
         X_SIZE,
         Y_SIZE,
         Z_SIZE,
-        PIXEL_SIZE,
+        PIXEL_SIZE_XY,
+        PIXEL_SIZE_Z,
         BOX_OVERLAP,
         BASE_THICKNESS,
         SHAPE,
         BORDER_HEIGHT,
-        BORDER_WIDTH
+        BORDER_WIDTH,
+        BLOCK_SIZE_3D;
+
+        public enum Settings3D {
+            TILT_DEGREES_IN_X,
+            TILT_DEGREES_IN_Y,
+            TILT_DEGREES_IN_Z,
+            MODEL_MOVE,
+            SHADOW,
+            SHADOW_Z,
+            SHADOW_DEPTH
+        }
+
     }
 
     public enum Fractal { ;
@@ -28,10 +41,14 @@ public enum Config {
             I1,
             J0,
             J1,
+            K0,
+            K1,
             I_SCALE,
             J_SCALE,
+            K_SCALE,
             I_SHIFT,
             J_SHIFT,
+            K_SHIFT,
             POLAR_COORDINATES,
             INSIDE_OUT,
             SHOW_ROUGH_MAP
@@ -51,6 +68,10 @@ public enum Config {
             APPLY_LOG
         }
 
+        public enum JuliaSet {
+            IC,
+            RC
+        }
     }
 
     public enum InfiniteMachineConfig {
@@ -80,6 +101,6 @@ public enum Config {
         WAVE_RIDGE_COUNT_IN_X_AXIS,
         MASS_RADIUS_COEFFICIENT,
         WAVE_HEIGHT,
-        PERSPECTIVE_ANGLE;
+        PERSPECTIVE_ANGLE
     }
 }

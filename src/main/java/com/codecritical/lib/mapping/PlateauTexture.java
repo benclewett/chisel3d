@@ -26,7 +26,7 @@ public class PlateauTexture {
     final static double LOW_Z = 0.0;
 
     final ConfigReader config;
-    final ETextureName eTextureMapName;
+    final TextureName eTextureMapName;
     final IMapArray map;
     final PlateauCollections plateauCollection;
     final int iHoleRadiosCountOnMap, jHoleRadiosCountOnMap;
@@ -34,12 +34,12 @@ public class PlateauTexture {
     final double hollowDepth;
     final boolean plateauHollowIncludeEdge;
 
-    public static ETextureName getTextureName(ConfigReader config) {
-        return (PlateauTexture.ETextureName)config.asOptionalEnum(PlateauTexture.ETextureName.class, Config.Fractal.Processing.PLATEAU_TEXTURE_MAP)
-                .orElse(PlateauTexture.ETextureName.NONE);
+    public static TextureName getTextureName(ConfigReader config) {
+        return (TextureName)config.asOptionalEnum(TextureName.class, Config.Fractal.Processing.PLATEAU_TEXTURE_MAP)
+                .orElse(TextureName.NONE);
     }
 
-    public enum ETextureName {
+    public enum TextureName {
         NONE,
         HIGH,
         LOW,
@@ -70,7 +70,6 @@ public class PlateauTexture {
             case HIGH -> Optional.of(getHigh(map));
             case LOW -> Optional.of(getLow(map));
             case HOLLOW -> Optional.of(getHollow(map, hollowDepth));
-            default -> throw new RuntimeException("Texture map " + eTextureMapName + " is not known");
         };
     }
 
