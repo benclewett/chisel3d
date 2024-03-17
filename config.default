@@ -14,12 +14,12 @@ Config.StlPrint.PIXEL_SIZE_XY=.5
 # Z used for 3D effects. (Not supported)  If not needed, leave high as drastically increases polygon count.
 Config.StlPrint.PIXEL_SIZE_Z=10
 # The base is added onto the Z size.
-Config.StlPrint.BASE_THICKNESS=3
+Config.StlPrint.BASE_THICKNESS=5
 # SHAPE=[SQUARE, CIRCLE]  Only SQUARE works today.
 Config.StlPrint.SHAPE=SQUARE
 # Optional Border, added round the print increasing the width.
 Config.StlPrint.BORDER_WIDTH=3
-Config.StlPrint.BORDER_HEIGHT=20
+Config.StlPrint.BORDER_HEIGHT=10
 
 
 #
@@ -29,10 +29,10 @@ Config.StlPrint.BORDER_HEIGHT=20
 #
 
 Config.Fractal.Model.MAX_ITERATIONS=400
-Config.Fractal.Model.I0=-1.8
-Config.Fractal.Model.I1=1.8
-Config.Fractal.Model.J0=-1.3
-Config.Fractal.Model.J1=1.3
+Config.Fractal.Model.I0=-2.1
+Config.Fractal.Model.I1=0.5
+Config.Fractal.Model.J0=-1
+Config.Fractal.Model.J1=1
 # Tweaks of model size/shift.  Look for a log output for new I/J values.  Default [1,1,0,0]
 Config.Fractal.Model.I_SCALE=1
 Config.Fractal.Model.J_SCALE=1
@@ -61,6 +61,7 @@ Config.Fractal.Processing.GAUSSIAN_RADIUS=0.003
 Config.Fractal.Processing.PROJECT_CENTRE_SPHERE=
 # Natural Log.  EXP -> e^z, NONE -> z, LN -> ln(z).  EXP exaggerates hills, LN softens hills.
 Config.Fractal.Processing.APPLY_LOG=NONE
+
 #
 # Pure Julia Sets Only (Not Mandelbrots or Burning Ships)
 #
@@ -68,13 +69,21 @@ Config.Fractal.JuliaSet.RC=-0.8
 Config.Fractal.JuliaSet.IC=0.156
 
 #
-# 3D Models
+# 3D Model Extras
+# Model name: MANDELBROT_3D
 #
-Config.Fractal.Model.K0 = 1
-Config.Fractal.Model.K1 = -1
+Config.StlPrint.BLOCK_SIZE_3D = .3
+Config.StlPrint.Settings3D.TILT_DEGREES_IN_Y=45
+Config.StlPrint.Settings3D.TILT_DEGREES_IN_X=0
+Config.StlPrint.Settings3D.TILT_DEGREES_IN_Z=0
+Config.StlPrint.Settings3D.MODEL_MOVE=0,0,30
+Config.StlPrint.Settings3D.SHADOW=true
+Config.StlPrint.Settings3D.SHADOW_Z=0
+Config.StlPrint.Settings3D.SHADOW_DEPTH=2
+Config.Fractal.Model.K0 = 1.1
+Config.Fractal.Model.K1 = -1.1
 Config.Fractal.Model.K_SCALE = 1.0
 Config.Fractal.Model.K_SHIFT = 0.0
-Config.StlPrint.BLOCK_SIZE_3D = 1
 
 #
 # Gravitational Waves STL Print

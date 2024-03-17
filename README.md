@@ -185,6 +185,28 @@ Config.Fractal.JuliaSet.RC=-0.8
 Config.Fractal.JuliaSet.IC=0.156
 </pre>
 
+## Mandelbrot Rising
+
+<img src="images/mandelbrot_rising.png" height="200" width="300" />
+
+<pre>
+Config.StlPrint.BLOCK_SIZE_3D = .3
+Config.StlPrint.Settings3D.TILT_DEGREES_IN_Y=45
+Config.StlPrint.Settings3D.TILT_DEGREES_IN_X=0
+Config.StlPrint.Settings3D.TILT_DEGREES_IN_Z=0
+Config.StlPrint.Settings3D.MODEL_MOVE=0,0,30
+Config.StlPrint.Settings3D.SHADOW=true
+Config.StlPrint.Settings3D.SHADOW_Z=0
+Config.StlPrint.Settings3D.SHADOW_DEPTH=2
+Config.Fractal.Model.MAX_ITERATIONS=400
+Config.Fractal.Model.I0=-2.1
+Config.Fractal.Model.I1=0.5
+Config.Fractal.Model.J0=-1
+Config.Fractal.Model.J1=1
+Config.Fractal.Model.K0 = 1.1
+Config.Fractal.Model.K1 = -1.1
+</pre>
+
 ## Classic Burning Ship
 
 <img src="images/burning_ship.png" height="200" width="300" />

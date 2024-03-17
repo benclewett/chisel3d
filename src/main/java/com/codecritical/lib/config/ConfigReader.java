@@ -208,4 +208,13 @@ public class ConfigReader {
         }
         return Boolean.parseBoolean(val.get());
     }
+
+    public boolean isPresent(Enum config) {
+        var val = get(config);
+        return (val.isPresent());
+    }
+
+    public ConfigReader clone() {
+        return new ConfigReader(properties);
+    }
 }

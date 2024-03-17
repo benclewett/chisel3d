@@ -13,6 +13,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @ParametersAreNonnullByDefault
 public class FastUnion {
@@ -22,6 +23,11 @@ public class FastUnion {
 
     // Static Class
     private FastUnion() {}
+
+    /** Unions a large number of parts at some speed. */
+    public static CSG fastUnion(Collection<CSG> parts) {
+        return fastUnion(parts.stream().collect(ImmutableList.toImmutableList()));
+    }
 
     /** Unions a large number of parts at some speed. */
     public static CSG fastUnion(ImmutableList<CSG> parts) {

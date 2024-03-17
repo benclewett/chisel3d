@@ -19,7 +19,18 @@ public enum Config {
         SHAPE,
         BORDER_HEIGHT,
         BORDER_WIDTH,
-        BLOCK_SIZE_3D
+        BLOCK_SIZE_3D;
+
+        public enum Settings3D {
+            TILT_DEGREES_IN_X,
+            TILT_DEGREES_IN_Y,
+            TILT_DEGREES_IN_Z,
+            MODEL_MOVE,
+            SHADOW,
+            SHADOW_Z,
+            SHADOW_DEPTH
+        }
+
     }
 
     public enum Fractal { ;
@@ -61,7 +72,6 @@ public enum Config {
             IC,
             RC
         }
-
     }
 
     public enum InfiniteMachineConfig {

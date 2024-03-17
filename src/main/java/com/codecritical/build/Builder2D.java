@@ -13,6 +13,7 @@ import com.codecritical.lib.model.IBuildPrint;
 import com.codecritical.parts.ExportStl;
 import com.codecritical.parts.Hemisphere;
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import eu.printingin3d.javascad.coords.Coords3d;
 import eu.printingin3d.javascad.coords.Dims3d;
 import eu.printingin3d.javascad.models.Cube;
@@ -250,7 +251,7 @@ public class Builder2D {
         OptionalDouble borderWidth = config.asOptionalDouble(Config.StlPrint.BORDER_WIDTH);
 
         if (borderHeight.isEmpty() || borderWidth.isEmpty()) {
-            logger.info("No border");
+            logger.info("No boundary");
             return this;
         }
 
@@ -293,6 +294,7 @@ public class Builder2D {
 
     private static final String STL = ".stl";
 
+    @CanIgnoreReturnValue
     public Builder2D savePrint() {
 
         String fileName = config.asString(Config.OUTPUT_FILENAME);

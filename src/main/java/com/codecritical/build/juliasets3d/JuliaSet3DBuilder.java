@@ -34,6 +34,9 @@ public class JuliaSet3DBuilder {
 
         Builder3D.create(config, map)
                 .buildModel()
+                .transformToCompleteModel()
+                .addBase()
+                .addBoundary()
                 .savePrint();
     }
 }
