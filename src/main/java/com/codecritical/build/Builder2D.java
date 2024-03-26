@@ -14,9 +14,12 @@ import com.codecritical.parts.ExportStl;
 import com.codecritical.parts.Hemisphere;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import eu.printingin3d.javascad.basic.Radius;
+import eu.printingin3d.javascad.coords.Angles3d;
 import eu.printingin3d.javascad.coords.Coords3d;
 import eu.printingin3d.javascad.coords.Dims3d;
 import eu.printingin3d.javascad.models.Cube;
+import eu.printingin3d.javascad.models.Cylinder;
 import eu.printingin3d.javascad.tranform.TransformationFactory;
 import eu.printingin3d.javascad.vrl.CSG;
 
@@ -32,7 +35,7 @@ public class Builder2D {
     private final ConfigReader config;
     private Optional<IMapArray> plateauTextureMap = Optional.empty();
     private PlateauCollections plateauCollection;
-    private final ImmutableList.Builder<CSG> csg = ImmutableList.builder();
+    private ImmutableList.Builder<CSG> csg = ImmutableList.builder();
 
     public static Builder2D create(ConfigReader config, IMapArray map) {
         return new Builder2D(config, map);
@@ -86,7 +89,7 @@ public class Builder2D {
                 map = Mapping.normalise(map);
                 logger.info(String.format("Apply ln(z): min=%.3f, max=%.3f, mean=%.3f", map.getMin(), map.getMax(), map.getMean()));
             }
-            default -> throw new RuntimeException("Bad option for Config.JuliaSet.Processing.APPLY_LOG: " + config.asInt(Config.Fractal.Processing.APPLY_LOG));
+            default -> throw new RuntimeException("Bad option for Config.Fractal.Processing.APPLY_LOG: " + config.asInt(Config.Fractal.Processing.APPLY_LOG));
         }
         return this;
     }
@@ -255,21 +258,48 @@ public class Builder2D {
             return this;
         }
 
-        logger.info(String.format("Border width=%.1f height=%.1f", borderWidth.getAsDouble(), borderHeight.getAsDouble()));
+        var baseShape = (BuildPrintSurface.BaseShape) config.asEnum(BuildPrintSurface.BaseShape.class, Config.StlPrint.SHAPE);
+        logger.info(String.format("Border width=%.1f height=%.1f shape=%s",
+                borderWidth.getAsDouble(), borderHeight.getAsDouble(), baseShape));
 
+        switch (baseShape) {
+            case SQUARE -> addBoundarySquare(borderHeight.getAsDouble(), borderWidth.getAsDouble());
+            case CIRCLE -> addBoundaryCircle(borderHeight.getAsDouble(), borderWidth.getAsDouble());
+            default -> throw new RuntimeException("Unhandled Option: " + baseShape);
+        }
+
+        return this;
+    }
+
+    private void addBoundaryCircle(double borderHeight, double borderWidth) {
+        double xSize = config.asDouble(Config.StlPrint.X_SIZE) / 2;
+        double ySize = config.asDouble(Config.StlPrint.Y_SIZE) / 2;
+        var radiusInner = Radius.fromRadius(Math.min(xSize, ySize) + 0.1);
+        var radiusOuter = Radius.fromRadius(Math.min(xSize, ySize) + borderWidth);
+
+        var cylinderInner = new Cylinder(borderHeight, radiusInner, radiusInner).toCSG();
+        var cylinderOuter = new Cylinder(borderHeight, radiusOuter, radiusOuter).toCSG();
+
+        var border = cylinderOuter.difference(cylinderInner);
+        border = border.transformed(TransformationFactory.getTranlationMatrix(new Coords3d(0, 0, borderHeight / 2)));
+
+        csg.add(border);
+    }
+
+    private void addBoundarySquare(double borderHeight, double borderWidth) {
         double xSize = config.asDouble(Config.StlPrint.X_SIZE);
         double ySize = config.asDouble(Config.StlPrint.Y_SIZE);
 
-        double halfBorderWidth = borderWidth.getAsDouble() / 2.0;
-        double halfBorderHeight = borderHeight.getAsDouble() / 2.0;
+        double halfBorderWidth = borderWidth / 2.0;
+        double halfBorderHeight = borderHeight / 2.0;
 
         double slither = -0.1;
 
-        var topBorder = new Cube(new Dims3d(xSize, borderWidth.getAsDouble() - slither, borderHeight.getAsDouble())).toCSG();
-        var bottomBorder = new Cube(new Dims3d(xSize, borderWidth.getAsDouble() - slither, borderHeight.getAsDouble())).toCSG();
+        var topBorder = new Cube(new Dims3d(xSize, borderWidth - slither, borderHeight)).toCSG();
+        var bottomBorder = new Cube(new Dims3d(xSize, borderWidth - slither, borderHeight)).toCSG();
 
-        var leftBorder = new Cube(new Dims3d(borderWidth.getAsDouble() - slither, ySize + 2 * borderWidth.getAsDouble(), borderHeight.getAsDouble())).toCSG();
-        var rightBorder = new Cube(new Dims3d(borderWidth.getAsDouble() - slither, ySize + 2 * borderWidth.getAsDouble(), borderHeight.getAsDouble())).toCSG();
+        var leftBorder = new Cube(new Dims3d(borderWidth - slither, ySize + 2 * borderWidth, borderHeight)).toCSG();
+        var rightBorder = new Cube(new Dims3d(borderWidth - slither, ySize + 2 * borderWidth, borderHeight)).toCSG();
 
         topBorder = topBorder.transformed(TransformationFactory.getTranlationMatrix(new Coords3d(0, ySize / 2.0 + halfBorderWidth, halfBorderHeight)));
         bottomBorder = bottomBorder.transformed(TransformationFactory.getTranlationMatrix(new Coords3d(0, -ySize / 2.0 - halfBorderWidth, halfBorderHeight)));
@@ -280,8 +310,6 @@ public class Builder2D {
         var csgBorder = topBorder.union(leftBorder).union(rightBorder).union(bottomBorder);
 
         csg.add(csgBorder);
-
-        return this;
     }
 
     /**

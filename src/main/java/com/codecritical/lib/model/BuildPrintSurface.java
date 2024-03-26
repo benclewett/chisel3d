@@ -12,7 +12,11 @@ import com.codecritical.lib.mapping.IMapArray;
 import com.codecritical.lib.mapping.Trig;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
+import eu.printingin3d.javascad.basic.Radius;
 import eu.printingin3d.javascad.coords.Coords3d;
+import eu.printingin3d.javascad.models.Cylinder;
+import eu.printingin3d.javascad.tranform.TransformationFactory;
+import eu.printingin3d.javascad.tranzitions.Union;
 import eu.printingin3d.javascad.vrl.CSG;
 import eu.printingin3d.javascad.vrl.Polygon;
 
@@ -46,9 +50,7 @@ public class BuildPrintSurface implements IBuildPrint {
 
     // For use when we are in CIRCLE mode
     private final Coords3d centre;
-    private final double circleRadiusSquared;
     private final double circleRadius;
-    private final ImmutableList<Coords3d> boundingCircumference;
     private final Optional<Coords3d> projectCentreSphere;
     private final ConfigReader config;
 
@@ -74,8 +76,6 @@ public class BuildPrintSurface implements IBuildPrint {
         );
         this.circularSorter = new CircularSorter(this.centre);
         this.circleRadius = (xMax - xMin) / 2;
-        this.circleRadiusSquared = this.circleRadius * this.circleRadius;
-        this.boundingCircumference = buildBoundingCircumference();
         this.projectCentreSphere = config.asOptionalCoors3d(Config.Fractal.Processing.PROJECT_CENTRE_SPHERE);
 
         logger.info(this.toString());
@@ -88,12 +88,16 @@ public class BuildPrintSurface implements IBuildPrint {
         ImmutableList<Polygon> polygons = buildAllPolygons();
         var mandelbrot = new CSG(polygons);
 
-        // Trying again....  Still don't work.
-        /*
-        var cylinder = new Cylinder(zRange * 2, Radius.fromRadius(Math.min(xRange, yRange) / 2.01)).toCSG();
-        cylinder = cylinder.transformed(TransformationFactory.getTranlationMatrix(new Coords3d(0, 0, zRange / 2.0)));
-        mandelbrot = mandelbrot.intersect(cylinder);
-         */
+        // Sometimes this works, sometimes not.
+        if (BaseShape.CIRCLE.equals(baseShape)) {
+            var cylinder = new Cylinder((zRange + baseThickness) * 10.0, Radius.fromRadius(Math.min(xRange, yRange) / 2.01111)).toCSG();
+            cylinder = cylinder.transformed(TransformationFactory.getTranlationMatrix(new Coords3d(0, 0, -(baseThickness + zRange) * 3)));
+            logger.info("Intersecting map with cylinder to circularise output.");
+            mandelbrot = cylinder.intersect(mandelbrot);
+            var cylinderBase = new Cylinder(baseThickness, Radius.fromRadius(Math.min(xRange, yRange) / 1.95)).toCSG();
+            cylinderBase = cylinderBase.transformed(TransformationFactory.getTranlationMatrix(new Coords3d(0, 0, baseThickness / 1.9)));
+            mandelbrot = mandelbrot.union(cylinderBase);
+        }
 
         return ImmutableList.of(mandelbrot);
     }
@@ -208,55 +212,21 @@ public class BuildPrintSurface implements IBuildPrint {
             return;
         }
 
-        if (BaseShape.CIRCLE.equals(baseShape)) {
-            throw new RuntimeException("CIRCLE not yet supported.");
-        }
-
-        // Remember, a correctly defined polygons is ANTI-CLOCKWISE on the surface.
-        // (Blender doesn't care, but UltiMaker Cura does.)
-
-        /*
-        if (BaseShape.CIRCLE.equals(BaseShape)) {
-            // Pre-process cut-off on the radius of the circle.
-            int[] vsInRadius = getVertexInRadius(vs, 4);
-            int countIn = Arrays.stream(vsInRadius).sum();
-            if (countIn == 0) {
-                return EMPTY_POLYGON_LIST;
-            } else if (countIn == 1) {
-                // Inner corner of the square
-                List<Coords3d> triangle = mapToTriangle(vsInRadius, vs, perimeter);
-                polygons.add(Polygon.fromPolygons(triangle, COLOR));
-                return polygons;
-            } else if (countIn == 2) {
-                // Square cut in half, which is 2x polygons for simplicity
-                Coords3d[][] newSquare = mapToSquare(vsInRadius, vs, perimeter);
-                polygons.add(Polygon.fromPolygons(Arrays.asList(newSquare[0]), COLOR));
-                polygons.add(Polygon.fromPolygons(Arrays.asList(newSquare[1]), COLOR));
-                return polygons;
-            } else if (countIn == 3) {
-                // TODO
-            } else {
-                throw new RuntimeException("Math is wrong somewhere, we have " + countIn + " vertices in square.  Should be between 0 and 3.");
-            }
-        }
-         */
-
         Quadrilateral quadrilateral = addSquare(i - 1, i, j - 1, j);
         builder.addAll(quadrilateral.getPolygons());
 
         // Square Edge Walls.  Extend down to the base.
-        if (BaseShape.SQUARE.equals(baseShape)) {
-            // One polygon down to the base.  Register of perimeter position to construct the base.
-            if (i == 1) {
-                addPerimeter(builder, perimeter, quadrilateral.v0, quadrilateral.v3);
-            } else if (i == map.getISize() - 1) {
-                addPerimeter(builder, perimeter, quadrilateral.v2, quadrilateral.v1);
-            }
-            if (j == 1) {
-                addPerimeter(builder, perimeter, quadrilateral.v1, quadrilateral.v0);
-            } else if (j == map.getJSize() - 1) {
-                addPerimeter(builder, perimeter, quadrilateral.v3, quadrilateral.v2);
-            }
+        if (i == 1) {
+            addPerimeter(builder, perimeter, quadrilateral.v0, quadrilateral.v3);
+        }
+        if (i == map.getISize() - 1) {
+            addPerimeter(builder, perimeter, quadrilateral.v2, quadrilateral.v1);
+        }
+        if (j == 1) {
+            addPerimeter(builder, perimeter, quadrilateral.v1, quadrilateral.v0);
+        }
+        if (j == map.getJSize() - 1) {
+            addPerimeter(builder, perimeter, quadrilateral.v3, quadrilateral.v2);
         }
     }
 
@@ -274,6 +244,7 @@ public class BuildPrintSurface implements IBuildPrint {
         }
     }
 
+    /** Parr coordinates in, in anti-clockwise direction. */
     private Quadrilateral addSquare(int i0, int i1, int j0, int j1) {
         return new Quadrilateral(
                 new Coords3d(mapX(i0), mapY(j0), mapZ(map.get(i0, j0))),
@@ -281,35 +252,6 @@ public class BuildPrintSurface implements IBuildPrint {
                 new Coords3d(mapX(i1), mapY(j1), mapZ(map.get(i1, j1))),
                 new Coords3d(mapX(i0), mapY(j1), mapZ(map.get(i0, j1)))
         );
-    }
-
-    //endregion
-
-    //region divide polygon to bounding.
-
-    private Coords3d getBoundaryCrossingLinePoint(Coords3d v0, Coords3d v1) {
-        for (int i0 = 0; i0 < boundingCircumference.size(); i0++) {
-            int i1 = (i0 + 1) % boundingCircumference.size();
-            var vb0 = boundingCircumference.get(i0);
-            var vb1 = boundingCircumference.get(i1);
-            Optional<Coords3d> cross = Trig.lineSegmentIntersect(v0, v1, vb0, vb1);
-            if (cross.isPresent()) {
-                return cross.get();
-            }
-        }
-        throw new RuntimeException(String.format("Cannot find where line %s to %s crosses bounding circumference.", v0, v1));
-    }
-
-    private int[] getVertexInRadius(Coords3d[] vertexSet, int count) {
-        int[] bOut = new int[count];
-        for (int i = 0; i < count; i++) {
-            bOut[i] = (getRadiusSquare(vertexSet[i]) < circleRadiusSquared) ? 1 : 0;
-        }
-        return bOut;
-    }
-
-    private double getRadiusSquare(Coords3d c) {
-        return Math.pow(centre.getX() - c.getX(), 2) + Math.pow(centre.getY() - c.getY(), 2);
     }
 
     //endregion
@@ -402,7 +344,6 @@ public class BuildPrintSurface implements IBuildPrint {
     }
 
     //endregion
-
 
     @Override
     public String toString() {

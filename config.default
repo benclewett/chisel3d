@@ -6,33 +6,33 @@ Config.OUTPUT_FILENAME=fractal
 # All dimensions are mm or coefficients.
 #
 
-Config.StlPrint.X_SIZE=160
-Config.StlPrint.Y_SIZE=120
+Config.StlPrint.X_SIZE=100
+Config.StlPrint.Y_SIZE=101
 Config.StlPrint.Z_SIZE=30
 # Fine: down to 0.1.  Course: 0.5 or above.
-Config.StlPrint.PIXEL_SIZE_XY=.5
-# Z used for 3D effects. (Not supported)  If not needed, leave high as drastically increases polygon count.
-Config.StlPrint.PIXEL_SIZE_Z=10
+Config.StlPrint.PIXEL_SIZE_XY=.2
+# Z used for 2D projections to 3D effects. (Not supported)  If not needed, leave high as drastically increases polygon count.
+Config.StlPrint.PIXEL_SIZE_Z=50
 # The base is added onto the Z size.
-Config.StlPrint.BASE_THICKNESS=5
-# SHAPE=[SQUARE, CIRCLE]  Only SQUARE works today.
-Config.StlPrint.SHAPE=SQUARE
+Config.StlPrint.BASE_THICKNESS=3
+# SHAPE=[SQUARE, CIRCLE]
+Config.StlPrint.SHAPE=CIRCLE
 # Optional Border, added round the print increasing the width.
 Config.StlPrint.BORDER_WIDTH=3
-Config.StlPrint.BORDER_HEIGHT=10
+Config.StlPrint.BORDER_HEIGHT=6
 
 
 #
 # Mandelbrot & Burning Ship Fractal STL Prints
-# Program Options: MANDELBROT*, BURNING_SHIP
+# Model Names: MANDELBROT*, BURNING_SHIP
 # Useful site: https://usefuljs.net/fractals/
 #
 
 Config.Fractal.Model.MAX_ITERATIONS=400
 Config.Fractal.Model.I0=-2.1
-Config.Fractal.Model.I1=0.5
-Config.Fractal.Model.J0=-1
-Config.Fractal.Model.J1=1
+Config.Fractal.Model.I1=2.1
+Config.Fractal.Model.J0=-2.1
+Config.Fractal.Model.J1=2.1
 # Tweaks of model size/shift.  Look for a log output for new I/J values.  Default [1,1,0,0]
 Config.Fractal.Model.I_SCALE=1
 Config.Fractal.Model.J_SCALE=1
@@ -56,14 +56,15 @@ Config.Fractal.Processing.PLATEAU_HOLLOW_DEPTH=0.0
 # Trim outside base.  This fails at this time.
 Config.Fractal.Processing.TRIM_OUTSIDE_BASE=false
 # Gaussian Radius as coefficient of the size.  Optional.  0.005 (0.5%) to 0.001 are a good options.
-Config.Fractal.Processing.GAUSSIAN_RADIUS=0.003
+Config.Fractal.Processing.GAUSSIAN_RADIUS=0.002
 # Optional projection from centre of a spear as x,y,z.  Above for concave, below for convex.  Stl print units.
 Config.Fractal.Processing.PROJECT_CENTRE_SPHERE=
 # Natural Log.  EXP -> e^z, NONE -> z, LN -> ln(z).  EXP exaggerates hills, LN softens hills.
-Config.Fractal.Processing.APPLY_LOG=NONE
+Config.Fractal.Processing.APPLY_LOG=EXP
 
 #
-# Pure Julia Sets Only (Not Mandelbrots or Burning Ships)
+# Pure Julia Sets Only
+# Model name: JULIA_SET
 #
 Config.Fractal.JuliaSet.RC=-0.8
 Config.Fractal.JuliaSet.IC=0.156
@@ -72,22 +73,22 @@ Config.Fractal.JuliaSet.IC=0.156
 # 3D Model Extras
 # Model name: MANDELBROT_3D
 #
-Config.StlPrint.BLOCK_SIZE_3D = .3
-Config.StlPrint.Settings3D.TILT_DEGREES_IN_Y=45
-Config.StlPrint.Settings3D.TILT_DEGREES_IN_X=0
-Config.StlPrint.Settings3D.TILT_DEGREES_IN_Z=0
-Config.StlPrint.Settings3D.MODEL_MOVE=0,0,30
-Config.StlPrint.Settings3D.SHADOW=true
+Config.StlPrint.BLOCK_SIZE_3D = .5
+Config.StlPrint.Settings3D.TILT_DEGREES_IN_Y=
+Config.StlPrint.Settings3D.TILT_DEGREES_IN_X=
+Config.StlPrint.Settings3D.TILT_DEGREES_IN_Z=
+Config.StlPrint.Settings3D.MODEL_MOVE=
+Config.StlPrint.Settings3D.SHADOW=false
 Config.StlPrint.Settings3D.SHADOW_Z=0
 Config.StlPrint.Settings3D.SHADOW_DEPTH=2
-Config.Fractal.Model.K0 = 1.1
-Config.Fractal.Model.K1 = -1.1
+Config.Fractal.Model.K0 = -0.35
+Config.Fractal.Model.K1 = 0.35
 Config.Fractal.Model.K_SCALE = 1.0
 Config.Fractal.Model.K_SHIFT = 0.0
 
 #
 # Gravitational Waves STL Print
-# Program Option: GRAVITATIONAL_WAVES
+# Model Name: GRAVITATIONAL_WAVES
 #
 
 Config.GravitationalWaves.I0=0
@@ -107,7 +108,7 @@ Config.GravitationalWaves.PERSPECTIVE_ANGLE=0.523
 
 #
 # Infinite Machine
-# Program Option: INFINITE_MACHINE
+# Model Name: INFINITE_MACHINE
 #
 
 Config.InfiniteMachineConfig.OUTPUT_FILENAME=infinite_machine_small.stl

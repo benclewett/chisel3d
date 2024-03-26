@@ -39,6 +39,7 @@ public class JuliaSetsBuilder {
             case MANDELBROT_BUDDHA -> new MandelbrotBuddhaMap(config).getMap();
             case JULIA_SET -> new JuliaSetStandardMap(config).getMap();
             case BURNING_SHIP -> new BurningShipMap(config).getMap();
+            case MANDELBROT_TRICORN -> new MandelbrotTricorn(config).getMap();
             default -> throw new RuntimeException("Unknown option: " + model);
         };
     }
@@ -55,8 +56,8 @@ public class JuliaSetsBuilder {
                 .applyPlateauTexture()
                 .applyGaussian()
                 // .trimOutsideBase()
-                .addBoundary()
                 .mapToCsg()
+                .addBoundary()
                 .savePrint();
     }
 

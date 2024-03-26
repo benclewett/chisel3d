@@ -35,7 +35,7 @@ public class Container {
 
         switch (model) {
             case INFINITE_MACHINE -> new InfiniteMachineBuilder(config, random);
-            case MANDELBROT, MANDELBROT_CUBIC, MANDELBROT_BUDDHA, JULIA_SET, BURNING_SHIP -> new JuliaSetsBuilder(config, model);
+            case MANDELBROT, MANDELBROT_CUBIC, MANDELBROT_BUDDHA, JULIA_SET, BURNING_SHIP, MANDELBROT_TRICORN -> new JuliaSetsBuilder(config, model);
             case GRAVITATIONAL_WAVES -> new GravitationalWaveBuilder(config);
             case MANDELBROT_3D -> new JuliaSet3DBuilder(config);
             default -> throw new IllegalStateException("Unexpected value: " + model);
