@@ -185,6 +185,18 @@ Config.Fractal.JuliaSet.RC=-0.8
 Config.Fractal.JuliaSet.IC=0.156
 </pre>
 
+## Mandelbrot Tricorn
+
+<img src="images/mandelbrot_tricorn.png" height="200" width="300" />
+
+<pre>
+Config.Fractal.Model.MAX_ITERATIONS=400
+Config.Fractal.Model.I0=-2.1
+Config.Fractal.Model.I1=2.1
+Config.Fractal.Model.J0=-2.1
+Config.Fractal.Model.J1=2.1
+</pre>
+
 ## Mandelbrot Rising
 
 <img src="images/mandelbrot_rising.png" height="200" width="300" />

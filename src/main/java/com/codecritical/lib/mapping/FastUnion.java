@@ -32,8 +32,7 @@ public class FastUnion {
     /** Unions a large number of parts at some speed. */
     public static CSG fastUnion(ImmutableList<CSG> parts) {
 
-        // Don't forget the mapToCsg() call.
-        Verify.verify(parts.size() != 0);
+        Verify.verify(!parts.isEmpty(), "No parts.");
 
         // The 'Union' class should be able to do this.  However, this slows down exponentially.
         // 10,000 parts can take 10 hours.  This method takes the same number of seconds.
@@ -43,6 +42,8 @@ public class FastUnion {
         var partList = parts.stream()
                 .filter(p -> !p.getPolygons().isEmpty())
                 .collect(ImmutableList.toImmutableList());
+
+        Verify.verify(!partList.isEmpty(), "No valid parts.");
 
         do {
             logger.info("Loop " + i + ", outstanding count: " + partList.size() + ", polygons: " +

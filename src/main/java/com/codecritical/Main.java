@@ -16,7 +16,8 @@ public class Main {
         GRAVITATIONAL_WAVES,
         BURNING_SHIP,
         JULIA_SET,
-        MANDELBROT_3D
+        MANDELBROT_3D,
+        MANDELBROT_TRICORN
     }
 
     public static void main(String[] args) {

@@ -57,10 +57,10 @@ public abstract class JuliaSet {
         logger.info(String.format("Width: i=%.20f j=%.20f", iLen, jLen));
 
         logger.info(String.format("Using:\r\n" +
-                "Config.JuliaSet.Model.I0=%.20f\r\n" +
-                "Config.JuliaSet.Model.I1=%.20f\r\n" +
-                "Config.JuliaSet.Model.J0=%.20f\r\n" +
-                "Config.JuliaSet.Model.J1=%.20f",
+                "Config.Fractal.Model.I0=%.20f\r\n" +
+                "Config.Fractal.Model.I1=%.20f\r\n" +
+                "Config.Fractal.Model.J0=%.20f\r\n" +
+                "Config.Fractal.Model.J1=%.20f",
                 i0, i1, j0, j1));
 
         this.maxIterations = config.asInt(Config.Fractal.Model.MAX_ITERATIONS);

@@ -67,12 +67,12 @@ public abstract class JuliaSet3D {
 
         logger.info(String.format("""
                         Using:\r
-                        Config.JuliaSet.Model.I0=%.20f\r
-                        Config.JuliaSet.Model.I1=%.20f\r
-                        Config.JuliaSet.Model.J0=%.20f\r
-                        Config.JuliaSet.Model.J1=%.20f\r
-                        Config.JuliaSet.Model.K0=%.20f\r
-                        Config.JuliaSet.Model.K1=%.20f""",
+                        Config.Fractal.Model.I0=%.20f\r
+                        Config.Fractal.Model.I1=%.20f\r
+                        Config.Fractal.Model.J0=%.20f\r
+                        Config.Fractal.Model.J1=%.20f\r
+                        Config.Fractal.Model.K0=%.20f\r
+                        Config.Fractal.Model.K1=%.20f""",
                 i0, i1, j0, j1, k0, k1));
 
         this.maxIterations = config.asInt(Config.Fractal.Model.MAX_ITERATIONS);

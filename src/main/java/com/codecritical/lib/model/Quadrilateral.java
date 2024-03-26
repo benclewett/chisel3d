@@ -11,8 +11,12 @@ import eu.printingin3d.javascad.vrl.Polygon;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Build Square by adding either 1 or 4 coplanar polygons.  Used to encapsulate a square tile.
@@ -41,6 +45,7 @@ public class Quadrilateral {
     public final ImmutableList<Polygon> polygons;
     public final Coords3d v0, v1, v2, v3;
 
+    /** Parr coordinates in, in anti-clockwise direction. */
     public Quadrilateral(Coords3d v0, Coords3d v1, Coords3d v2, Coords3d v3) {
         this.v0 = v0;
         this.v1 = v1;
@@ -54,6 +59,31 @@ public class Quadrilateral {
     }
 
     private ImmutableList<Polygon> buildPolygons() {
+
+        // Not a quadrilateral?
+        Set<Coords3d> pUnique = new HashSet<>();
+        pUnique.add(v0);
+        pUnique.add(v1);
+        pUnique.add(v2);
+        pUnique.add(v3);
+        if (pUnique.size() == 3) {
+            // Add them in the correct order.
+            List<Coords3d> l = new ArrayList<>();
+            l.add(v0);
+            if (!l.contains(v1)) {
+                l.add(v1);
+            }
+            if (!l.contains(v2)) {
+                l.add(v2);
+            }
+            if (!l.contains(v3)) {
+                l.add(v3);
+            }
+            return ImmutableList.of(Polygon.fromPolygons(l, COLOR));
+        } else if (pUnique.size() < 3) {
+            return ImmutableList.of();
+        }
+
         ImmutableList.Builder<Polygon> builder = ImmutableList.builder();
 
         if ((v0.getZ() == v1.getZ() && v2.getZ() == v3.getZ()) || (v0.getZ() == v1.getZ() && v2.getZ() == v3.getZ())) {
